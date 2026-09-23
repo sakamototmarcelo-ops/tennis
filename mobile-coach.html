@@ -189,14 +189,33 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .obs-chips-row{display:flex;flex-wrap:wrap;gap:4px}
 .obs-chip{padding:4px 9px;border:1px solid var(--bdr);border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;cursor:pointer;color:var(--dim);background:transparent;transition:.12s;white-space:nowrap;line-height:1.4}
 .obs-chip.on{background:var(--c-obs);border-color:var(--c-obs);color:#fff}
-/* situação relevante */
-.item-card.relevant{border-color:var(--c-obs);border-left:3px solid var(--c-obs)}
-.rel-badge{display:inline-block;font-size:8.5px;background:var(--c-obs);color:#fff;padding:1px 5px;border-radius:6px;margin-left:5px;vertical-align:middle;font-weight:700;letter-spacing:.2px}
-/* plano de ajustes */
-.adj-card{background:var(--card);border:1px solid var(--bdr);border-left:3px solid var(--c-obs);border-radius:10px;padding:10px 13px;margin-bottom:7px}
-.adj-prio{font-family:'Space Grotesk',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
-.adj-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--txt);margin-bottom:4px}
-.adj-inst{font-size:12.5px;line-height:1.55;color:var(--dim)}
+/* mode toggle */
+.jogo-mode-toggle{display:flex;gap:6px;margin:10px 0 8px}
+.jogo-mode-btn{flex:1;padding:9px 0;border-radius:10px;border:1.5px solid var(--bdr);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--dim);cursor:pointer;transition:.12s}
+.jogo-mode-btn.on{background:var(--c-cen);border-color:var(--c-cen);color:#fff}
+#mode-pausa.on{background:var(--c-pau);border-color:var(--c-pau)}
+/* situação rows */
+.sit-row{padding:9px 12px;border-radius:10px;margin-bottom:5px;border:1px solid var(--bdr);background:var(--card);transition:.12s}
+.sit-row.active{border-color:var(--c-cen);border-left:3px solid var(--c-cen)}
+.sit-row.inactive{opacity:.45}
+.sit-row-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.sit-row-title{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;color:var(--txt);line-height:1.3}
+.sit-row.active .sit-row-title{color:var(--c-cen)}
+.sit-row-sub{font-size:11px;color:var(--dim);margin-top:2px;line-height:1.4}
+.sit-row-badge{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;background:var(--c-cen);color:#fff;padding:2px 7px;border-radius:6px;white-space:nowrap;flex-shrink:0;margin-top:1px;letter-spacing:.2px}
+.sit-row-inst{font-size:12px;line-height:1.6;color:var(--txt);margin-top:8px;padding-top:7px;border-top:1px solid var(--bdr)}
+.sit-view-lbl{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:6px}
+/* pausa plan */
+.pausa-hdr{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--c-pau);margin:0 0 7px}
+.pause-step{background:var(--card);border:1px solid var(--bdr);border-left:3px solid var(--c-obs);border-radius:10px;padding:10px 13px;margin-bottom:7px}
+.pause-step-num{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;color:var(--c-obs);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.pause-step-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.pause-step-inst{font-size:12.5px;line-height:1.55;color:var(--dim)}
+.pause-timing{background:var(--c-pau-l);border:1px solid var(--c-pau-bdr);border-radius:10px;padding:10px 13px;margin-bottom:8px}
+.pause-timing-lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:var(--c-pau);margin-bottom:6px;display:block}
+.pause-timing-row{font-size:12px;line-height:1.5;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;gap:8px}
+.pause-timing-row:last-child{border-bottom:none}
+.pause-timing-time{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;color:var(--c-pau);min-width:44px;flex-shrink:0}
 
 /* IA EXPAND */
 .ai-expand-btn{width:100%;padding:11px;border-radius:10px;border:1.5px dashed var(--c-ins-bdr);background:var(--c-ins-l);color:var(--c-ins);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px;transition:.15s}
@@ -242,7 +261,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
     <!-- CHIPS DE OBSERVAÇÃO -->
     <div class="obs-section">
       <div class="obs-hdr">
-        <span class="obs-hdr-title">O que está acontecendo</span>
+        <span class="obs-hdr-title">O que estou vendo</span>
         <span class="obs-count" id="obs-count"></span>
         <button class="obs-clear" onclick="clearObs()">limpar</button>
       </div>
@@ -251,15 +270,15 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
         <div class="obs-chips-row">
           <button class="obs-chip" data-key="no-net-serve" onclick="toggleObs(this)">Não sobe após saque</button>
           <button class="obs-chip" data-key="no-net-ret" onclick="toggleObs(this)">Não sobe na devolução</button>
-          <button class="obs-chip" data-key="net-passive" onclick="toggleObs(this)">Rede jogadora passiva</button>
+          <button class="obs-chip" data-key="net-passive" onclick="toggleObs(this)">Rede passiva</button>
         </div>
       </div>
       <div class="obs-cat">
         <span class="obs-cat-lbl">Saque</span>
         <div class="obs-chips-row">
           <button class="obs-chip" data-key="2saque-weak" onclick="toggleObs(this)">2º saque fraco</button>
-          <button class="obs-chip" data-key="df-pressure" onclick="toggleObs(this)">Dupla falta sob pressão</button>
-          <button class="obs-chip" data-key="same-dir" onclick="toggleObs(this)">Saque sempre no mesmo lugar</button>
+          <button class="obs-chip" data-key="df-pressure" onclick="toggleObs(this)">DF sob pressão</button>
+          <button class="obs-chip" data-key="same-dir" onclick="toggleObs(this)">Sempre no mesmo lugar</button>
         </div>
       </div>
       <div class="obs-cat">
@@ -272,18 +291,18 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
         </div>
       </div>
       <div class="obs-cat">
-        <span class="obs-cat-lbl">Trocas</span>
+        <span class="obs-cat-lbl">Construção</span>
         <div class="obs-chips-row">
           <button class="obs-chip" data-key="ball-high" onclick="toggleObs(this)">Bola sempre alta</button>
-          <button class="obs-chip" data-key="short-ignored" onclick="toggleObs(this)">Bola curta ignorada</button>
-          <button class="obs-chip" data-key="forced-finish" onclick="toggleObs(this)">Finalização forçada</button>
+          <button class="obs-chip" data-key="short-ignored" onclick="toggleObs(this)">Curta não atacada</button>
+          <button class="obs-chip" data-key="forced-finish" onclick="toggleObs(this)">Finaliza cedo</button>
         </div>
       </div>
       <div class="obs-cat">
         <span class="obs-cat-lbl">Cobertura</span>
         <div class="obs-chips-row">
           <button class="obs-chip" data-key="no-switch" onclick="toggleObs(this)">Sem switch no lob</button>
-          <button class="obs-chip" data-key="no-poach" onclick="toggleObs(this)">Rede não intercepta</button>
+          <button class="obs-chip" data-key="no-poach" onclick="toggleObs(this)">Sem interceptação</button>
           <button class="obs-chip" data-key="middle-hesitate" onclick="toggleObs(this)">Hesitam no meio</button>
         </div>
       </div>
@@ -295,30 +314,34 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
           <button class="obs-chip" data-key="no-comm" onclick="toggleObs(this)">Sem comunicação</button>
         </div>
       </div>
-      <button class="gen-btn" id="obs-plan-btn" onclick="gerarPlanoAjustes()" style="display:none;margin-top:10px">Gerar Plano de Ajustes →</button>
     </div>
 
-    <!-- PLANO DE AJUSTES (output) -->
-    <div id="obs-plano-wrap" style="display:none">
-      <div class="pg-lbl">Plano de Ajustes</div>
-      <div id="obs-plano-content"></div>
+    <!-- MODE TOGGLE -->
+    <div class="jogo-mode-toggle">
+      <button class="jogo-mode-btn on" id="mode-emjogo" onclick="setJogoMode('emjogo',this)">▶ Em Jogo</button>
+      <button class="jogo-mode-btn" id="mode-pausa" onclick="setJogoMode('pausa',this)">⏸ Na Pausa</button>
     </div>
 
-    <!-- SITUAÇÕES -->
-    <div class="pg-lbl" style="margin-top:4px">Situações</div>
-    <div id="situacoes-list"></div>
+    <!-- VIEW: EM JOGO — situações rápidas -->
+    <div id="view-emjogo">
+      <div class="sit-view-lbl">Situações — toque para ver a instrução</div>
+      <div id="situacoes-list"></div>
+    </div>
 
-    <!-- COMO INSTRUIR (colapsado) -->
-    <div class="item-card" style="margin-top:4px;border-color:var(--c-ins-bdr)">
-      <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-ins)">Como instruir na pausa</div><div class="item-sub">4 regras de coaching</div></div>
-        <span class="item-arr">▾</span>
-      </div>
-      <div class="item-body" style="background:var(--c-ins-l);margin:-14px;padding:14px;border-radius:0 0 10px 10px">
-        <strong style="color:var(--c-ins)">1 instrução por pausa</strong> — o cérebro não processa mais de uma mudança de cada vez.<br><br>
-        <strong style="color:var(--c-ins)">Formato: gatilho + ação</strong> — "Quando vier bola curta → avança em movimento." Não "jogue mais profundo".<br><br>
-        <strong style="color:var(--c-ins)">Nunca: técnica de golpe</strong> — joelho, cotovelo, pegada... isso é treino. Na pausa: só tática posicional.<br><br>
-        <strong style="color:var(--c-ins)">Nunca: quem errou mais</strong> — guarde para conversa individual pós-jogo.
+    <!-- VIEW: NA PAUSA — plano estruturado -->
+    <div id="view-pausa" style="display:none">
+      <div id="pausa-content"></div>
+      <div class="item-card" style="border-color:var(--c-ins-bdr)">
+        <div class="item-hd" onclick="tog(this.parentElement)">
+          <div><div class="item-title" style="color:var(--c-ins)">Como instruir na pausa</div><div class="item-sub">4 regras de coaching</div></div>
+          <span class="item-arr">▾</span>
+        </div>
+        <div class="item-body" style="background:var(--c-ins-l);margin:-14px;padding:14px;border-radius:0 0 10px 10px">
+          <strong style="color:var(--c-ins)">1 instrução por pausa</strong> — o cérebro não processa mais de uma mudança de cada vez.<br><br>
+          <strong style="color:var(--c-ins)">Formato: gatilho + ação</strong> — "Quando vier bola curta → avança em movimento." Não "jogue mais profundo".<br><br>
+          <strong style="color:var(--c-ins)">Nunca: técnica de golpe</strong> — joelho, cotovelo, pegada... isso é treino. Na pausa: só tática posicional.<br><br>
+          <strong style="color:var(--c-ins)">Nunca: quem errou mais</strong> — guarde para conversa individual pós-jogo.
+        </div>
       </div>
     </div>
 
@@ -721,89 +744,117 @@ function go(id, btn) {
 
 /* ── EM JOGO — OBSERVAÇÕES ── */
 const obsActive = new Set();
+let jogoMode = 'emjogo';
 
+/* Situações de jogo: padrões que se reconhecem em quadra → instrução imediata */
 const SCENARIOS = [
-  {key:'troca-longa', obs:['ball-high','short-ignored','no-net-serve','no-net-ret'],
-   color:'var(--c-cen)', title:'Troca longa sem plano',
-   sub:'8–15 bolas, ninguém avança, quem erra perde',
-   inst:'"Na 4ª bola, se vier curta — drop shot e avança. Se vier funda — profundo no BH e espera a curta aparecer."'},
-  {key:'bola-alta', obs:['ball-high'],
-   color:'var(--c-cen)', title:'Bola alta devolvida alta',
-   sub:'Ciclo de alturas sem construção',
-   inst:'"Quando vier bola alta: recua um passo, deixa cair até o ombro, bate flat cruzado — não devolve alta de volta."'},
+  // POSIÇÃO
   {key:'sem-rede', obs:['no-net-serve','no-net-ret'],
-   color:'var(--c-cen)', title:'Dupla no fundo sem subir',
-   sub:'Ambas no fundo, sem avançar',
-   inst:'"Após saque: 3 passos à frente antes de ver a devolução. Após devolução: entra na rede na 3ª bola no máximo."'},
+   title:'Dupla no fundo sem subir',
+   sub:'Nenhuma avança após saque ou devolução',
+   inst:'Saque → 3 passos à frente antes de ver a devolução. Devolução → entra na 3ª bola no máximo. Quem fica no fundo entrega a rede.'},
+  {key:'rede-passiva', obs:['no-poach','net-passive'],
+   title:'Rede decorativa — sem interceptação',
+   sub:'Jogadora da rede não corta nem intimida',
+   inst:'Toda bola cruzada = poach. Parte no momento que a adversária contata a bola, não depois. Se a bola passa, ela ganhou o ponto psicologicamente.'},
+  // SAQUE
   {key:'2saque-ataque', obs:['2saque-weak'],
-   color:'var(--c-cen)', title:'2º saque attackável',
-   sub:'Saque fraco que chega na zona de ataque',
-   inst:'"Devolver o 2º no BH delas. Cruzado e profundo. Parceira: faz blitz se a bola vier curta para a rede."'},
-  {key:'sem-poach', obs:['no-poach','net-passive'],
-   color:'var(--c-cen)', title:'Rede passiva — sem interceptação',
-   sub:'Jogadora da rede fica parada',
-   inst:'"Toda bola cruzada é poach. Quando a parceira devolver — move diagonal. Não espera: antecipa o cruzado."'},
-  {key:'sem-switch', obs:['no-switch'],
-   color:'var(--c-cen)', title:'Sem switch no lob',
-   sub:'Lob passa, ninguém troca',
-   inst:'"Parceira: quando o lob passar sobre você — grita \'troca\' e vai para o outro lado. Você recua e deixa ela fechar."'},
-  {key:'meio-hesita', obs:['middle-hesitate'],
-   color:'var(--c-cen)', title:'Hesitam no meio',
-   sub:'Bolas pelo centro sem dono',
-   inst:'"Todo meio é da sacadora. Combinem antes de cada ponto: \'centro é meu\' — para não duplicar nem hesitar."'},
-  {key:'pressao-erros', obs:['pressure-errors','df-pressure'],
-   color:'var(--c-obs)', title:'Erros em pontos críticos',
-   sub:'Dupla falta, erro em 30-40 ou game point',
-   inst:'"Em pontos importantes: primeira bola profunda no BH. Não force. A pressão é mental, não técnica — respira e abre o campo."'},
+   title:'2º saque atacável',
+   sub:'Saque lento ou alto na zona de ataque',
+   inst:'Devolvente: posição 1m à frente, ataca cruzado profundo no BH delas. Rede: parte para o poach na devolução paralela.'},
+  {key:'df-critico', obs:['df-pressure'],
+   title:'Dupla falta em momento crítico',
+   sub:'DF aparece em 30-40, game point ou tiebreak',
+   inst:'2º saque: kick com margem, nunca flat. Primeiro objetivo é colocar na quadra. Ace não existe na hora H — margem sobre tudo.'},
+  {key:'saque-previsto', obs:['same-dir'],
+   title:'Saque previsível — sempre no mesmo lugar',
+   sub:'Adversárias já se posicionam antes do saque',
+   inst:'Próximo game: 1º saque no corpo, 2º no T. Adversárias já leram o padrão — qualquer variação desequilibra.'},
+  // CONSTRUÇÃO
+  {key:'troca-longa', obs:['ball-high','short-ignored','no-net-serve','no-net-ret'],
+   title:'Troca longa sem plano de ponto',
+   sub:'8+ bolas, ninguém decide, quem erra mais perde',
+   inst:'Plano: 3 bolas fundas no BH → quando vier curta ou alta → drop shot e avança. Não finaliza antes disso — construção primeiro.'},
+  {key:'bola-alta', obs:['ball-high'],
+   title:'Ciclo de bola alta — troca passiva',
+   sub:'Ambas devolvem alto, ninguém avança nem agride',
+   inst:'Quando vier alta: recua, deixa cair até o ombro, bate flat cruzado profundo. Quebra o ciclo na 1ª oportunidade — não devolve alta.'},
+  {key:'curta-ignorada', obs:['short-ignored'],
+   title:'Bola curta não atacada',
+   sub:'Bate na curta e volta para o fundo em vez de avançar',
+   inst:'Bola curta = avança em movimento. Bate diagonal e fecha a rede. Quem bate na curta e recua perde o ponto seguinte.'},
   {key:'bh-alvo', obs:['bh-j1','bh-j2'],
-   color:'var(--c-obs)', title:'BH fraco identificado',
-   sub:'Lado que produz erros ou bolas altas',
-   inst:'"Construção: saque no T (BH delas) + 3ª bola cruzada funda no BH. Rali: toda bola no BH até ela errar ou levantar bola curta."'},
-  {key:'tensao', obs:['tension','no-comm'],
-   color:'var(--c-obs)', title:'Tensão entre parceiras',
-   sub:'Comunicação caiu, linguagem corporal negativa',
-   inst:'"Não instruir tática agora — primeiro trabalhar a parceria. \'Ela está tentando. Uma palavra positiva vale mais que qualquer ajuste.\'"'},
+   title:'BH fraco identificado',
+   sub:'Lado que produz erros constantes ou bola curta fácil',
+   inst:'Saque no T + 3ª cruzada profunda no BH. No rali: toda bola no BH até ela errar ou levantar a curta — aí finaliza.'},
+  {key:'fh-alvo', obs:['fh-j1','fh-j2'],
+   title:'FH fica dentro — abre o campo',
+   sub:'Forehand produz bola curta ou não empurra profunda',
+   inst:'Bola aberta no FH → ela fica curta → desloca para o meio aberto + finaliza com paralelo.'},
+  {key:'winner-forcado', obs:['forced-finish'],
+   title:'Finalização forçada antes da hora',
+   sub:'Tentam o winner na 2ª ou 3ª bola sem abrir campo',
+   inst:'Paciência: 2 bolas fundas no lado fraco + abre com paralelo → finaliza só quando vier a bola curta. Não força.'},
+  // COBERTURA
+  {key:'sem-switch', obs:['no-switch'],
+   title:'Sem troca de lado no lob',
+   sub:'O lob passa e as duas correm para o mesmo lado',
+   inst:'Lob sobre você: grita TROCA imediatamente e vai para o lado oposto. Parceira recua e cobre o centro. Automático — sem pensar.'},
+  {key:'meio-sem-dono', obs:['middle-hesitate'],
+   title:'Bola pelo centro sem dono',
+   sub:'Hesitam, se olham, uma bate atrasada ou as duas chegam',
+   inst:'Regra fixa: todo meio é da sacadora (quem bateu o saque ou devolveu). Combinem antes do ponto — sem discussão em jogo.'},
+  // MENTAL
+  {key:'pressao-erros', obs:['pressure-errors','df-pressure'],
+   title:'Erros nos pontos críticos',
+   sub:'Os erros aparecem em 30-40, game point, tiebreak',
+   inst:'Pontos críticos: profundo no BH delas, nada de winner. A pressão é delas agora — joga seguro e força o erro delas.'},
+  {key:'parceria-caiu', obs:['tension','no-comm'],
+   title:'Parceria em colapso',
+   sub:'Comunicação parou, linguagem corporal negativa',
+   inst:'Tática espera. Pausa: uma frase positiva sobre a parceira antes de qualquer instrução. Sem isso, nenhuma tática funciona.'},
 ];
 
+/* Plano de pausa: instrução que se fala nos 90s de troca de lado */
 const OBS_INST = {
-  'no-net-serve':  {prio:1, title:'Subir após o saque',
-    inst:'"Saque → 3 passos à frente antes de ver a devolução. Sacadora não fica no fundo."'},
-  'no-net-ret':    {prio:1, title:'Subir na devolução',
-    inst:'"Na 3ª bola: se vier no meio ou curta — avança em movimento. Não espera no fundo."'},
-  'net-passive':   {prio:2, title:'Rede: interceptar o cruzado',
-    inst:'"Toda bola que vai cruzado pela sua frente: move diagonal e corta. Você está lá para interceptar, não decorar."'},
-  '2saque-weak':   {prio:1, title:'Atacar o 2º saque',
-    inst:'"2º saque: posição de devolução 1 metro à frente. Ataca cruzado profundo no BH delas."'},
-  'df-pressure':   {prio:2, title:'Reduzir DF sob pressão',
-    inst:'"Saque de kick no 2º: mais margem sobre a rede. Em 30-40 e tiebreak: ace não existe — coloca na quadra."'},
-  'same-dir':      {prio:3, title:'Variar direção do saque',
-    inst:'"Próximo game: alterna T e corpo. Parceira: blitz quando sacares no corpo delas."'},
-  'bh-j1':         {prio:1, title:'Construir no BH da J1',
-    inst:'"Saque no T + 3ª cruzada profunda no BH J1. Rali: bola no BH até a curta aparecer."'},
-  'bh-j2':         {prio:1, title:'Construir no BH da J2',
-    inst:'"Saque no T + 3ª cruzada profunda no BH J2. Rali: bola no BH até a curta aparecer."'},
-  'fh-j1':         {prio:2, title:'Pressionar FH da J1',
-    inst:'"FH da J1 fica dentro: bola aberta no FH. Ela abre espaço no meio para o próximo golpe."'},
-  'fh-j2':         {prio:2, title:'Pressionar FH da J2',
-    inst:'"FH da J2 fica dentro: bola aberta no FH. Ela abre espaço no meio para o próximo golpe."'},
-  'ball-high':     {prio:2, title:'Quebrar o ciclo de bola alta',
-    inst:'"Quando vier alta: recua, deixa cair, bate flat cruzado com profundidade. Não devolve alta de volta."'},
-  'short-ignored': {prio:2, title:'Atacar a bola curta',
-    inst:'"Bola curta = avanço automático. Não bate e volta ao fundo. Bate em movimento e fecha a rede."'},
-  'forced-finish': {prio:3, title:'Construir antes de finalizar',
-    inst:'"Não força o winner na 2ª bola. Constrói com 2 bolas fundas + quando a curta aparecer — finaliza."'},
-  'no-switch':     {prio:1, title:'Switch no lob — combinação',
-    inst:'"Lob sobre você: grita \'troca\' imediatamente, vai para o lado oposto. Parceira recua e cobre."'},
-  'no-poach':      {prio:1, title:'Poach — interceptar o cruzado',
-    inst:'"Próximo game: toda bola cruzada é poach. Parte na hora que a adversária bate, não depois."'},
-  'middle-hesitate':{prio:2, title:'Centro é da sacadora',
-    inst:'"Combinem: todo meio é da sacadora. Antes do ponto: \'centro é meu\' — sem hesitação em jogo."'},
-  'pressure-errors':{prio:1, title:'Pontos críticos: jogar seguro',
-    inst:'"Em 30-40 e game point: profundo no BH, não force. A pressão é delas, não de você."'},
-  'tension':       {prio:1, title:'Recuperar a parceria',
-    inst:'"Pausa: falar separado. \'Ela está tentando. Uma palavra positiva agora vale mais que qualquer tática.\'"'},
-  'no-comm':       {prio:2, title:'Retomar comunicação',
-    inst:'"Antes de cada ponto: um sinal ou palavra. \'Minha\' no meio, \'troca\' no lob. Só isso."'},
+  'no-net-serve':   {prio:1, title:'Subir após o saque',
+    inst:'Saque → 3 passos à frente antes de ver a devolução. Não espera no fundo.'},
+  'no-net-ret':     {prio:1, title:'Subir na devolução',
+    inst:'Na 3ª bola: se vier no meio ou curta → avança em movimento. Quem devolve e fica no fundo perde o centro.'},
+  'net-passive':    {prio:2, title:'Rede: parte no cruzado',
+    inst:'Toda bola que vai cruzado pela sua frente: move diagonal e intercepta. Você está lá para cortar, não decorar.'},
+  '2saque-weak':    {prio:1, title:'Atacar o 2º saque',
+    inst:'2º saque: posição 1m à frente, ataca cruzado profundo no BH delas. Rede: parte para o poach na devolução.'},
+  'df-pressure':    {prio:2, title:'2º saque: margem sobre tudo',
+    inst:'Kick com margem no 2º — nunca flat. Em 30-40 e tiebreak: coloca na quadra. Ace não existe em momentos críticos.'},
+  'same-dir':       {prio:3, title:'Variar direção do saque',
+    inst:'Próximo game: 1º no corpo, 2º no T. Elas já leram o padrão — qualquer mudança desequilibra.'},
+  'bh-j1':          {prio:1, title:'Construir no BH da J1',
+    inst:'Saque no T + 3ª cruzada profunda no BH J1. Rali: bola no BH até a curta aparecer.'},
+  'bh-j2':          {prio:1, title:'Construir no BH da J2',
+    inst:'Saque no T + 3ª cruzada profunda no BH J2. Rali: bola no BH até a curta aparecer.'},
+  'fh-j1':          {prio:2, title:'Abrir campo no FH da J1',
+    inst:'FH J1 fica curta: bola aberta no FH → ela abre espaço → paralelo no meio.'},
+  'fh-j2':          {prio:2, title:'Abrir campo no FH da J2',
+    inst:'FH J2 fica curta: bola aberta no FH → ela abre espaço → paralelo no meio.'},
+  'ball-high':      {prio:2, title:'Quebrar o ciclo de bola alta',
+    inst:'Quando vier alta: recua, deixa cair, bate flat cruzado profundo. Não devolve alta — quebra o ciclo.'},
+  'short-ignored':  {prio:2, title:'Atacar a curta e avançar',
+    inst:'Curta = avança em movimento, bate diagonal, fecha a rede. Não bate e recua.'},
+  'forced-finish':  {prio:3, title:'Paciência — construir antes de finalizar',
+    inst:'2 bolas fundas no lado fraco, abre com paralelo → finaliza quando a curta aparecer. Não força.'},
+  'no-switch':      {prio:1, title:'Switch no lob — automático',
+    inst:'Lob sobre você: grita TROCA, vai para o lado oposto imediatamente. Parceira recua e cobre.'},
+  'no-poach':       {prio:1, title:'Poach — parte antes da bola',
+    inst:'Próximo game: toda bola cruzada = poach. Parte quando ela bate — não quando a bola passa.'},
+  'middle-hesitate':{prio:2, title:'Centro é da sacadora — regra fixa',
+    inst:'Todo meio é da sacadora. Combinem antes de cada ponto. Sem exceção, sem hesitação.'},
+  'pressure-errors':{prio:1, title:'Pontos críticos: joga seguro',
+    inst:'30-40, game point, tiebreak: profundo no BH delas, nada de winner. A pressão é delas — força o erro.'},
+  'tension':        {prio:1, title:'Recuperar a parceria primeiro',
+    inst:'Antes de qualquer tática: uma frase positiva sobre a parceira. Sem isso, nada funciona.'},
+  'no-comm':        {prio:2, title:'Retomar comunicação — dois sinais só',
+    inst:'Antes de cada ponto: MINHA no meio, TROCA no lob. Só isso. Dois sinais resolvem 80% dos problemas.'},
 };
 
 function toggleObs(btn) {
@@ -819,60 +870,82 @@ function clearObs() {
   updateObsUI();
 }
 
+function setJogoMode(mode, btn) {
+  jogoMode = mode;
+  document.querySelectorAll('.jogo-mode-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('view-emjogo').style.display = mode === 'emjogo' ? '' : 'none';
+  document.getElementById('view-pausa').style.display  = mode === 'pausa'  ? '' : 'none';
+  if (mode === 'pausa') renderPausa();
+  else renderSituacoes();
+}
+
 function updateObsUI() {
   const n = obsActive.size;
   document.getElementById('obs-count').textContent = n ? n + ' marcad' + (n===1?'a':'as') : '';
-  document.getElementById('obs-plan-btn').style.display = n ? 'block' : 'none';
-  document.getElementById('obs-plano-wrap').style.display = 'none';
-  renderSituacoes();
+  if (jogoMode === 'emjogo') renderSituacoes();
+  else renderPausa();
 }
 
 function renderSituacoes() {
   const list = document.getElementById('situacoes-list');
   if (!list) return;
   const active = [...obsActive];
-  const sorted = [...SCENARIOS].sort((a, b) => {
-    const ra = a.obs.filter(k => active.includes(k)).length;
-    const rb = b.obs.filter(k => active.includes(k)).length;
-    return rb - ra;
-  });
-  list.innerHTML = sorted.map(sc => {
-    const matches = sc.obs.filter(k => active.includes(k)).length;
-    const rel = matches > 0;
-    return `<div class="item-card${rel?' relevant':''}">
-      <div class="item-hd" onclick="tog(this.parentElement)">
-        <div>
-          <div class="item-title" style="color:${sc.color}">${sc.title}${rel?'<span class="rel-badge">agora</span>':''}</div>
-          <div class="item-sub">${sc.sub}</div>
+  const withScore = SCENARIOS.map(sc => ({
+    ...sc, score: sc.obs.filter(k => active.includes(k)).length
+  })).sort((a, b) => b.score - a.score);
+
+  list.innerHTML = withScore.map((sc, i) => {
+    const rel = sc.score > 0;
+    const cls = rel ? ' active' : (active.length ? ' inactive' : '');
+    return `<div class="sit-row${cls}" onclick="sitToggle(this)">
+      <div class="sit-row-hd">
+        <div style="flex:1">
+          <div class="sit-row-title">${sc.title}</div>
+          <div class="sit-row-sub">${sc.sub}</div>
         </div>
-        <span class="item-arr">▾</span>
+        ${rel ? '<span class="sit-row-badge">agora</span>' : ''}
       </div>
-      <div class="item-body"><strong>Instrução:</strong> ${sc.inst}</div>
+      <div class="sit-row-inst" style="display:${rel?'block':'none'}">${sc.inst}</div>
     </div>`;
   }).join('');
 }
 
-function gerarPlanoAjustes() {
-  const wrap = document.getElementById('obs-plano-wrap');
-  const content = document.getElementById('obs-plano-content');
+function sitToggle(row) {
+  const inst = row.querySelector('.sit-row-inst');
+  inst.style.display = inst.style.display === 'none' ? 'block' : 'none';
+}
+
+function renderPausa() {
+  const content = document.getElementById('pausa-content');
+  if (!content) return;
   const active = [...obsActive];
   const ajustes = active
     .filter(k => OBS_INST[k])
     .map(k => ({...OBS_INST[k], key: k}))
-    .sort((a, b) => a.prio - b.prio);
+    .sort((a, b) => a.prio - b.prio)
+    .slice(0, 3);
 
-  if (!ajustes.length) {
-    content.innerHTML = '<p style="color:var(--dim);font-size:13px">Marque observações acima para gerar ajustes.</p>';
+  if (ajustes.length) {
+    const labels = ['1ª — mais urgente', '2ª instrução', '3ª instrução'];
+    content.innerHTML = `<div class="pausa-hdr">Troca de lado · o que falar</div>` +
+      ajustes.map((aj, i) => `
+        <div class="pause-step">
+          <div class="pause-step-num">${labels[i]}</div>
+          <div class="pause-step-title">${aj.title}</div>
+          <div class="pause-step-inst">${aj.inst}</div>
+        </div>`).join('');
   } else {
-    content.innerHTML = ajustes.map((aj, i) => `
-      <div class="adj-card">
-        <div class="adj-prio" style="color:var(--c-obs)">Ajuste ${i+1}</div>
-        <div class="adj-title">${aj.title}</div>
-        <div class="adj-inst">${aj.inst}</div>
-      </div>`).join('');
+    content.innerHTML = `
+      <div class="pausa-hdr">Troca de lado · protocolo geral</div>
+      <div class="pause-timing">
+        <span class="pause-timing-lbl">90 segundos</span>
+        <div class="pause-timing-row"><span class="pause-timing-time">0–30s</span><span>Elas sentam e hidratam — silêncio.</span></div>
+        <div class="pause-timing-row"><span class="pause-timing-time">30–70s</span><span>3 perguntas táticas + 1 ajuste. Você fala no máximo 40s.</span></div>
+        <div class="pause-timing-row"><span class="pause-timing-time">70s</span><span>Levantam e voltam à quadra.</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--dim);margin:4px 0 8px">Marque o que está vendo nos chips acima para gerar um plano de instrução.</p>`;
   }
-  wrap.style.display = 'block';
-  wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 function tog(card) { card.classList.toggle('open'); }
 
