@@ -177,6 +177,15 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .gen-btn{width:100%;padding:12px;border-radius:10px;background:var(--acc);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;border:none;cursor:pointer;margin-top:4px;transition:.15s}
 .gen-btn:active{opacity:.85}
 
+/* IA EXPAND */
+.ai-expand-btn{width:100%;padding:11px;border-radius:10px;border:1.5px dashed var(--c-ins-bdr);background:var(--c-ins-l);color:var(--c-ins);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px;transition:.15s}
+.ai-expand-btn:disabled{opacity:.55;cursor:wait}
+.ai-section-card{background:var(--card);border:1px solid var(--c-ins-bdr);border-left:3px solid var(--c-ins);border-radius:10px;padding:11px 13px;margin-bottom:9px}
+.ai-section-hd{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--c-ins);margin-bottom:6px}
+.ai-section-body{font-size:12.5px;line-height:1.65;color:var(--txt);white-space:pre-wrap}
+.ai-streaming{background:var(--card);border:1px solid var(--c-ins-bdr);border-radius:10px;padding:11px 13px;font-size:12.5px;line-height:1.65;color:var(--txt);white-space:pre-wrap;margin-bottom:9px}
+.ai-loading-lbl{text-align:center;padding:14px;color:var(--dim);font-size:12px;font-family:'Space Grotesk',sans-serif}
+
 /* PLANO output */
 .plano-empty{text-align:center;padding:36px 20px;color:var(--dim);font-size:13px;line-height:1.6}
 .plano-empty strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--dim);margin-bottom:6px}
@@ -487,6 +496,11 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
       <div id="plano-content">
         <div class="plano-empty"><strong>Plano ainda não gerado</strong>Preencha a análise e toque em "Gerar Plano de Jogo"</div>
       </div>
+      <!-- IA expansion -->
+      <div id="ai-wrap" style="display:none">
+        <button class="ai-expand-btn" id="ai-btn" onclick="expandWithAI()">✨ Análise com IA — enriquecer perfil</button>
+        <div id="ai-content"></div>
+      </div>
       <div class="back-link"><button onclick="showFtab('analise')">← Voltar à análise</button></div>
     </div>
 
@@ -542,6 +556,7 @@ function showFtab(id) {
 const posData = {}, ladoData = {};
 let alvoAdv = null;
 let fichaMode = 'perc'; // 'perc' | 'scout'
+let lastPfSnap = null;  // última snapshot de perfis para a IA
 
 /* ── SKILLS LIST (percepções) ── */
 const SKILLS = ['Saque','Devolução','Forehand','Backhand','Voleio','Smash/OH','Drop shot','Bola alta','Pressão','Movim.','Consistência'];
@@ -785,43 +800,43 @@ function gerarPlano() {
   const srcLabel = fichaMode === 'scout' ? 'scout' : 'percepções';
 
   const PLAY = {
-    'Saque':'pressionar na devolução — avançar à rede',
-    'Devolução':'variar saque: kick / flat / slice',
-    'Forehand':'dirigir para o forehand',
-    'Backhand':'cruzar para o backhand',
-    'Voleio':'lob profundo ou bola baixa nos pés',
-    'Smash/OH':'lob com frequência',
-    'Drop shot':'drop shot — vai abrir a quadra',
-    'Bola alta':'bolas baixas e planas',
-    'Pressão':'encurtar pontos, acelerar ritmo',
-    'Movim.':'drop + fundo alternados',
-    'Consistência':'forçar erros com volume',
+    'Saque':       'kick alto no BH → forçar retorno defensivo → avançar à rede',
+    'Devolução':   'variar saque: kick/slice/flat — dificultar antecipação',
+    'Forehand':    'BH cruzado profundo repetido → forçar FH fraco',
+    'Backhand':    'BH cruzado profundo e alto → esperar erro ou bola curta',
+    'Voleio':      'lob profundo diagonal — tirar da rede sem arriscar passante',
+    'Smash/OH':    'lob alto cruzado frequente — cansa e gera erros no overhead',
+    'Drop shot':   'drop shot curto → subir à rede imediatamente',
+    'Bola alta':   'bola plana e baixa no fundo — nunca devolver alta de volta',
+    'Pressão':     'pontos longos com volume — deixar a tensão acumular',
+    'Movim.':      'drop + fundo alternados — variar ângulo e ritmo',
+    'Consistência':'volume e profundidade constantes — esperar o erro não forçado',
   };
   const ACTION = {
-    'Saque':'criar abertura → avançar à rede',
-    'Devolução':'devolução cruzada → assumir a rede',
-    'Forehand':'redirecionar trocas pelo FH cruzado',
-    'Backhand':'BH cruzado como ataque, não defensivo',
-    'Voleio':'subir cedo e fechar com voleio angulado',
-    'Smash/OH':'avançar → punir lobs curtos com smash',
-    'Drop shot':'bola curta → abrir quadra → subir',
-    'Bola alta':'lob tático para criar pressão',
-    'Pressão':'ritmo alto, encurtar pontos decisivos',
-    'Movim.':'alternar ritmos para criar espaço',
-    'Consistência':'profundidade e volume — forçar erros',
+    'Saque':       'saque de abertura → 3ª bola agressiva → subir à rede',
+    'Devolução':   'retorno cruzado profundo → A2 poach → dupla na rede',
+    'Forehand':    'FH cruzado pesado para construir → FH inside-out para fechar',
+    'Backhand':    'BH cruzado profundo como ataque, não só defesa',
+    'Voleio':      'subir na primeira oportunidade — voleio nos pés para forçar erro',
+    'Smash/OH':    'posicionar cedo, avançar e punir qualquer lob curto',
+    'Drop shot':   'drop curto → adversária ao fundo → voleio angulado para fechar',
+    'Bola alta':   'lob ofensivo profundo para resetar e abrir passante',
+    'Pressão':     'ritmo alto — pontos curtos, não dar tempo de se reorganizar',
+    'Movim.':      'alternar ângulo, ritmo e profundidade — tirar do conforto',
+    'Consistência':'profundidade e volume — forçar erros e criar oportunidades',
   };
   const PROTECT = {
-    'Saque':'bolas lentas e colocadas — evitar dupla falta',
-    'Devolução':'devolução segura — bloquear e defender',
-    'Forehand':'redirecionar para o backhand — não trocar FH com FH',
-    'Backhand':'dirigir trocas para o FH — cobrir o BH',
-    'Voleio':'só subir com bola de qualidade',
-    'Smash/OH':'recuar antes do overhead — não forçar',
-    'Drop shot':'antecipar a bola curta — ler a posição',
-    'Bola alta':'recuar — deixar cair até o ombro',
-    'Pressão':'manter rotina entre pontos — respirar',
-    'Movim.':'lob para resetar posição',
-    'Consistência':'menos erros não forçados — jogar percentual',
+    'Saque':       '1º saque colocado (slice/kick) — não arriscar por potência',
+    'Devolução':   'retorno defensivo cruzado — bloquear profundo, não resolver na devolução',
+    'Forehand':    'evitar troca FH×FH — redirecionar para BH ou centro',
+    'Backhand':    'cobrir BH com posição — dirigir trocas para o FH forte',
+    'Voleio':      'não subir sem bola de qualidade — aguardar oportunidade real',
+    'Smash/OH':    'recuar antes do lob — deixar quicar se tiver dúvida',
+    'Drop shot':   'ler posição e antecipar bola curta — split step ativo',
+    'Bola alta':   'recuar um passo — deixar cair abaixo do ombro antes de bater',
+    'Pressão':     'rotina lenta entre pontos — toalha, respirar, ritmo próprio',
+    'Movim.':      'split step em todo retorno — base sempre ao centro',
+    'Consistência':'reduzir erros não forçados — jogar para a bola seguinte',
   };
 
   function planCard(title, color, badge, srcBadge, items) {
@@ -841,14 +856,18 @@ function gerarPlano() {
   function advPlays(p) {
     const plays = [];
     p.fracos.forEach(f => { if (PLAY[f]) plays.push(PLAY[f]); });
-    if (p.pos==='rede' && !p.fracos.includes('Voleio') && !p.fracos.includes('Smash/OH'))
-      plays.push('lob profundo — tirar da rede');
-    if (p.pos==='fundo' && !p.fracos.includes('Movim.'))
-      plays.push('drop shot — puxar à frente');
-    if (p.lado==='esquerda' && !p.fracos.includes('Backhand'))
-      plays.push('atacar pelo centro (BH exposto)');
-    if (p.lado==='direita' && !p.fracos.includes('Forehand'))
-      plays.push('paralelas — FH dela aponta para o centro');
+    if (p.pos === 'rede') {
+      if (!p.fracos.includes('Voleio') && !p.fracos.includes('Smash/OH'))
+        plays.push('lob profundo diagonal — tirar da rede, forçar overhead difícil');
+      if (!p.fracos.includes('Bola alta'))
+        plays.push('bola baixa nos pés da rede — forçar voleio de recuperação');
+    }
+    if (p.pos === 'fundo' && !p.fracos.includes('Drop shot') && !p.fracos.includes('Movim.'))
+      plays.push('drop shot — puxar à frente e abrir quadra');
+    if (p.lado === 'esquerda' && !p.fracos.includes('Backhand'))
+      plays.push('atacar pelo centro — BH exposto no lado esquerdo');
+    if (p.lado === 'direita' && !p.fracos.includes('Forehand'))
+      plays.push('paralelas — FH aponta para o centro, cruzado mais seguro');
     return plays;
   }
 
@@ -918,10 +937,145 @@ function gerarPlano() {
   html += planCard('Nosso Jogo','var(--acc)','','',myPlays);
   if (obs) html += `<div class="plan-card" style="border-color:var(--bdr)"><div class="plan-hd" style="color:var(--dim)">Observações</div><div style="font-size:12.5px;line-height:1.55;color:var(--txt)">${obs}</div></div>`;
 
-  if (!plays1.length && !plays2.length && !myPlays.length && !obs)
+  const perfilVazio = !plays1.length && !plays2.length && !myPlays.length && !obs;
+  if (perfilVazio)
     html = `<div class="plano-empty"><strong>Perfil incompleto</strong>Preencha fracos, armas e posição das jogadoras${fichaMode==='scout'?' (scout precisa de ≥2 marcações por habilidade)':''}.</div>`;
 
   document.getElementById('plano-content').innerHTML = html;
+
+  /* store snapshot for AI call */
+  lastPfSnap = {my1, my2, adv1, adv2, advNome, obs};
+
+  /* show/reset AI wrap */
+  const aiWrap = document.getElementById('ai-wrap');
+  const aiContent = document.getElementById('ai-content');
+  aiWrap.style.display = perfilVazio ? 'none' : '';
+  aiContent.innerHTML = '';
+  const aiBtn = document.getElementById('ai-btn');
+  aiBtn.disabled = false;
+  aiBtn.textContent = '✨ Análise com IA — enriquecer perfil';
+
   showFtab('plano');
+}
+
+/* ── IA: aplicar perfil enriquecido nos chips ── */
+function applyAIProfile(prefix, data) {
+  const card = document.getElementById('pf-' + prefix);
+  if (card) {
+    card.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+    (data.armas || []).forEach(val => {
+      const c = card.querySelector(`.chip-arma[data-val="${val}"]`);
+      if (c) c.classList.add('on');
+    });
+    (data.fracos || []).forEach(val => {
+      const c = card.querySelector(`.chip-fraco[data-val="${val}"]`);
+      if (c) c.classList.add('on');
+    });
+  }
+  if (data.pos) {
+    posData[prefix] = data.pos;
+    document.querySelectorAll(`#pf-${prefix} .pf .pos-tg:first-child .pos-btn`).forEach(b =>
+      b.classList.toggle('on', b.textContent.toLowerCase() === data.pos));
+  }
+  if (data.lado) {
+    ladoData[prefix] = data.lado;
+    document.querySelectorAll(`#pf-${prefix} .pf .pos-tg:last-child .pos-btn`).forEach(b =>
+      b.classList.toggle('on', b.textContent.toLowerCase().startsWith(data.lado.slice(0,3))));
+  }
+}
+
+/* ── IA: expandir e enriquecer plano ── */
+async function expandWithAI() {
+  const btn = document.getElementById('ai-btn');
+  const content = document.getElementById('ai-content');
+  if (!lastPfSnap) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Analisando...';
+  content.innerHTML = '<div class="ai-loading-lbl">Consultando IA — pode levar até 15 s...</div>';
+
+  let sample;
+  try { sample = await claude.use('sample'); } catch(e) { sample = null; }
+  if (!sample) {
+    content.innerHTML = '<div class="ai-loading-lbl">IA não disponível. Verifique a conexão.</div>';
+    btn.disabled = false; btn.textContent = '✨ Análise com IA — enriquecer perfil';
+    return;
+  }
+
+  const {my1, my2, adv1, adv2, advNome, obs} = lastPfSnap;
+  const validSkills = SKILLS.join(', ');
+
+  function pfStr(label, p, src) {
+    const pts = [];
+    if (p.nome) pts.push(`nome:${p.nome}`);
+    if (p.armas.length) pts.push(`armas:${p.armas.join(',')}`);
+    if (p.fracos.length) pts.push(`fracos:${p.fracos.join(',')}`);
+    if (p.pos) pts.push(`pos:${p.pos}`);
+    if (p.lado) pts.push(`lado:${p.lado}`);
+    if (src) pts.push(`fonte:${src}`);
+    return `${label}: ${pts.join(' | ') || '(sem dados)'}`;
+  }
+
+  const scoutExtra = fichaMode === 'scout' && scoutPoints.length
+    ? `\nScout (${scoutPoints.length} pts): adv1=${JSON.stringify(deriveScoutProfile('adv1'))} adv2=${JSON.stringify(deriveScoutProfile('adv2'))}`
+    : '';
+
+  const prompt = `Coach de duplas femininas amadoras (recreativo, Brasil).
+
+PERFIL:
+${pfStr('Nossa J1', my1)}
+${pfStr('Nossa J2', my2)}
+${pfStr('Adv J1', adv1, fichaMode)}
+${pfStr('Adv J2', adv2, fichaMode)}
+${advNome ? 'Time adversário: ' + advNome : ''}
+${obs ? 'Obs: ' + obs : ''}${scoutExtra}
+
+Habilidades válidas (use EXATAMENTE esses valores): ${validSkills}
+
+Retorne JSON com estrutura exata:
+{
+  "adv1": {"armas": [...], "fracos": [...]},
+  "adv2": {"armas": [...], "fracos": [...]},
+  "taticas": "2-3 linhas sobre como explorar fracos de cada adversária",
+  "padroes": "2-3 sequências de ponto (ex: kick no BH → 3ª bola cruzada → rede)",
+  "placar": "ajustes para game point, tiebreak e set decisivo",
+  "frases": ["frase pronta 1 para troca de lado", "frase 2", "frase 3"]
+}
+
+Seja específico ao perfil. Armas/fracos DEVEM usar exatamente os valores da lista.`;
+
+  try {
+    const data = await sample.json(prompt, {modelTier: 'default'});
+
+    /* enriquecer chips + posData */
+    if (data.adv1) applyAIProfile('adv1', data.adv1);
+    if (data.adv2) applyAIProfile('adv2', data.adv2);
+
+    /* reger plano instantâneo com dados enriquecidos */
+    gerarPlano();
+
+    /* renderizar seções narrativas */
+    const secs = [
+      {label:'Táticas por Jogadora',      val: data.taticas},
+      {label:'Padrões de Ponto',           val: data.padroes},
+      {label:'Ajustes por Placar',          val: data.placar},
+      {label:'Frases para a Troca de Lado',val: Array.isArray(data.frases) ? data.frases.map((f,i)=>`${i+1}. ${f}`).join('\n') : data.frases},
+    ];
+    document.getElementById('ai-content').innerHTML =
+      secs.filter(s => s.val).map(s =>
+        `<div class="ai-section-card"><div class="ai-section-hd">${s.label}</div><div class="ai-section-body">${s.val}</div></div>`
+      ).join('');
+
+    document.getElementById('ai-btn').disabled = false;
+    document.getElementById('ai-btn').textContent = '↺ Reanalisar com IA';
+    showFtab('plano');
+  } catch(e) {
+    const msg = e?.code === 'rate_limited' ? 'Muitas requisições — aguarde e tente novamente.'
+      : e?.code === 'not_granted' ? 'Permissão negada.'
+      : `Erro: ${e?.message || 'tente novamente'}`;
+    content.innerHTML = `<div class="ai-loading-lbl">${msg}</div>`;
+    btn.disabled = false;
+    btn.textContent = '✨ Análise com IA — enriquecer perfil';
+  }
 }
 </script>
