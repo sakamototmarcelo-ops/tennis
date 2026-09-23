@@ -1020,29 +1020,56 @@ async function expandWithAI() {
     ? `\nScout (${scoutPoints.length} pts): adv1=${JSON.stringify(deriveScoutProfile('adv1'))} adv2=${JSON.stringify(deriveScoutProfile('adv2'))}`
     : '';
 
-  const prompt = `Coach de duplas femininas amadoras (recreativo, Brasil).
+  const prompt = `Você é coach certificado de tênis de duplas femininas amadoras (nível recreativo, Brasil).
 
-PERFIL:
+━━ PRINCÍPIOS TÁTICOS QUE VOCÊ APLICA ━━
+
+POSICIONAMENTO
+• A dupla que controla a rede vence 70%+ dos pontos no amador — todo padrão visa chegar à rede
+• Formação padrão: 1 na rede + 1 no fundo; objetivo = ambas à rede na 3ª/5ª bola
+• Rede: posição a 1,5m da net, no centro do corredor; fundo: 1m atrás da linha de base
+
+PADRÕES DE CONSTRUÇÃO
+• Saque de abertura + 3ª bola: saque abre ângulo → 3ª bola no espaço criado → avançar
+• Devolução cruzada + poach: retorno cruzado profundo → parceira da rede intercepta ou avança
+• Centro como arma: bola pelo meio divide a comunicação das adversárias e elimina ângulos
+• Bola nos pés da rede: força voleio de recuperação em vez de finalização — cria erro
+
+TENDÊNCIAS DO AMADOR FEMININO
+• BH é o lado fraco em 80% das amadoras — cruzado repetido cria pressão
+• 2º saque fraco é oportunidade: atacar o corpo ou o BH → assumir rede
+• Dupla falta surge em pressão → manter 1º saque confiável em momentos críticos
+• 60% dos pontos terminam em erro não forçado — consistência supera agressividade
+• Lob defensivo profundo é a resposta mais usada contra equipes na rede — treinar smash/OH
+
+SITUAÇÕES ESPECÍFICAS
+• Adversária na rede: lob profundo diagonal (não passante direto) → forçar overhead difícil
+• Dupla adversária no fundo: drop shot + subir → voleio angulado para fechar
+• Lado esquerdo exposto: bola central para o BH descoberto
+• Game point / tiebreak: manter padrão que funcionou, não inventar — erros aumentam 40% em pressão
+
+━━ PERFIL DO JOGO ━━
 ${pfStr('Nossa J1', my1)}
 ${pfStr('Nossa J2', my2)}
 ${pfStr('Adv J1', adv1, fichaMode)}
 ${pfStr('Adv J2', adv2, fichaMode)}
 ${advNome ? 'Time adversário: ' + advNome : ''}
-${obs ? 'Obs: ' + obs : ''}${scoutExtra}
+${obs ? 'Observações: ' + obs : ''}${scoutExtra}
 
-Habilidades válidas (use EXATAMENTE esses valores): ${validSkills}
+━━ HABILIDADES VÁLIDAS ━━
+Use EXATAMENTE estes valores nos campos armas/fracos: ${validSkills}
 
-Retorne JSON com estrutura exata:
+━━ RETORNE JSON COM ESTA ESTRUTURA ━━
 {
   "adv1": {"armas": [...], "fracos": [...]},
   "adv2": {"armas": [...], "fracos": [...]},
-  "taticas": "2-3 linhas sobre como explorar fracos de cada adversária",
-  "padroes": "2-3 sequências de ponto (ex: kick no BH → 3ª bola cruzada → rede)",
-  "placar": "ajustes para game point, tiebreak e set decisivo",
-  "frases": ["frase pronta 1 para troca de lado", "frase 2", "frase 3"]
+  "taticas": "Como explorar cada adversária — cite fracos específicos + princípio tático aplicável (3-4 linhas)",
+  "padroes": "2-3 sequências concretas de ponto adaptadas ao perfil (formato: passo → passo → desfecho)",
+  "placar": "O que mudar (ou manter) em game point, tiebreak e set decisivo — baseado no perfil",
+  "frases": ["gatilho + ação curta para usar na troca de lado", "frase 2", "frase 3"]
 }
 
-Seja específico ao perfil. Armas/fracos DEVEM usar exatamente os valores da lista.`;
+Seja específico ao perfil dado. Mencione nomes quando disponíveis. Armas/fracos DEVEM usar exatamente os valores da lista.`;
 
   try {
     const data = await sample.json(prompt, {modelTier: 'default'});
