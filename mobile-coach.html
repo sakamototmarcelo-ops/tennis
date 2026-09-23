@@ -14,7 +14,6 @@
   --c-cen:#c04a10;--c-cen-l:#ffe8d8;--c-cen-bdr:#e8a080;
   --c-ins:#6030a0;--c-ins-l:#f0e4ff;--c-ins-bdr:#c090e8;
   --c-pau:#0088a0;--c-pau-l:#d4f0f8;--c-pau-bdr:#60c0d8;
-  --ger:#0088a0;--ger-bg:#d4f0f8;
   --nav-h:62px;
   color-scheme:light
 }
@@ -27,7 +26,6 @@
   --c-cen-l:#3a1a08;--c-cen-bdr:#a04820;
   --c-ins-l:#28103e;--c-ins-bdr:#7840b8;
   --c-pau-l:#082830;--c-pau-bdr:#206878;
-  --ger-bg:#082830;
   color-scheme:dark
 }}
 :root[data-theme="dark"]{
@@ -39,7 +37,6 @@
   --c-cen-l:#3a1a08;--c-cen-bdr:#a04820;
   --c-ins-l:#28103e;--c-ins-bdr:#7840b8;
   --c-pau-l:#082830;--c-pau-bdr:#206878;
-  --ger-bg:#082830;
   color-scheme:dark
 }
 
@@ -47,29 +44,23 @@
 html,body{height:100%;overflow:hidden;background:var(--bg)}
 body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex-direction:column;max-width:480px;margin:0 auto}
 
-/* TOP BAR */
 .topbar{flex-shrink:0;background:var(--surf);border-bottom:1px solid var(--bdr);padding:10px 16px 8px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
 .topbar h1{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--acc)}
 .topbar p{font-size:12px;color:var(--dim);margin-top:1px}
 
-/* SCROLL AREA */
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 14px 16px}
 
-/* BOTTOM NAV */
 .botnav{flex-shrink:0;background:var(--surf);border-top:1px solid var(--bdr);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:env(safe-area-inset-bottom,0px)}
 .botnav::-webkit-scrollbar{display:none}
 .navbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 10px;cursor:pointer;border:none;background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:500;transition:.15s;min-height:var(--nav-h)}
 .navbtn.on{color:var(--acc)}
 .navbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* SECTIONS */
 .sec{display:none}
 .sec.on{display:block}
-
-/* PAGE LABEL */
 .pg-lbl{font-size:11.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:10px}
 
-/* ITEM CARDS — expandable */
+/* ITEM CARDS */
 .item-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;overflow:hidden}
 .item-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;gap:10px;user-select:none}
 .item-title{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;flex:1;line-height:1.3}
@@ -80,34 +71,37 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .item-card.open .item-body{display:block}
 .item-body strong{font-weight:600}
 
-/* RULE CARDS */
+/* RULE / PROTO CARDS */
 .rule-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:13px 14px;margin-bottom:8px}
 .rule-hd{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;margin-bottom:4px}
 .rule-body{font-size:13px;line-height:1.55;color:var(--dim)}
-
-/* PROTOCOLO CARDS */
 .proto-card{border-radius:10px;padding:13px 14px;margin-bottom:8px}
 .proto-hd{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
 .proto-row{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start}
 .proto-time{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;background:rgba(0,0,0,.08);border-radius:5px;padding:2px 6px;white-space:nowrap;flex-shrink:0;margin-top:1px}
 .proto-text{font-size:12.5px;line-height:1.45;color:var(--txt)}
 
-/* ─── FICHA PRÉ-JOGO styles ─── */
+/* FICHA */
 .ficha-tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--bdr);margin:-12px -14px 12px}
 .ftab{flex:1;padding:9px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
 .ftab.on{color:var(--acc);border-bottom-color:var(--acc)}
-
 .f-hidden{display:none}
 
 .field{margin-bottom:12px}
 .field label{display:block;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:5px}
 .field input,.field textarea{width:100%;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px;font-family:'Inter',sans-serif;font-size:13.5px;color:var(--txt);outline:none;transition:.15s}
 .field input:focus,.field textarea:focus{border-color:var(--acc)}
-.field textarea{resize:none;height:56px;line-height:1.5}
+.field textarea{resize:none;height:52px;line-height:1.5}
 
 .sec-title{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--acc);margin:14px 0 8px;display:flex;align-items:center;gap:7px}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--bdr)}
 
+/* SOURCE TOGGLE */
+.src-toggle{display:flex;gap:0;margin-bottom:10px;border:1px solid var(--bdr);border-radius:8px;overflow:hidden}
+.src-btn{flex:1;padding:8px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--dim);transition:.15s}
+.src-btn.on{background:var(--acc);color:#fff}
+
+/* PROFILE GRID (percepções) */
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .profile-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:8px 9px}
 .profile-card.mine{border-left:3px solid var(--acc)}
@@ -119,23 +113,40 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .pf label{display:block;font-size:9px;color:var(--dim);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
 .pf input{width:100%;background:var(--surf);border:1px solid var(--bdr);border-radius:5px;padding:4px 6px;font-size:11.5px;color:var(--txt);font-family:'Inter',sans-serif;outline:none}
 .pf input:focus{border-color:var(--acc)}
-
 .chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
 .chip{padding:2px 5px;border:1px solid var(--bdr);border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:600;cursor:pointer;color:var(--dim);background:transparent;transition:.12s;white-space:nowrap;line-height:1.4}
 .chip-arma.on{background:var(--forte-bg);border-color:var(--forte);color:var(--forte)}
 .chip-fraco.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
-
 .pos-row{display:flex;gap:4px}
 .pos-tg{display:flex;gap:3px;flex:1}
 .pos-btn{flex:1;padding:4px 2px;border:1px solid var(--bdr);border-radius:5px;background:transparent;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;cursor:pointer;color:var(--dim);transition:.12s}
 .pos-btn.on{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
 .profile-card.opp .pos-btn.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
 
+/* SCOUT */
+.scout-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.scout-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:9px;border-left:3px solid var(--fraco)}
+.scout-card .pc-hd{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--fraco);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
+.scout-card .pc-hd button{font-size:9px;color:var(--dim);background:none;border:none;cursor:pointer;padding:0;font-family:'Inter',sans-serif}
+.scout-card .pf input{width:100%;background:var(--surf);border:1px solid var(--bdr);border-radius:5px;padding:4px 6px;font-size:11.5px;color:var(--txt);font-family:'Inter',sans-serif;outline:none;margin-bottom:6px}
+.tally-row{display:flex;align-items:center;gap:4px;margin-bottom:3px}
+.tally-skill{font-size:9px;font-weight:600;color:var(--dim);font-family:'Space Grotesk',sans-serif;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tally-btn{display:flex;align-items:center;gap:2px;padding:3px 5px;border-radius:6px;border:1px solid;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;user-select:none;min-width:32px;justify-content:center;-webkit-tap-highlight-color:transparent;background:transparent}
+.tally-btn.err{border-color:var(--fraco);color:var(--fraco)}
+.tally-btn.err.hit{background:var(--fraco-bg)}
+.tally-btn.win{border-color:var(--forte);color:var(--forte)}
+.tally-btn.win.hit{background:var(--forte-bg)}
+.tally-icon{font-size:9px}
+.tally-n{min-width:10px;text-align:center}
+
+/* POSIÇÃO SCOUT */
+.scout-pos{display:flex;gap:4px;margin-top:4px}
+
+/* ALVO + GEN */
 .alvo-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:8px 11px}
 .alvo-row label{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
 .alvo-row .pos-tg{flex:1}
 .alvo-row .pos-btn.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
-
 .gen-btn{width:100%;padding:12px;border-radius:10px;background:var(--acc);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;border:none;cursor:pointer;margin-top:4px;transition:.15s}
 .gen-btn:active{opacity:.85}
 
@@ -143,8 +154,9 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .plano-empty{text-align:center;padding:36px 20px;color:var(--dim);font-size:13px;line-height:1.6}
 .plano-empty strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--dim);margin-bottom:6px}
 .plan-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:11px 13px;margin-bottom:9px}
-.plan-hd{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.plan-hd{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .plan-badge{font-size:9px;background:var(--fraco);color:#fff;padding:1px 6px;border-radius:8px}
+.plan-badge-src{font-size:8.5px;background:var(--dim);color:#fff;padding:1px 5px;border-radius:8px;opacity:.8}
 .plan-item{font-size:12.5px;line-height:1.5;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;gap:6px}
 .plan-item:last-child{border-bottom:none;padding-bottom:0}
 .plan-arrow{color:var(--dim);flex-shrink:0;font-size:11px;margin-top:1px}
@@ -167,174 +179,141 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 
 <div class="content" id="content">
 
-  <!-- ── OBSERVAR ── -->
+  <!-- OBSERVAR -->
   <div class="sec on" id="s-obs">
     <div class="pg-lbl">O que observar em quadra</div>
-
     <div class="item-card open">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Chegam à rede?</div>
-        <div class="item-sub">Posicionamento após saque e devolução</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Chegam à rede?</div><div class="item-sub">Posicionamento após saque e devolução</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body">As duas avançam 3 passos após bater? Ou ficam presas no meio da quadra? É o indicador mais importante do padrão de jogo.</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Padrão de bola</div>
-        <div class="item-sub">Altura / profundidade / ritmo das trocas</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Padrão de bola</div><div class="item-sub">Altura / profundidade / ritmo das trocas</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body">A bola volta alta de novo? Fica sempre no mesmo ritmo? Cai no centro ou abre ângulo? Esses padrões revelam o que mudar.</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Comunicação</div>
-        <div class="item-sub">Bola pelo meio, switch, sinais</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Comunicação</div><div class="item-sub">Bola pelo meio, switch, sinais</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body">Há hesitação na bola pelo meio? Chamam "minha"? Confirmam o sinal? A falta de comunicação é sempre mais cara do que o erro técnico.</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Energia & tensão</div>
-        <div class="item-sub">Linguagem corporal, foco, relação entre parceiras</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Energia & tensão</div><div class="item-sub">Linguagem corporal, foco, relação entre parceiras</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body">Cabeça baixa após erro? Evitam se olhar? O estado mental é observável e muda a estratégia de instrução — lógica funciona quando estão calmas.</div>
     </div>
   </div>
 
-  <!-- ── CENÁRIOS ── -->
+  <!-- CENÁRIOS -->
   <div class="sec" id="s-cen">
     <div class="pg-lbl">Situações mais comuns</div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Troca longa sem plano</div>
-        <div class="item-sub">8–15 bolas, ninguém avança, quem erra perde</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Troca longa sem plano</div><div class="item-sub">8–15 bolas, ninguém avança, quem erra perde</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "Na 4ª bola, se vier curta ou no centro — drop shot e avança. Se vier funda — profundo no backhand e espera a bola curta aparecer."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Bola alta devolvida alta</div>
-        <div class="item-sub">Ciclo de alturas sem construção</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Bola alta devolvida alta</div><div class="item-sub">Ciclo de alturas sem construção</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "Quando vier bola alta: recua um passo, deixa cair até o ombro, bate flat cruzado com profundidade — não devolve alta de volta."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Bola curta ignorada</div>
-        <div class="item-sub">Oportunidade de avanço não aproveitada</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Bola curta ignorada</div><div class="item-sub">Oportunidade de avanço não aproveitada</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "Bola que cai antes da linha de serviço é sinal verde — avança e bate em movimento. Não espera a próxima."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">A2 recuou ao fundo</div>
-        <div class="item-sub">Formação dois atrás passiva</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">A2 recuou ao fundo</div><div class="item-sub">Formação dois atrás passiva</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "A2 fica na linha de serviço no mínimo — só recua se o lob passar. Voltar à rede logo após o próximo ponto do saque."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Lob repetido sobre A2</div>
-        <div class="item-sub">Adversária explora a posição da rede</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Lob repetido sobre A2</div><div class="item-sub">Adversária explora a posição da rede</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "A2 recua um passo da rede. Quando vir o balanço de lob — split step para trás. Se o lob passou: 'switch!' automático."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Bola pelo meio cai</div>
-        <div class="item-sub">Hesitação, ninguém bate</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Bola pelo meio cai</div><div class="item-sub">Hesitação, ninguém bate</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "Definam agora: forehand chama 'minha' — sempre. Combinação feita aqui na troca, antes do próximo game."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Finalização forçada</div>
-        <div class="item-sub">Tentam winner difícil na rede, erram</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Finalização forçada</div><div class="item-sub">Tentam winner difícil na rede, erram</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "Na rede: voleio suave nos pés, não tenta winner. Deixa a adversária errar — ela está em posição difícil."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Placar de pressão</div>
-        <div class="item-sub">30-40, deuce, tiebreak — erros aumentam</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Placar de pressão</div><div class="item-sub">30-40, deuce, tiebreak — erros aumentam</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução:</strong> "Rotina mais lenta. Padrão mais seguro — o que funcionou até aqui funciona agora. Não muda o plano no ponto importante."</div>
     </div>
-
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-cen)">Tensão entre parceiras</div>
-        <div class="item-sub">Linguagem negativa, comunicação caiu</div></div>
+        <div><div class="item-title" style="color:var(--c-cen)">Tensão entre parceiras</div><div class="item-sub">Linguagem negativa, comunicação caiu</div></div>
         <span class="item-arr">▾</span>
       </div>
       <div class="item-body"><strong>Instrução (falar separado com cada uma):</strong> "Ela está tentando. Uma palavra positiva agora vale mais que qualquer tática." Resolver a parceria primeiro.</div>
     </div>
   </div>
 
-  <!-- ── INSTRUÇÃO ── -->
+  <!-- INSTRUÇÃO -->
   <div class="sec" id="s-ins">
     <div class="pg-lbl">Como dar feedback</div>
-
     <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
       <div class="rule-hd" style="color:var(--c-ins)">1 instrução por pausa</div>
       <div class="rule-body">O cérebro não processa mais que uma mudança. Escolha a instrução mais urgente — a segunda fica para a próxima troca.</div>
     </div>
-
     <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
       <div class="rule-hd" style="color:var(--c-ins)">Formato: gatilho + ação</div>
       <div class="rule-body">"Quando X → faz Y" — não "jogue mais profundo". "Quando a bola vier curta → avança e bate em movimento" é acionável.</div>
     </div>
-
     <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
       <div class="rule-hd" style="color:var(--c-ins)">Nunca: técnica de golpe</div>
       <div class="rule-body">"Dobra mais o joelho no voleio" não resolve em 90 segundos. Técnica é para o treino. Na pausa: só tática posicional e decisão.</div>
     </div>
-
     <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
       <div class="rule-hd" style="color:var(--c-ins)">Nunca: quem errou mais</div>
       <div class="rule-body">Dizer "você errou 5 vezes pelo meio" na frente da parceira cria distância e baixa a confiança. Guarde para conversa individual pós-jogo.</div>
     </div>
   </div>
 
-  <!-- ── PAUSA ── -->
+  <!-- PAUSA -->
   <div class="sec" id="s-pau">
     <div class="pg-lbl">Quando e quanto tempo</div>
-
     <div class="proto-card" style="background:var(--c-pau-l);border:1px solid var(--c-pau-bdr)">
       <div class="proto-hd" style="color:var(--c-pau)">Entre pontos · ~20s</div>
       <div class="rule-body" style="font-size:13px"><strong>Só observar.</strong> Use para anotar o padrão que se repete. Instruir entre pontos quebra o ritmo e gera pressão desnecessária.</div>
     </div>
-
     <div class="proto-card" style="background:var(--c-pau-l);border:1px solid var(--c-pau-bdr)">
       <div class="proto-hd" style="color:var(--c-pau)">Troca de lado · 90s</div>
       <div class="proto-row"><span class="proto-time" style="color:var(--c-pau)">0–30s</span><span class="proto-text">Elas sentam e hidratam — silêncio.</span></div>
       <div class="proto-row"><span class="proto-time" style="color:var(--c-pau)">30–70s</span><span class="proto-text">3 perguntas táticas + 1 ajuste. Você fala no máximo 40 segundos.</span></div>
       <div class="proto-row"><span class="proto-time" style="color:var(--c-pau)">70s</span><span class="proto-text">Levantam e voltam à quadra.</span></div>
     </div>
-
     <div class="proto-card" style="background:var(--c-pau-l);border:1px solid var(--c-pau-bdr)">
       <div class="proto-hd" style="color:var(--c-pau)">Set break · 2 minutos</div>
       <div class="proto-row"><span class="proto-time" style="color:var(--c-pau)">Tático</span><span class="proto-text">1 ajuste do set que acabou.</span></div>
@@ -343,15 +322,15 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
     </div>
   </div>
 
-  <!-- ── FICHA PRÉ-JOGO ── -->
+  <!-- FICHA PRÉ-JOGO -->
   <div class="sec" id="s-fic">
 
     <div class="ficha-tabs">
       <div class="ftab on" id="ft-analise" onclick="showFtab('analise')">Análise</div>
-      <div class="ftab" id="ft-plano" onclick="showFtab('plano')">Plano de Jogo</div>
+      <div class="ftab" id="ft-plano" onclick="showFtab('plano')">Plano</div>
     </div>
 
-    <!-- Análise -->
+    <!-- ANÁLISE -->
     <div id="fic-analise">
       <div class="field">
         <label>Adversárias</label>
@@ -362,8 +341,23 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
         <div class="field" style="flex:1"><label>Data</label><input type="date" id="data"></div>
       </div>
 
-      <div class="sec-title">Perfil das Jogadoras</div>
-      <div class="profile-grid" id="profile-grid"></div>
+      <!-- Minha equipe (sempre chips) -->
+      <div class="sec-title">Minha equipe</div>
+      <div class="profile-grid" id="my-profile-grid"></div>
+
+      <!-- Adversárias — fonte selecionável -->
+      <div class="sec-title" style="margin-top:4px">Adversárias
+        <div class="src-toggle" style="margin-left:auto;margin-bottom:0;border-color:var(--bdr)">
+          <button class="src-btn on" id="src-perc" onclick="setSrc('perc')">Percepções</button>
+          <button class="src-btn" id="src-scout" onclick="setSrc('scout')">Scout ao vivo</button>
+        </div>
+      </div>
+
+      <!-- Percepções: chips das adversárias -->
+      <div id="adv-perc-grid" class="profile-grid"></div>
+
+      <!-- Scout: contadores ao vivo -->
+      <div id="adv-scout-grid" class="scout-grid f-hidden"></div>
 
       <div class="alvo-row">
         <label>Alvo prioritário</label>
@@ -381,7 +375,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
       <button class="gen-btn" onclick="gerarPlano()">Gerar Plano de Jogo →</button>
     </div>
 
-    <!-- Plano -->
+    <!-- PLANO -->
     <div id="fic-plano" class="f-hidden">
       <div id="plano-content">
         <div class="plano-empty"><strong>Plano ainda não gerado</strong>Preencha a análise e toque em "Gerar Plano de Jogo"</div>
@@ -418,7 +412,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 </nav>
 
 <script>
-/* ─── NAV ─── */
+/* ── NAV ── */
 function go(id, btn) {
   document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.navbtn').forEach(b => b.classList.remove('on'));
@@ -428,7 +422,7 @@ function go(id, btn) {
 }
 function tog(card) { card.classList.toggle('open'); }
 
-/* ─── FICHA SUB-TABS ─── */
+/* ── FICHA SUB-TABS ── */
 function showFtab(id) {
   document.getElementById('fic-analise').classList.toggle('f-hidden', id !== 'analise');
   document.getElementById('fic-plano').classList.toggle('f-hidden', id !== 'plano');
@@ -437,25 +431,31 @@ function showFtab(id) {
   document.getElementById('content').scrollTop = 0;
 }
 
-/* ─── FICHA LÓGICA ─── */
+/* ── DATA ── */
 const posData = {}, ladoData = {};
 let alvoAdv = null;
+let fichaMode = 'perc'; // 'perc' | 'scout'
 
-const SKILLS_OPTS = ['Saque','Devolução','Forehand','Backhand','Voleio','Smash/OH','Drop shot','Bola alta','Pressão','Movim.','Consistência'];
+const SKILLS = ['Saque','Devolução','Forehand','Backhand','Voleio','Smash/OH','Drop shot','Bola alta','Pressão','Movim.','Consistência'];
 
+/* scout counters: { adv1: { Saque:{err,win}, ... }, adv2: {...} } */
+const scoutData = {
+  adv1: Object.fromEntries(SKILLS.map(s => [s, {err:0, win:0}])),
+  adv2: Object.fromEntries(SKILLS.map(s => [s, {err:0, win:0}]))
+};
+
+/* ── BUILD PROFILE CARDS (minha equipe + percepções adversárias) ── */
 function buildProfileCard(prefix, label, isOpp) {
   const cls = isOpp ? 'opp' : 'mine';
-  const armaChips = SKILLS_OPTS.map(v =>
-    `<button class="chip chip-arma" data-val="${v}" onclick="toggleChip(this)">${v}</button>`
-  ).join('');
-  const fracoChips = SKILLS_OPTS.map(v =>
-    `<button class="chip chip-fraco" data-val="${v}" onclick="toggleChip(this)">${v}</button>`
-  ).join('');
+  const armaChips = SKILLS.map(v =>
+    `<button class="chip chip-arma" data-val="${v}" onclick="toggleChip(this)">${v}</button>`).join('');
+  const fracoChips = SKILLS.map(v =>
+    `<button class="chip chip-fraco" data-val="${v}" onclick="toggleChip(this)">${v}</button>`).join('');
   return `<div class="profile-card ${cls}" id="pf-${prefix}">
     <div class="pc-hd">${label}</div>
     <div class="pf"><label>Nome</label><input type="text" id="${prefix}-nome" placeholder="opcional"></div>
     <div class="pf"><label>Arma</label><div class="chips">${armaChips}</div></div>
-    <div class="pf"><label>Ponto fraco</label><div class="chips">${fracoChips}</div></div>
+    <div class="pf"><label>Fraco</label><div class="chips">${fracoChips}</div></div>
     <div class="pf"><label>Posição &amp; Lado</label>
       <div class="pos-row">
         <div class="pos-tg">
@@ -471,12 +471,105 @@ function buildProfileCard(prefix, label, isOpp) {
   </div>`;
 }
 
-document.getElementById('profile-grid').innerHTML =
+/* ── BUILD SCOUT CARDS ── */
+function buildScoutCard(prefix, label) {
+  const rows = SKILLS.map(s => `
+    <div class="tally-row">
+      <span class="tally-skill">${s}</span>
+      <button class="tally-btn err" id="sc-${prefix}-${s}-err"
+        onclick="tally('${prefix}','${s}','err',1,this)"
+        oncontextmenu="tally('${prefix}','${s}','err',-1,this);return false">
+        <span class="tally-icon">❌</span><span class="tally-n" id="scn-${prefix}-${s}-err">0</span>
+      </button>
+      <button class="tally-btn win" id="sc-${prefix}-${s}-win"
+        onclick="tally('${prefix}','${s}','win',1,this)"
+        oncontextmenu="tally('${prefix}','${s}','win',-1,this);return false">
+        <span class="tally-icon">⚡</span><span class="tally-n" id="scn-${prefix}-${s}-win">0</span>
+      </button>
+    </div>`).join('');
+  return `<div class="scout-card" id="sc-${prefix}">
+    <div class="pc-hd">${label}
+      <button onclick="resetScout('${prefix}')">limpar</button>
+    </div>
+    <input type="text" id="${prefix}-nome-sc" placeholder="Nome (opcional)"
+      oninput="syncScoutName('${prefix}')">
+    ${rows}
+    <div class="pf" style="margin-top:6px"><label>Posição &amp; Lado</label>
+      <div class="pos-row">
+        <div class="pos-tg">
+          <button class="pos-btn" onclick="setPos('${prefix}','fundo',this)">Fundo</button>
+          <button class="pos-btn" onclick="setPos('${prefix}','rede',this)">Rede</button>
+        </div>
+        <div class="pos-tg">
+          <button class="pos-btn" onclick="setLado('${prefix}','esquerda',this)">Esq</button>
+          <button class="pos-btn" onclick="setLado('${prefix}','direita',this)">Dir</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+document.getElementById('my-profile-grid').innerHTML =
   buildProfileCard('my1','Minha J1',false) +
+  buildProfileCard('my2','Minha J2',false);
+
+document.getElementById('adv-perc-grid').innerHTML =
   buildProfileCard('adv1','Adv J1',true) +
-  buildProfileCard('my2','Minha J2',false) +
   buildProfileCard('adv2','Adv J2',true);
 
+document.getElementById('adv-scout-grid').innerHTML =
+  buildScoutCard('adv1','Adv J1') +
+  buildScoutCard('adv2','Adv J2');
+
+/* hold-to-decrement on mobile */
+(function addHold() {
+  let timer;
+  document.addEventListener('touchstart', e => {
+    const btn = e.target.closest('.tally-btn');
+    if (!btn) return;
+    const [,prefix,skill,type] = btn.id.split('-');
+    timer = setTimeout(() => tally(prefix, skill, type, -1, btn), 500);
+  }, {passive:true});
+  document.addEventListener('touchend', () => clearTimeout(timer), {passive:true});
+})();
+
+/* ── SCOUT FUNCTIONS ── */
+function tally(prefix, skill, type, delta, btn) {
+  const d = scoutData[prefix][skill];
+  d[type] = Math.max(0, d[type] + delta);
+  document.getElementById(`scn-${prefix}-${skill}-${type}`).textContent = d[type];
+  const errBtn = document.getElementById(`sc-${prefix}-${skill}-err`);
+  const winBtn = document.getElementById(`sc-${prefix}-${skill}-win`);
+  errBtn.classList.toggle('hit', d.err > 0);
+  winBtn.classList.toggle('hit', d.win > 0);
+}
+
+function resetScout(prefix) {
+  SKILLS.forEach(s => {
+    scoutData[prefix][s] = {err:0, win:0};
+    document.getElementById(`scn-${prefix}-${s}-err`).textContent = '0';
+    document.getElementById(`scn-${prefix}-${s}-win`).textContent = '0';
+    document.getElementById(`sc-${prefix}-${s}-err`).classList.remove('hit');
+    document.getElementById(`sc-${prefix}-${s}-win`).classList.remove('hit');
+  });
+}
+
+function syncScoutName(prefix) {
+  const sc = document.getElementById(prefix+'-nome-sc');
+  const ch = document.getElementById(prefix+'-nome');
+  if (sc && ch) ch.value = sc.value;
+}
+
+/* ── SOURCE TOGGLE ── */
+function setSrc(mode) {
+  fichaMode = mode;
+  document.getElementById('src-perc').classList.toggle('on', mode === 'perc');
+  document.getElementById('src-scout').classList.toggle('on', mode === 'scout');
+  document.getElementById('adv-perc-grid').classList.toggle('f-hidden', mode !== 'perc');
+  document.getElementById('adv-scout-grid').classList.toggle('f-hidden', mode !== 'scout');
+}
+
+/* ── COMMON HELPERS ── */
 function toggleChip(el) {
   const turningOn = !el.classList.contains('on');
   el.classList.toggle('on');
@@ -502,27 +595,48 @@ function setAlvo(val, btn) {
   document.querySelectorAll('.alvo-row .pos-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 }
+
+/* ── GET PROFILE ── */
 function getPf(prefix) {
+  const isAdv = prefix.startsWith('adv');
+  if (isAdv && fichaMode === 'scout') {
+    /* derive armas/fracos from scout tallies (threshold ≥2) */
+    const d = scoutData[prefix];
+    const armas = SKILLS.filter(s => d[s].win >= 2);
+    const fracos = SKILLS.filter(s => d[s].err >= 2);
+    const nameEl = document.getElementById(prefix+'-nome-sc') || document.getElementById(prefix+'-nome');
+    return {
+      nome: nameEl?.value?.trim() || '',
+      armas, fracos,
+      pos: posData[prefix] || null,
+      lado: ladoData[prefix] || null,
+      src: 'scout'
+    };
+  }
   const card = document.getElementById('pf-'+prefix);
   const armas = card ? [...card.querySelectorAll('.chip-arma.on')].map(c=>c.dataset.val) : [];
   const fracos = card ? [...card.querySelectorAll('.chip-fraco.on')].map(c=>c.dataset.val) : [];
   return {
-    nome: (document.getElementById(prefix+'-nome')||{}).value?.trim() || '',
+    nome: document.getElementById(prefix+'-nome')?.value?.trim() || '',
     armas, fracos,
     pos: posData[prefix] || null,
-    lado: ladoData[prefix] || null
+    lado: ladoData[prefix] || null,
+    src: 'perc'
   };
 }
+
 function pName(k) {
   const fb = {my1:'nossa J1', my2:'nossa J2', adv1:'Adv J1', adv2:'Adv J2'};
-  const el = document.getElementById(k+'-nome');
+  const el = document.getElementById(k+'-nome') || document.getElementById(k+'-nome-sc');
   return (el && el.value.trim()) || fb[k];
 }
 
+/* ── GERAR PLANO ── */
 function gerarPlano() {
   const my1=getPf('my1'), my2=getPf('my2'), adv1=getPf('adv1'), adv2=getPf('adv2');
   const advNome = document.getElementById('adv-nome').value || 'Adversárias';
   const obs = document.getElementById('obs').value;
+  const srcLabel = fichaMode === 'scout' ? 'scout' : 'percepções';
 
   const PLAY = {
     'Saque':'pressionar na devolução — avançar à rede',
@@ -564,12 +678,14 @@ function gerarPlano() {
     'Consistência':'menos erros não forçados — jogar percentual',
   };
 
-  function planCard(title, color, badge, items) {
+  function planCard(title, color, badge, srcBadge, items) {
     if (!items.length) return '';
     const rows = items.map(t=>`<div class="plan-item"><span class="plan-arrow">→</span><span>${t}</span></div>`).join('');
-    const badgeHTML = badge ? `<span class="plan-badge">${badge}</span>` : '';
     return `<div class="plan-card" style="border-color:${color}">
-      <div class="plan-hd" style="color:${color}">${title}${badgeHTML}</div>${rows}</div>`;
+      <div class="plan-hd" style="color:${color}">${title}
+        ${badge ? `<span class="plan-badge">${badge}</span>` : ''}
+        ${srcBadge ? `<span class="plan-badge-src">${srcBadge}</span>` : ''}
+      </div>${rows}</div>`;
   }
 
   const prio = alvoAdv==='J1' ? 'adv1' : alvoAdv==='J2' ? 'adv2'
@@ -601,8 +717,8 @@ function gerarPlano() {
     if (ladoStr) myPlays.push(ladoStr);
   });
 
-  // Matchup summary card
-  function line(lbl, p, isOpp) {
+  /* matchup summary */
+  function mline(lbl, p, isOpp) {
     const parts=[];
     if (p.armas.length) parts.push(`<span style="color:var(--forte)">⚡ ${p.armas.join(', ')}</span>`);
     if (p.fracos.length) parts.push(`<span style="color:var(--fraco)">⚠ ${p.fracos.join(', ')}</span>`);
@@ -613,9 +729,23 @@ function gerarPlano() {
     const n = p.nome ? ` <em>${p.nome}</em>` : '';
     return `<div class="matchup-row"><span class="matchup-who" style="color:${c}">${lbl}${n}</span><span style="font-size:12px;line-height:1.5">${parts.join(' · ')||'—'}</span></div>`;
   }
-  let html = `<div class="matchup-card"><div class="ml">👥 Perfil do Jogo</div>
-    ${line('Minha J1',my1,false)}${line('Minha J2',my2,false)}
-    ${line('Adv J1',adv1,true)}${line('Adv J2',adv2,true)}</div>`;
+
+  /* scout detail hint */
+  function scoutHint(prefix) {
+    if (fichaMode !== 'scout') return '';
+    const d = scoutData[prefix];
+    const rows = SKILLS.filter(s => d[s].err > 0 || d[s].win > 0)
+      .map(s => `${s}: ${d[s].err>0?'❌'+d[s].err+' ':''}${d[s].win>0?'⚡'+d[s].win:''}`.trim())
+      .join(' · ');
+    return rows ? `<div style="font-size:10.5px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,48,160,.15)">${rows}</div>` : '';
+  }
+
+  let html = `<div class="matchup-card">
+    <div class="ml">👥 Perfil do Jogo <span style="opacity:.6;font-weight:400;text-transform:none;font-size:9px">· via ${srcLabel}</span></div>
+    ${mline('Minha J1',my1,false)}${mline('Minha J2',my2,false)}
+    ${mline('Adv J1',adv1,true)}${mline('Adv J2',adv2,true)}
+    ${scoutHint('adv1')}${scoutHint('adv2')}
+  </div>`;
 
   const ua=[...new Set([...my1.armas,...my2.armas])];
   const uf=[...new Set([...my1.fracos,...my2.fracos])];
@@ -624,20 +754,26 @@ function gerarPlano() {
   if (uf.length) sp.push(`<strong>Cobrir:</strong> ${uf.join(', ')}`);
   html += `<div class="plan-card" style="border-color:var(--acc)">
     <div class="plan-hd" style="color:var(--acc)">Plano — vs ${advNome}</div>
-    <div style="font-size:12.5px;line-height:1.5;color:var(--dim)">${sp.join(' · ')||'Preencha o perfil das jogadoras.'}</div></div>`;
+    <div style="font-size:12.5px;line-height:1.5;color:var(--dim)">${sp.join(' · ')||'Preencha o perfil da equipe.'}</div></div>`;
 
   const blocks = [{k:'adv1',p:adv1,plays:plays1},{k:'adv2',p:adv2,plays:plays2}]
     .sort((a,b) => (b.k===prio?1:0)-(a.k===prio?1:0));
   blocks.forEach(({k,p,plays}) => {
     if (!plays.length) return;
     const isPrio = k===prio;
-    html += planCard(p.nome||(k==='adv1'?'Adv J1':'Adv J2'), isPrio?'var(--fraco)':'var(--dim)', isPrio?'ALVO':'', plays);
+    html += planCard(
+      p.nome||(k==='adv1'?'Adv J1':'Adv J2'),
+      isPrio?'var(--fraco)':'var(--dim)',
+      isPrio?'ALVO':'',
+      p.src==='scout' ? 'scout' : '',
+      plays
+    );
   });
-  html += planCard('Nosso Jogo', 'var(--acc)', '', myPlays);
+  html += planCard('Nosso Jogo','var(--acc)','','',myPlays);
   if (obs) html += `<div class="plan-card" style="border-color:var(--bdr)"><div class="plan-hd" style="color:var(--dim)">Observações</div><div style="font-size:12.5px;line-height:1.55;color:var(--txt)">${obs}</div></div>`;
 
   if (!plays1.length && !plays2.length && !myPlays.length && !obs)
-    html = `<div class="plano-empty"><strong>Perfil incompleto</strong>Preencha fracos, armas e posição das jogadoras.</div>`;
+    html = `<div class="plano-empty"><strong>Perfil incompleto</strong>Preencha fracos, armas e posição das jogadoras${fichaMode==='scout'?' (scout precisa de ≥2 marcações por habilidade)':''}.</div>`;
 
   document.getElementById('plano-content').innerHTML = html;
   showFtab('plano');
