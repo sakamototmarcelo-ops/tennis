@@ -1,0 +1,539 @@
+<title>Ficha Pré-Jogo — Duplas</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f0f5f1;--surf:#e2ece4;--card:#fff;--bdr:#b8d4be;
+  --txt:#0d2015;--dim:#3a6a46;--acc:#1a7a30;--acc2:#d4eedb;
+  --forte:#1a7a30;--forte-bg:#d4eedb;--forte-txt:#0a3015;
+  --neutro:#5a7a60;--neutro-bg:#e2ece4;--neutro-txt:#1a3020;
+  --fraco:#c04a10;--fraco-bg:#ffe8d8;--fraco-txt:#5c1e00;
+  --atk:#1a7a30;--atk-bg:#d4eedb;
+  --evi:#c04a10;--evi-bg:#ffe8d8;
+  --ger:#0088a0;--ger-bg:#d4f0f8;
+  --neu:#6030a0;--neu-bg:#f0e4ff;
+  color-scheme:light
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);font-family:'Inter',system-ui,sans-serif;color:var(--txt)}
+body{display:flex;flex-direction:column;overflow:hidden;max-width:520px;margin:0 auto}
+
+.topbar{flex-shrink:0;background:var(--surf);border-bottom:1px solid var(--bdr);padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.topbar h1{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--acc)}
+.topbar p{font-size:11.5px;color:var(--dim);margin-top:1px}
+
+.tabs{flex-shrink:0;display:flex;background:var(--surf);border-bottom:1px solid var(--bdr)}
+.tab{flex:1;padding:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.content.hidden{display:none}
+
+/* FORM */
+.field{margin-bottom:14px}
+.field label{display:block;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:5px}
+.field input,.field textarea{width:100%;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--txt);outline:none;transition:.15s}
+.field input:focus,.field textarea:focus{border-color:var(--acc)}
+.field textarea{resize:none;height:60px;line-height:1.5}
+
+.sec-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--acc);margin:18px 0 10px;display:flex;align-items:center;gap:7px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+.dim-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:12px 13px;margin-bottom:9px}
+.dim-label{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--txt);margin-bottom:8px}
+.dim-row{display:flex;align-items:center;margin-bottom:5px;gap:8px}
+.dim-row:last-child{margin-bottom:0}
+.dim-who{font-size:11px;color:var(--dim);width:68px;flex-shrink:0;font-weight:500}
+.dim-sep{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin:7px 0 4px;padding-top:6px;border-top:1px solid var(--bdr)}
+.dim-sep.mine{color:var(--acc)}
+.dim-sep.opp{color:var(--fraco)}
+.ptag{font-size:10px;font-weight:700;opacity:.8;margin-left:3px;white-space:nowrap}
+.btn-group{display:flex;gap:4px;flex:1}
+.rtb{flex:1;padding:6px 4px;border-radius:6px;border:1px solid var(--bdr);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;color:var(--dim)}
+.rtb.sel-forte{background:var(--forte-bg);border-color:var(--forte);color:var(--forte)}
+.rtb.sel-neutro{background:var(--neutro-bg);border-color:var(--neutro);color:var(--neutro)}
+.rtb.sel-fraco{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
+
+.gen-btn{width:100%;padding:13px;border-radius:10px;background:var(--acc);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;border:none;cursor:pointer;margin-top:6px;transition:.15s}
+.gen-btn:active{background:var(--forte)}
+
+/* PLANO */
+.plano-empty{text-align:center;padding:40px 20px;color:var(--dim);font-size:13.5px;line-height:1.6}
+.plano-empty strong{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--dim);margin-bottom:6px}
+
+.quadrant{border-radius:10px;padding:13px 14px;margin-bottom:10px;border:1px solid}
+.q-label{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.q-item{font-size:13.5px;line-height:1.5;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;gap:8px;align-items:flex-start}
+.q-item:last-child{border-bottom:none;padding-bottom:0}
+.q-item .qi-lbl{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;min-width:90px;flex-shrink:0}
+.q-item .qi-txt{font-size:12.5px;line-height:1.45;color:inherit;opacity:.85}
+.q-atk{background:var(--atk-bg);border-color:#70c080;color:var(--forte-txt)}
+.q-atk .q-label{color:var(--forte)}
+.q-evi{background:var(--evi-bg);border-color:#e09060;color:var(--fraco-txt)}
+.q-evi .q-label{color:var(--fraco)}
+.q-ger{background:var(--ger-bg);border-color:#60b8d0;color:#003848}
+.q-ger .q-label{color:var(--ger)}
+.q-neu{background:var(--neu-bg);border-color:#a070d0;color:#2a0a50}
+.q-neu .q-label{color:var(--neu)}
+
+.plano-box{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:13px 14px;margin-bottom:10px}
+.plano-box h3{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--acc);margin-bottom:6px}
+.plano-box p{font-size:14px;line-height:1.55;color:var(--txt)}
+.plano-box p strong{font-weight:700;color:var(--acc)}
+
+/* PROFILES */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.profile-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:9px 10px}
+.profile-card.mine{border-left:3px solid var(--acc)}
+.profile-card.opp{border-left:3px solid var(--fraco)}
+.pc-hd{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.profile-card.mine .pc-hd{color:var(--acc)}
+.profile-card.opp .pc-hd{color:var(--fraco)}
+.pf{margin-bottom:5px}
+.pf label{display:block;font-size:9.5px;color:var(--dim);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
+.pf input{width:100%;background:var(--surf);border:1px solid var(--bdr);border-radius:5px;padding:5px 7px;font-size:12px;color:var(--txt);font-family:'Inter',sans-serif;outline:none}
+.pf input:focus{border-color:var(--acc)}
+.pos-tg{display:flex;gap:3px;margin-top:2px}
+.pos-btn{flex:1;padding:4px 2px;border:1px solid var(--bdr);border-radius:5px;background:transparent;font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;cursor:pointer;color:var(--dim);transition:.12s}
+.pos-btn.on{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
+.profile-card.opp .pos-btn.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
+.alvo-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:9px 11px}
+.alvo-row label{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.alvo-row .pos-tg{flex:1}
+.alvo-row .pos-btn.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
+
+.chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px}
+.chip{padding:3px 6px;border:1px solid var(--bdr);border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:600;cursor:pointer;color:var(--dim);background:transparent;transition:.12s;white-space:nowrap;line-height:1.4}
+.chip-arma.on{background:var(--forte-bg);border-color:var(--forte);color:var(--forte)}
+.chip-fraco.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
+.pos-row{display:flex;gap:5px}
+.pos-row .pos-tg{flex:1}
+
+.plan-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.plan-hd{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.plan-badge{font-size:9px;background:var(--fraco);color:#fff;padding:1px 6px;border-radius:8px}
+.plan-item{font-size:13px;line-height:1.5;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;gap:6px}
+.plan-item:last-child{border-bottom:none;padding-bottom:0}
+.plan-arrow{color:var(--dim);flex-shrink:0;font-size:11px;margin-top:2px}
+
+.reset-link{text-align:center;margin-top:8px}
+.reset-link button{background:none;border:none;color:var(--dim);font-size:12px;cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif}
+</style>
+
+<div class="topbar">
+  <h1>Ficha Pré-Jogo — Duplas Femininas</h1>
+  <p>Análise de forças, fraquezas e plano tático</p>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="showTab('analise',this)">Análise</div>
+  <div class="tab" onclick="showTab('plano',this)">Plano de Jogo</div>
+</div>
+
+<!-- ANÁLISE -->
+<div class="content" id="tab-analise">
+
+  <div class="field">
+    <label>Adversárias</label>
+    <input type="text" id="adv-nome" placeholder="Nome / time adversário">
+  </div>
+  <div style="display:flex;gap:10px">
+    <div class="field" style="flex:1">
+      <label>Local / Superfície</label>
+      <input type="text" id="local" placeholder="Ex: quadra dura">
+    </div>
+    <div class="field" style="flex:1">
+      <label>Data</label>
+      <input type="date" id="data">
+    </div>
+  </div>
+
+  <div class="sec-title">Perfil das Jogadoras</div>
+
+  <div class="profile-grid" id="profile-grid"></div>
+
+  <div class="alvo-row">
+    <label>Alvo prioritário</label>
+    <div class="pos-tg">
+      <button class="pos-btn" onclick="setAlvo('J1',this)">J1 adv</button>
+      <button class="pos-btn" onclick="setAlvo('J2',this)">J2 adv</button>
+    </div>
+  </div>
+
+  <div class="field" style="margin-top:4px">
+    <label>Observações gerais</label>
+    <textarea id="obs" placeholder="Padrão de jogo observado, condições, histórico..."></textarea>
+  </div>
+
+  <button class="gen-btn" onclick="gerarPlano()">Gerar Plano de Jogo →</button>
+</div>
+
+<!-- PLANO -->
+<div class="content hidden" id="tab-plano">
+  <div id="plano-content">
+    <div class="plano-empty">
+      <strong>Plano ainda não gerado</strong>
+      Preencha a análise e toque em<br>"Gerar Plano de Jogo"
+    </div>
+  </div>
+  <div class="reset-link"><button onclick="showTab('analise', document.querySelectorAll('.tab')[0])">← Voltar à análise</button></div>
+</div>
+
+<script>
+const posData = {}, ladoData = {};
+let alvoAdv = null;
+
+const SKILLS_OPTS = ['Saque','Devolução','Forehand','Backhand','Voleio','Smash/OH','Drop shot','Bola alta','Pressão','Movim.','Consistência'];
+const ARMA_OPTS = SKILLS_OPTS;
+const FRACO_OPTS = SKILLS_OPTS;
+
+function buildProfileCard(prefix, label, isOpp) {
+  const cls = isOpp ? 'opp' : 'mine';
+  const armaChips = ARMA_OPTS.map(v =>
+    `<button class="chip chip-arma" data-val="${v}" onclick="toggleChip(this)">${v}</button>`
+  ).join('');
+  const fracoChips = FRACO_OPTS.map(v =>
+    `<button class="chip chip-fraco" data-val="${v}" onclick="toggleChip(this)">${v}</button>`
+  ).join('');
+  return `<div class="profile-card ${cls}" id="pf-${prefix}">
+    <div class="pc-hd">${label}</div>
+    <div class="pf"><label>Nome</label><input type="text" id="${prefix}-nome" placeholder="opcional"></div>
+    <div class="pf"><label>Arma</label><div class="chips">${armaChips}</div></div>
+    <div class="pf"><label>Ponto fraco</label><div class="chips">${fracoChips}</div></div>
+    <div class="pf"><label>Posição &amp; Lado</label>
+      <div class="pos-row">
+        <div class="pos-tg">
+          <button class="pos-btn" onclick="setPos('${prefix}','fundo',this)">Fundo</button>
+          <button class="pos-btn" onclick="setPos('${prefix}','rede',this)">Rede</button>
+        </div>
+        <div class="pos-tg">
+          <button class="pos-btn" onclick="setLado('${prefix}','esquerda',this)">Esq</button>
+          <button class="pos-btn" onclick="setLado('${prefix}','direita',this)">Dir</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+document.getElementById('profile-grid').innerHTML =
+  buildProfileCard('my1','Minha J1',false) +
+  buildProfileCard('adv1','Adv J1',true) +
+  buildProfileCard('my2','Minha J2',false) +
+  buildProfileCard('adv2','Adv J2',true);
+
+function toggleChip(el) {
+  const turningOn = !el.classList.contains('on');
+  el.classList.toggle('on');
+  if (turningOn) {
+    const card = el.closest('.profile-card');
+    const other = el.classList.contains('chip-arma') ? 'chip-fraco' : 'chip-arma';
+    const match = card.querySelector(`.${other}[data-val="${el.dataset.val}"]`);
+    if (match) match.classList.remove('on');
+  }
+}
+
+function setPos(id, val, btn) {
+  posData[id] = val;
+  btn.closest('.pos-tg').querySelectorAll('.pos-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function setLado(id, val, btn) {
+  ladoData[id] = val;
+  btn.closest('.pos-tg').querySelectorAll('.pos-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function setAlvo(val, btn) {
+  alvoAdv = val;
+  document.querySelectorAll('.alvo-row .pos-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+function getPf(prefix) {
+  const card = document.getElementById('pf-'+prefix);
+  const armas = card ? [...card.querySelectorAll('.chip-arma.on')].map(c=>c.dataset.val) : [];
+  const fracos = card ? [...card.querySelectorAll('.chip-fraco.on')].map(c=>c.dataset.val) : [];
+  return {
+    nome: (document.getElementById(prefix+'-nome')||{}).value?.trim() || '',
+    armas,
+    fracos,
+    pos: posData[prefix] || null,
+    lado: ladoData[prefix] || null
+  };
+}
+
+function buildMatchupHTML() {
+  const my1=getPf('my1'), my2=getPf('my2'), adv1=getPf('adv1'), adv2=getPf('adv2');
+  if (![my1,my2,adv1,adv2].some(p => p.nome||p.armas.length||p.fracos.length||p.pos||p.lado)) return '';
+
+  function line(lbl, p, isOpp) {
+    const parts=[];
+    if (p.armas.length) parts.push(`<span style="color:var(--forte)">⚡ ${p.armas.join(', ')}</span>`);
+    if (p.fracos.length) parts.push(`<span style="color:var(--fraco)">⚠ ${p.fracos.join(', ')}</span>`);
+    const posIco = p.pos==='rede'?'🏃 Rede': p.pos==='fundo'?'🎾 Fundo':'';
+    const ladoIco = p.lado==='esquerda'?'◀ Esq': p.lado==='direita'?'▶ Dir':'';
+    if (posIco||ladoIco) parts.push(`<span style="color:var(--dim)">${[posIco,ladoIco].filter(Boolean).join(' ')}</span>`);
+    const c = isOpp ? 'var(--fraco)' : 'var(--acc)';
+    const n = p.nome ? ` <em>${p.nome}</em>` : '';
+    return `<div class="q-item"><span class="qi-lbl" style="color:${c};font-weight:700">${lbl}${n}</span><span class="qi-txt">${parts.join(' · ')||'—'}</span></div>`;
+  }
+
+  let recs=[];
+  const targetAdv = alvoAdv==='J1' ? adv1 : alvoAdv==='J2' ? adv2 : null;
+  if (targetAdv) {
+    const name = targetAdv.nome||(alvoAdv==='J1'?'Adv J1':'Adv J2');
+    const fr = targetAdv.fracos.length ? ` — explorar: ${targetAdv.fracos.join(', ')}` : '';
+    recs.push(`Alvo prioritário: <strong>${name}</strong>${fr}`);
+  } else {
+    const withFraco = [{p:adv1,l:'Adv J1'},{p:adv2,l:'Adv J2'}].filter(x=>x.p.fracos.length);
+    if (withFraco.length===1) recs.push(`Explorar fraco de <strong>${withFraco[0].p.nome||withFraco[0].l}</strong>: ${withFraco[0].p.fracos.join(', ')}`);
+  }
+  const myArmaJ = [my1,my2].find(p=>p.armas.length);
+  if (myArmaJ) {
+    const nm = myArmaJ.nome || ([my1,my2].indexOf(myArmaJ)===0?'J1':'J2');
+    recs.push(`Usar <strong>${myArmaJ.armas[0]} de ${nm}</strong> como ponto de partida.`);
+  }
+  const advRede = [{p:adv1,l:'Adv J1'},{p:adv2,l:'Adv J2'}].filter(x=>x.p.pos==='rede');
+  if (advRede.length) recs.push(`${advRede.map(x=>x.p.nome||x.l).join(' e ')} prefere rede — usar lob profundo.`);
+
+  return `<div class="quadrant" style="background:#f6f0ff;border:1px solid #b090d8;color:#2a0a50;margin-bottom:10px">
+    <div class="q-label" style="color:#6030a0">👥 PERFIL DO JOGO</div>
+    ${line('Minha J1',my1,false)}${line('Minha J2',my2,false)}${line('Adv J1',adv1,true)}${line('Adv J2',adv2,true)}
+    ${recs.length?`<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(96,48,160,.2)">${recs.map(r=>`<div style="font-size:12.5px;line-height:1.55;margin-bottom:4px">→ ${r}</div>`).join('')}</div>`:''}
+  </div>`;
+}
+
+function fracoJogada(fraco, lado) {
+  const lSide = lado==='esquerda' ? ' (lado esquerdo)' : lado==='direita' ? ' (lado direito)' : '';
+  const lCenter = lado==='esquerda' ? ' — backhand exposto no centro' : '';
+  const map = {
+    'Saque':       'Pressionar na devolução — avançar à rede imediatamente',
+    'Devolução':   'Variar saque: kick para o corpo, flat pelo T, slice largo',
+    'Forehand':    `Dirigir bolas para o forehand${lSide}`,
+    'Backhand':    `Cruzar para o backhand${lSide}${lCenter}`,
+    'Voleio':      'Lob profundo ou bola baixa nos pés — voleio fraco',
+    'Smash/OH':    'Usar lob com frequência — smash/overhead é ponto fraco',
+    'Drop shot':   'Drop shot como arma — vai errar ou abrir a quadra',
+    'Bola alta':   'Bolas baixas e planas — não alimentar com altura',
+    'Pressão':     'Encurtar pontos, subir à rede, acelerar ritmo nos decisivos',
+    'Movim.':      'Alternar drop shot + bola profunda para desgastar',
+    'Consistência':'Forçar volume de bolas — erros não forçados são a maior fraqueza',
+  };
+  return map[fraco] || `Explorar ${fraco}`;
+}
+
+function buildAlvoSection(adv1, adv2, my1, my2) {
+  const myAllArmas = [...my1.armas, ...my2.armas];
+  function playerBlock(p, k, isPrio) {
+    const plays = [];
+    p.fracos.forEach(f => plays.push(fracoJogada(f, p.lado)));
+    if (p.pos==='rede') plays.push('Lob profundo para tirar da rede');
+    if (p.pos==='fundo') plays.push('Drop shot para puxar à frente do court');
+    if (p.lado==='esquerda' && !p.fracos.includes('Backhand'))
+      plays.push('Atacar pelo centro — backhand exposto no meio');
+    if (p.lado==='direita' && !p.fracos.includes('Forehand'))
+      plays.push('Bolas paralelas — forehand dela aponta para o centro, evitar o meio');
+    if (!plays.length) return '';
+    const name = p.nome || (k==='adv1'?'Adv J1':'Adv J2');
+    const badge = isPrio ? ' <span style="font-size:9px;background:var(--fraco);color:#fff;padding:1px 5px;border-radius:8px;vertical-align:middle">ALVO</span>' : '';
+    const rows = plays.map(t => `<div class="q-item" style="padding:5px 0"><span class="qi-txt" style="font-size:13px;line-height:1.5">→ ${t}</span></div>`).join('');
+    return `<div style="margin-bottom:10px">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--fraco);margin-bottom:4px">${name}${badge}</div>
+      ${rows}
+    </div>`;
+  }
+  const b1 = playerBlock(adv1,'adv1', alvoAdv==='J1' || (!alvoAdv && adv1.fracos.length >= adv2.fracos.length && adv1.fracos.length > 0));
+  const b2 = playerBlock(adv2,'adv2', alvoAdv==='J2' || (!alvoAdv && adv2.fracos.length > adv1.fracos.length));
+  if (!b1 && !b2) return '';
+  return `<div class="quadrant q-evi"><div class="q-label">🎯 JOGADAS POR ADVERSÁRIA</div>${b1}${b2}</div>`;
+}
+
+function pName(k) {
+  const fb = {my1:'nossa J1', my2:'nossa J2', adv1:'Adv J1', adv2:'Adv J2'};
+  const el = document.getElementById(k+'-nome');
+  return (el && el.value.trim()) || fb[k];
+}
+
+function fracoTip(f) {
+  if (!f) return '';
+  const s = f.toLowerCase();
+  if (s.includes('backhand') || (s.includes(' bh') && !s.includes('rh')))
+    return 'direcionar bolas pelo lado esquerdo, posição desconfortável';
+  if (s.includes('voleio'))
+    return 'lob profundo para tirar da rede; nas trocas, não abrir ângulo';
+  if (s.includes('overhead') || s.includes('smash'))
+    return 'usar lob com frequência — overhead fraco deixa a rede arriscada';
+  if (s.includes('press'))
+    return 'acelerar ritmo nos pontos críticos; encurtar trocas';
+  if (s.includes('bola alta'))
+    return 'manter bolas baixas e planas para não alimentar o ritmo dela';
+  if (s.includes('moviment'))
+    return 'alternar drop shot e bola profunda para desgastar';
+  if (s.includes('saque') || s.includes('serviço'))
+    return 'pressão na devolução; avançar imediatamente à rede';
+  if (s.includes('forehand') || s.includes(' fh'))
+    return 'direcionar para o backhand; não dar forehand livre';
+  if (s.includes('devolução') || s.includes('devolucao'))
+    return 'variar velocidade e direção do saque — kick para o corpo nos pontos decisivos';
+  return '';
+}
+
+function armaTip(a) {
+  if (!a) return '';
+  const s = a.toLowerCase();
+  if (s.includes('saque'))
+    return 'iniciar pontos com saque agressivo para criar abertura imediata';
+  if (s.includes('voleio'))
+    return 'priorizar chegar à rede — voleio é a arma decisiva';
+  if (s.includes('forehand') || s.includes(' fh'))
+    return 'redirecionar as trocas para o lado do forehand';
+  if (s.includes('backhand') || s.includes(' bh'))
+    return 'usar backhand cruzado como ataque, não só defensivo';
+  if (s.includes('smash') || s.includes('overhead'))
+    return 'avançar à rede e punir lobs curtos com smash';
+  if (s.includes('consistência') || s.includes('consistencia'))
+    return 'forçar erros com volume e profundidade — não tentar winner antes da hora';
+  if (s.includes('velocidade'))
+    return 'impor ritmo alto; não deixar a adversária recuperar';
+  if (s.includes('drop'))
+    return 'usar bola curta para abrir a quadra antes de subir à rede';
+  if (s.includes('bola alta'))
+    return 'usar lob como pressão táctica; forçar overhead de posição ruim';
+  return '';
+}
+
+function gerarPlano() {
+  const my1=getPf('my1'), my2=getPf('my2'), adv1=getPf('adv1'), adv2=getPf('adv2');
+  const advNome = document.getElementById('adv-nome').value || 'Adversárias';
+  const obs = document.getElementById('obs').value;
+
+  const PLAY = {
+    'Saque':       'pressionar na devolução — avançar à rede',
+    'Devolução':   'variar saque: kick / flat / slice',
+    'Forehand':    'dirigir para o forehand',
+    'Backhand':    'cruzar para o backhand',
+    'Voleio':      'lob profundo ou bola baixa nos pés',
+    'Smash/OH':    'lob com frequência',
+    'Drop shot':   'drop shot — vai abrir a quadra',
+    'Bola alta':   'bolas baixas e planas',
+    'Pressão':     'encurtar pontos, acelerar ritmo',
+    'Movim.':      'drop + fundo alternados',
+    'Consistência':'forçar erros com volume',
+  };
+  const ACTION = {
+    'Saque':       'criar abertura → avançar à rede',
+    'Devolução':   'devolução cruzada → assumir a rede',
+    'Forehand':    'redirecionar trocas pelo FH cruzado',
+    'Backhand':    'BH cruzado como ataque, não defensivo',
+    'Voleio':      'subir cedo e fechar com voleio angulado',
+    'Smash/OH':    'avançar → punir lobs curtos com smash',
+    'Drop shot':   'bola curta → abrir quadra → subir',
+    'Bola alta':   'lob tático para criar pressão',
+    'Pressão':     'ritmo alto, encurtar pontos decisivos',
+    'Movim.':      'alternar ritmos para criar espaço',
+    'Consistência':'profundidade e volume — forçar erros',
+  };
+  const PROTECT = {
+    'Saque':       'bolas lentas e colocadas — evitar dupla falta',
+    'Devolução':   'devolução segura — bloquear e defender',
+    'Forehand':    'redirecionar para o backhand — não trocar FH com FH',
+    'Backhand':    'dirigir trocas para o FH — cobrir o BH',
+    'Voleio':      'só subir com bola de qualidade',
+    'Smash/OH':    'recuar antes do overhead — não forçar',
+    'Drop shot':   'antecipar a bola curta — ler a posição',
+    'Bola alta':   'recuar — deixar cair até o ombro',
+    'Pressão':     'manter rotina entre pontos — respirar',
+    'Movim.':      'lob para resetar posição',
+    'Consistência':'menos erros não forçados — jogar percentual',
+  };
+
+  function planCard(title, color, badge, items) {
+    if (!items.length) return '';
+    const rows = items.map(t=>`<div class="plan-item"><span class="plan-arrow">→</span><span>${t}</span></div>`).join('');
+    const badgeHTML = badge ? `<span class="plan-badge">${badge}</span>` : '';
+    return `<div class="plan-card" style="border-color:${color}">
+      <div class="plan-hd" style="color:${color}">${title}${badgeHTML}</div>${rows}</div>`;
+  }
+
+  // Determine alvo priority
+  const prio = alvoAdv==='J1' ? 'adv1' : alvoAdv==='J2' ? 'adv2'
+    : adv1.fracos.length > adv2.fracos.length ? 'adv1'
+    : adv2.fracos.length > adv1.fracos.length ? 'adv2' : null;
+
+  function advPlays(p, k) {
+    const plays = [];
+    p.fracos.forEach(f => { if (PLAY[f]) plays.push(PLAY[f]); });
+    if (p.pos==='rede' && !p.fracos.includes('Voleio') && !p.fracos.includes('Smash/OH'))
+      plays.push('lob profundo — tirar da rede');
+    if (p.pos==='fundo' && !p.fracos.includes('Movim.'))
+      plays.push('drop shot — puxar à frente');
+    if (p.lado==='esquerda' && !p.fracos.includes('Backhand'))
+      plays.push('atacar pelo centro (BH exposto)');
+    if (p.lado==='direita' && !p.fracos.includes('Forehand'))
+      plays.push('paralelas — FH dela aponta para o centro');
+    return plays;
+  }
+
+  const plays1 = advPlays(adv1,'adv1'), plays2 = advPlays(adv2,'adv2');
+  const blocks = [
+    {k:'adv1', p:adv1, plays:plays1},
+    {k:'adv2', p:adv2, plays:plays2}
+  ].sort((a,b) => (b.k===prio?1:0)-(a.k===prio?1:0));
+
+  // My team plays
+  const myPlays = [];
+  [{p:my1,k:'my1'},{p:my2,k:'my2'}].forEach(({p,k}) => {
+    const jn = pName(k);
+    p.armas.forEach(a => { if (ACTION[a]) myPlays.push(`${jn} — ${a}: ${ACTION[a]}`); });
+    p.fracos.forEach(f => { if (PROTECT[f]) myPlays.push(`Cobrir ${jn} (${f}): ${PROTECT[f]}`); });
+    if (p.pos==='rede') myPlays.push(`${jn} prefere rede — subir na primeira oportunidade`);
+    const ladoStr = p.lado==='direita'?`${jn} Direita (FH no centro)`:p.lado==='esquerda'?`${jn} Esquerda (BH no centro)`:'';
+    if (ladoStr) myPlays.push(ladoStr);
+  });
+
+  const hasContent = plays1.length||plays2.length||myPlays.length;
+  let html = buildMatchupHTML();
+
+  html += `<div class="plano-box" style="border-color:var(--acc)">
+    <h3>Plano — vs ${advNome}</h3>`;
+  const sp=[];
+  const ua=[...new Set([...my1.armas,...my2.armas])];
+  const uf=[...new Set([...my1.fracos,...my2.fracos])];
+  if (ua.length) sp.push(`<strong>Armas:</strong> ${ua.join(', ')}`);
+  if (uf.length) sp.push(`<strong>Cobrir:</strong> ${uf.join(', ')}`);
+  html += `<p>${sp.join(' · ')||'Preencha o perfil das jogadoras.'}</p></div>`;
+
+  blocks.forEach(({k,p,plays}) => {
+    if (!plays.length) return;
+    const isPrio = k===prio;
+    const name = p.nome||(k==='adv1'?'Adv J1':'Adv J2');
+    html += planCard(name, isPrio?'var(--fraco)':'var(--dim)', isPrio?'ALVO':'', plays);
+  });
+
+  html += planCard('Nosso Jogo', 'var(--acc)', '', myPlays);
+  if (obs) html += `<div class="plano-box"><h3>Observações</h3><p>${obs}</p></div>`;
+
+  if (!hasContent && !obs) {
+    html = `<div class="plano-empty"><strong>Perfil incompleto</strong>Preencha fracos, armas e posição das jogadoras.</div>`;
+  }
+
+  document.getElementById('plano-content').innerHTML = html;
+  showTab('plano', document.querySelectorAll('.tab')[1]);
+}
+
+function sectionHTML(cls, title, items) {
+  const rows = items.map(txt =>
+    `<div class="q-item" style="padding:7px 0"><span class="qi-txt" style="font-size:13px;line-height:1.6">${txt}</span></div>`
+  ).join('');
+  return `<div class="quadrant q-${cls}"><div class="q-label">${title}</div>${rows}</div>`;
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  btn.classList.add('on');
+}
+</script>
