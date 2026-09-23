@@ -1,0 +1,379 @@
+<title>Coach — Duplas</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap">
+
+<style>
+:root{
+  --bg:#f0f3f8;--surf:#e0e8f2;--card:#ffffff;--bdr:#b0c4dc;
+  --txt:#0d1a2a;--dim:#3a5a7a;--acc:#1a4a9a;--acc2:#d0dff5;
+  --c-obs:#1a5fc0;--c-obs-l:#ddeaff;--c-obs-bdr:#90b8e8;
+  --c-cen:#c04a10;--c-cen-l:#ffe8d8;--c-cen-bdr:#e8a080;
+  --c-ins:#6030a0;--c-ins-l:#f0e4ff;--c-ins-bdr:#c090e8;
+  --c-pau:#0088a0;--c-pau-l:#d4f0f8;--c-pau-bdr:#60c0d8;
+  --nav-h:62px;
+  color-scheme:light
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1520;--surf:#162030;--card:#1c2a3c;--bdr:#2a4060;
+  --txt:#dce8f5;--dim:#7a9ac0;--acc:#5080d8;--acc2:#1a2d4a;
+  --c-obs-l:#1a2f50;--c-obs-bdr:#3060a8;
+  --c-cen-l:#3a1a08;--c-cen-bdr:#a04820;
+  --c-ins-l:#28103e;--c-ins-bdr:#7840b8;
+  --c-pau-l:#082830;--c-pau-bdr:#206878;
+  color-scheme:dark
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1520;--surf:#162030;--card:#1c2a3c;--bdr:#2a4060;
+  --txt:#dce8f5;--dim:#7a9ac0;--acc:#5080d8;--acc2:#1a2d4a;
+  --c-obs-l:#1a2f50;--c-obs-bdr:#3060a8;
+  --c-cen-l:#3a1a08;--c-cen-bdr:#a04820;
+  --c-ins-l:#28103e;--c-ins-bdr:#7840b8;
+  --c-pau-l:#082830;--c-pau-bdr:#206878;
+  color-scheme:dark
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex-direction:column;max-width:480px;margin:0 auto}
+
+/* TOP BAR */
+.topbar{flex-shrink:0;background:var(--surf);border-bottom:1px solid var(--bdr);padding:10px 16px 8px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.topbar h1{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--acc)}
+.topbar p{font-size:12px;color:var(--dim);margin-top:1px}
+
+/* SCROLL AREA */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 14px 16px}
+
+/* BOTTOM NAV */
+.botnav{flex-shrink:0;background:var(--surf);border-top:1px solid var(--bdr);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:env(safe-area-inset-bottom,0px)}
+.botnav::-webkit-scrollbar{display:none}
+.navbtn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 10px;cursor:pointer;border:none;background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:500;transition:.15s;min-height:var(--nav-h)}
+.navbtn.on{color:var(--acc)}
+.navbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* SECTIONS */
+.sec{display:none}
+.sec.on{display:block}
+
+/* PAGE LABEL */
+.pg-lbl{font-size:11.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:10px}
+
+/* ITEM CARDS — expandable */
+.item-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.item-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;gap:10px;user-select:none}
+.item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.item-title{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;flex:1;line-height:1.3}
+.item-sub{font-size:11.5px;color:var(--dim);flex:1;line-height:1.3;margin-top:2px}
+.item-arr{font-size:14px;color:var(--dim);transition:.2s;flex-shrink:0}
+.item-card.open .item-arr{transform:rotate(180deg)}
+.item-body{display:none;padding:0 14px 14px;font-size:13px;line-height:1.6;color:var(--txt);border-top:1px solid var(--bdr);padding-top:12px}
+.item-card.open .item-body{display:block}
+.item-body strong{font-weight:600}
+
+/* RULE CARDS — não expandem */
+.rule-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:13px 14px;margin-bottom:8px}
+.rule-hd{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;margin-bottom:4px}
+.rule-body{font-size:13px;line-height:1.55;color:var(--dim)}
+
+/* PROTOCOLO CARDS */
+.proto-card{border-radius:10px;padding:13px 14px;margin-bottom:8px}
+.proto-hd{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.proto-row{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start}
+.proto-time{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;background:rgba(0,0,0,.08);border-radius:5px;padding:2px 6px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.proto-text{font-size:12.5px;line-height:1.45;color:var(--txt)}
+
+/* SECTION HEADER */
+.sec-hd{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 0 8px;margin-top:4px}
+</style>
+
+<div class="topbar">
+  <h1>Coach · Duplas Femininas</h1>
+  <p>Guia de partida · Amador · Jogo de fundo</p>
+</div>
+
+<div class="content" id="content">
+
+  <!-- ── OBSERVAR ── -->
+  <div class="sec on" id="s-obs">
+    <div class="pg-lbl">O que observar em quadra</div>
+
+    <div class="item-card open">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-obs)">Chegam à rede?</div>
+          <div class="item-sub">Posicionamento após saque e devolução</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        As duas avançam 3 passos após bater? Ou ficam presas no meio da quadra? É o indicador mais importante do padrão de jogo.
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-obs)">Padrão de bola</div>
+          <div class="item-sub">Altura / profundidade / ritmo das trocas</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        A bola volta alta de novo? Fica sempre no mesmo ritmo? Cai no centro ou abre ângulo? Esses padrões revelam o que mudar.
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-obs)">Comunicação</div>
+          <div class="item-sub">Bola pelo meio, switch, sinais</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        Há hesitação na bola pelo meio? Chamam "minha"? Confirmam o sinal? A falta de comunicação é sempre mais cara do que o erro técnico.
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-obs)">Energia & tensão</div>
+          <div class="item-sub">Linguagem corporal, foco, relação entre parceiras</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        Cabeça baixa após erro? Evitam se olhar? O estado mental é observável e muda a estratégia de instrução — lógica funciona quando estão calmas.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CENÁRIOS ── -->
+  <div class="sec" id="s-cen">
+    <div class="pg-lbl">Situações mais comuns</div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Troca longa sem plano</div>
+          <div class="item-sub">8–15 bolas, ninguém avança, quem erra perde</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "Na 4ª bola, se vier curta ou no centro — drop shot e avança. Se vier funda — profundo no backhand e espera a bola curta aparecer."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Bola alta devolvida alta</div>
+          <div class="item-sub">Ciclo de alturas sem construção</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "Quando vier bola alta: recua um passo, deixa cair até o ombro, bate flat cruzado com profundidade — não devolve alta de volta."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Bola curta ignorada</div>
+          <div class="item-sub">Oportunidade de avanço não aproveitada</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "Bola que cai antes da linha de serviço é sinal verde — avança e bate em movimento. Não espera a próxima."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">A2 recuou ao fundo</div>
+          <div class="item-sub">Formação dois atrás passiva</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "A2 fica na linha de serviço no mínimo — só recua se o lob passar. Voltar à rede logo após o próximo ponto do saque."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Lob repetido sobre A2</div>
+          <div class="item-sub">Adversária explora a posição da rede</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "A2 recua um passo da rede. Quando vir o balanço de lob — split step para trás. Se o lob passou: 'switch!' automático."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Bola pelo meio cai</div>
+          <div class="item-sub">Hesitação, ninguém bate</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "Definam agora: forehand chama 'minha' — sempre. Combinação feita aqui na troca, antes do próximo game."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Finalização forçada</div>
+          <div class="item-sub">Tentam winner difícil na rede, erram</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "Na rede: voleio suave nos pés, não tenta winner. Deixa a adversária errar — ela está em posição difícil."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Placar de pressão</div>
+          <div class="item-sub">30-40, deuce, tiebreak — erros aumentam</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução:</strong> "Rotina mais lenta. Padrão mais seguro — o que funcionou até aqui funciona agora. Não muda o plano no ponto importante."
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:var(--c-cen)">Tensão entre parceiras</div>
+          <div class="item-sub">Linguagem negativa, comunicação caiu</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        <strong>Instrução (falar separado com cada uma):</strong> "Ela está tentando. Uma palavra positiva agora vale mais que qualquer tática." Resolver a parceria primeiro.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INSTRUÇÃO ── -->
+  <div class="sec" id="s-ins">
+    <div class="pg-lbl">Como dar feedback</div>
+
+    <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
+      <div class="rule-hd" style="color:var(--c-ins)">1 instrução por pausa</div>
+      <div class="rule-body">O cérebro não processa mais que uma mudança. Escolha a instrução mais urgente — a segunda fica para a próxima troca.</div>
+    </div>
+
+    <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
+      <div class="rule-hd" style="color:var(--c-ins)">Formato: gatilho + ação</div>
+      <div class="rule-body">"Quando X → faz Y" — não "jogue mais profundo". Instruções abstratas não funcionam em jogo. "Quando a bola vier curta → avança e bate em movimento" é acionável.</div>
+    </div>
+
+    <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
+      <div class="rule-hd" style="color:var(--c-ins)">Nunca: técnica de golpe</div>
+      <div class="rule-body">"Dobra mais o joelho no voleio" não resolve em 90 segundos. Técnica é para o treino. Na pausa: só tática posicional e decisão.</div>
+    </div>
+
+    <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
+      <div class="rule-hd" style="color:var(--c-ins)">Nunca: quem errou mais</div>
+      <div class="rule-body">Dizer "você errou 5 vezes pelo meio" na frente da parceira cria distância e baixa a confiança. Guarde para conversa individual pós-jogo.</div>
+    </div>
+  </div>
+
+  <!-- ── PAUSA ── -->
+  <div class="sec" id="s-pau">
+    <div class="pg-lbl">Quando e quanto tempo</div>
+
+    <div class="proto-card" style="background:var(--c-pau-l);border:1px solid var(--c-pau-bdr)">
+      <div class="proto-hd" style="color:var(--c-pau)">Entre pontos · ~20s</div>
+      <div class="rule-body" style="font-size:13px">
+        <strong>Só observar.</strong> Use para anotar o padrão que se repete. Instruir entre pontos quebra o ritmo e gera pressão desnecessária.
+      </div>
+    </div>
+
+    <div class="proto-card" style="background:var(--c-pau-l);border:1px solid var(--c-pau-bdr)">
+      <div class="proto-hd" style="color:var(--c-pau)">Troca de lado · 90s</div>
+      <div class="proto-row">
+        <span class="proto-time" style="color:var(--c-pau)">0–30s</span>
+        <span class="proto-text">Elas sentam e hidratam — silêncio.</span>
+      </div>
+      <div class="proto-row">
+        <span class="proto-time" style="color:var(--c-pau)">30–70s</span>
+        <span class="proto-text">3 perguntas táticas + 1 ajuste. Você fala no máximo 40 segundos.</span>
+      </div>
+      <div class="proto-row">
+        <span class="proto-time" style="color:var(--c-pau)">70s</span>
+        <span class="proto-text">Levantam e voltam à quadra.</span>
+      </div>
+    </div>
+
+    <div class="proto-card" style="background:var(--c-pau-l);border:1px solid var(--c-pau-bdr)">
+      <div class="proto-hd" style="color:var(--c-pau)">Set break · 2 minutos</div>
+      <div class="proto-row">
+        <span class="proto-time" style="color:var(--c-pau)">Tático</span>
+        <span class="proto-text">1 ajuste do set que acabou.</span>
+      </div>
+      <div class="proto-row">
+        <span class="proto-time" style="color:var(--c-pau)">Mental</span>
+        <span class="proto-text">1 frase de reset — "próximo set começa 0-0".</span>
+      </div>
+      <div class="proto-row">
+        <span class="proto-time" style="color:var(--c-pau)">Físico</span>
+        <span class="proto-text">Checar dor ou cansaço. Se perderam o set: mudar 1 coisa, não reconstruir tudo.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="botnav">
+  <button class="navbtn on" onclick="go('obs',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/></svg>
+    Observar
+  </button>
+  <button class="navbtn" onclick="go('cen',this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    Cenários
+  </button>
+  <button class="navbtn" onclick="go('ins',this)">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Instruir
+  </button>
+  <button class="navbtn" onclick="go('pau',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Pausa
+  </button>
+</nav>
+
+<script>
+function go(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.navbtn').forEach(b => b.classList.remove('on'));
+  document.getElementById('s-' + id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('content').scrollTop = 0;
+}
+function tog(card) {
+  card.classList.toggle('open');
+}
+</script>
