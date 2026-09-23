@@ -123,24 +123,51 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .pos-btn.on{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
 .profile-card.opp .pos-btn.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
 
-/* SCOUT */
-.scout-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.scout-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:9px;border-left:3px solid var(--fraco)}
-.scout-card .pc-hd{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--fraco);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
-.scout-card .pc-hd button{font-size:9px;color:var(--dim);background:none;border:none;cursor:pointer;padding:0;font-family:'Inter',sans-serif}
-.scout-card .pf input{width:100%;background:var(--surf);border:1px solid var(--bdr);border-radius:5px;padding:4px 6px;font-size:11.5px;color:var(--txt);font-family:'Inter',sans-serif;outline:none;margin-bottom:6px}
-.tally-row{display:flex;align-items:center;gap:4px;margin-bottom:3px}
-.tally-skill{font-size:9px;font-weight:600;color:var(--dim);font-family:'Space Grotesk',sans-serif;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tally-btn{display:flex;align-items:center;gap:2px;padding:3px 5px;border-radius:6px;border:1px solid;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;user-select:none;min-width:32px;justify-content:center;-webkit-tap-highlight-color:transparent;background:transparent}
-.tally-btn.err{border-color:var(--fraco);color:var(--fraco)}
-.tally-btn.err.hit{background:var(--fraco-bg)}
-.tally-btn.win{border-color:var(--forte);color:var(--forte)}
-.tally-btn.win.hit{background:var(--forte-bg)}
-.tally-icon{font-size:9px}
-.tally-n{min-width:10px;text-align:center}
+/* SCOUT PANEL */
+.scout-panel{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:10px}
+.scout-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.scout-hdr-title{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px}
+.scout-hdr-meta{display:flex;align-items:center;gap:8px}
+.scout-count{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--dim)}
+.scout-undo{font-size:11px;color:var(--dim);background:none;border:1px solid var(--bdr);border-radius:6px;padding:3px 8px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:700}
+.scout-step{margin-bottom:10px}
+.scout-step-lbl{font-size:9.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:5px}
+.scout-btns{display:flex;flex-wrap:wrap;gap:4px}
+.sc-btn{padding:7px 10px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;color:var(--dim);transition:.12s;user-select:none}
+.sc-btn.sel-player{background:var(--acc);border-color:var(--acc);color:#fff}
+.sc-btn.sel-shot{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
+.sc-btn.sel-out-err{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
+.sc-btn.sel-out-win{background:var(--forte-bg);border-color:var(--forte);color:var(--forte)}
+.sc-btn.sel-out-df{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
+.scout-feedback{text-align:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--forte);height:20px;margin-bottom:4px;transition:opacity .3s}
+.scout-feedback.fade{opacity:0}
 
-/* POSIÇÃO SCOUT */
-.scout-pos{display:flex;gap:4px;margin-top:4px}
+/* SCOUT SUMMARY */
+.scout-summary{border-top:1px solid var(--bdr);margin-top:8px;padding-top:8px}
+.scout-sum-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:6px}
+.scout-sum-lbl{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--dim)}
+.scout-sum-arr{font-size:12px;color:var(--dim);transition:.2s}
+.scout-sum-open .scout-sum-arr{transform:rotate(180deg)}
+.scout-sum-body{display:none}
+.scout-sum-open .scout-sum-body{display:block}
+.scout-player-sum{margin-bottom:8px}
+.scout-player-lbl{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;color:var(--fraco);margin-bottom:3px}
+.scout-shot-row{display:flex;flex-wrap:wrap;gap:4px;font-size:10.5px}
+.scout-chip{padding:2px 6px;border-radius:6px;font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;white-space:nowrap}
+.scout-chip-err{background:var(--fraco-bg);color:var(--fraco)}
+.scout-chip-win{background:var(--forte-bg);color:var(--forte)}
+.scout-chip-both{background:var(--acc2);color:var(--acc)}
+
+/* SCOUT POS (por jogadora, abaixo do resumo) */
+.scout-pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.scout-pos-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:8px 9px;border-left:3px solid var(--fraco)}
+.scout-pos-card .pc-hd{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--fraco);margin-bottom:5px}
+.scout-pos-card input{width:100%;background:var(--surf);border:1px solid var(--bdr);border-radius:5px;padding:4px 6px;font-size:11.5px;color:var(--txt);font-family:'Inter',sans-serif;outline:none;margin-bottom:5px}
+.pos-row{display:flex;gap:4px}
+.pos-tg{display:flex;gap:3px;flex:1}
+.pos-btn{flex:1;padding:4px 2px;border:1px solid var(--bdr);border-radius:5px;background:transparent;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;cursor:pointer;color:var(--dim);transition:.12s}
+.pos-btn.on{background:var(--acc2);border-color:var(--acc);color:var(--acc)}
+.scout-pos-card .pos-btn.on{background:var(--fraco-bg);border-color:var(--fraco);color:var(--fraco)}
 
 /* ALVO + GEN */
 .alvo-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;background:var(--card);border:1px solid var(--bdr);border-radius:8px;padding:8px 11px}
@@ -356,8 +383,88 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
       <!-- Percepções: chips das adversárias -->
       <div id="adv-perc-grid" class="profile-grid"></div>
 
-      <!-- Scout: contadores ao vivo -->
-      <div id="adv-scout-grid" class="scout-grid f-hidden"></div>
+      <!-- Scout: registro ponto a ponto -->
+      <div id="adv-scout-wrap" class="f-hidden">
+
+        <!-- painel 3 passos -->
+        <div class="scout-panel">
+          <div class="scout-hdr">
+            <span class="scout-hdr-title">Scout ao vivo</span>
+            <div class="scout-hdr-meta">
+              <span class="scout-count"><span id="sc-total">0</span> pts</span>
+              <button class="scout-undo" onclick="scoutUndo()">↩ Desfazer</button>
+            </div>
+          </div>
+
+          <div class="scout-step">
+            <div class="scout-step-lbl">1 · Jogadora</div>
+            <div class="scout-btns">
+              <button class="sc-btn" id="sbp-adv1" onclick="scSel('player','adv1',this)">Adv J1</button>
+              <button class="sc-btn" id="sbp-adv2" onclick="scSel('player','adv2',this)">Adv J2</button>
+            </div>
+          </div>
+
+          <div class="scout-step">
+            <div class="scout-step-lbl">2 · Golpe</div>
+            <div class="scout-btns" id="sc-shot-btns">
+              <button class="sc-btn" data-shot="FH"    onclick="scSel('shot','FH',this)">FH</button>
+              <button class="sc-btn" data-shot="BH"    onclick="scSel('shot','BH',this)">BH</button>
+              <button class="sc-btn" data-shot="Saque" onclick="scSel('shot','Saque',this)">Saque</button>
+              <button class="sc-btn" data-shot="Dev"   onclick="scSel('shot','Dev',this)">Dev</button>
+              <button class="sc-btn" data-shot="Voleio" onclick="scSel('shot','Voleio',this)">Voleio</button>
+              <button class="sc-btn" data-shot="Smash" onclick="scSel('shot','Smash',this)">Smash</button>
+              <button class="sc-btn" data-shot="Drop"  onclick="scSel('shot','Drop',this)">Drop</button>
+              <button class="sc-btn" data-shot="Lob"   onclick="scSel('shot','Lob',this)">Lob</button>
+            </div>
+          </div>
+
+          <div class="scout-step">
+            <div class="scout-step-lbl">3 · Resultado</div>
+            <div class="scout-btns">
+              <button class="sc-btn" id="sbo-err" onclick="scSel('out','err',this)">❌ Erro</button>
+              <button class="sc-btn" id="sbo-win" onclick="scSel('out','win',this)">⚡ Winner</button>
+              <button class="sc-btn" id="sbo-df"  onclick="scSel('out','df',this)">🎯 Dupla Falta</button>
+            </div>
+          </div>
+
+          <div class="scout-feedback fade" id="sc-feedback">✓ Registrado</div>
+
+          <div class="scout-summary scout-sum-open" id="sc-summary">
+            <div class="scout-sum-hdr" onclick="this.parentElement.classList.toggle('scout-sum-open')">
+              <span class="scout-sum-lbl">Resumo</span>
+              <span class="scout-sum-arr">▾</span>
+            </div>
+            <div class="scout-sum-body" id="sc-sum-body">
+              <div style="font-size:11.5px;color:var(--dim)">Nenhum ponto registrado ainda.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posição & Lado das adversárias (scout) -->
+        <div class="scout-pos-grid">
+          <div class="scout-pos-card" id="scpos-adv1">
+            <div class="pc-hd">Adv J1</div>
+            <input type="text" id="adv1-nome-sc" placeholder="Nome (opcional)" oninput="syncScoutName('adv1')">
+            <div class="pf" style="margin:0"><label style="font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:2px">Posição &amp; Lado</label>
+              <div class="pos-row">
+                <div class="pos-tg"><button class="pos-btn" onclick="setPos('adv1','fundo',this)">Fundo</button><button class="pos-btn" onclick="setPos('adv1','rede',this)">Rede</button></div>
+                <div class="pos-tg"><button class="pos-btn" onclick="setLado('adv1','esquerda',this)">Esq</button><button class="pos-btn" onclick="setLado('adv1','direita',this)">Dir</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="scout-pos-card" id="scpos-adv2">
+            <div class="pc-hd">Adv J2</div>
+            <input type="text" id="adv2-nome-sc" placeholder="Nome (opcional)" oninput="syncScoutName('adv2')">
+            <div class="pf" style="margin:0"><label style="font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:2px">Posição &amp; Lado</label>
+              <div class="pos-row">
+                <div class="pos-tg"><button class="pos-btn" onclick="setPos('adv2','fundo',this)">Fundo</button><button class="pos-btn" onclick="setPos('adv2','rede',this)">Rede</button></div>
+                <div class="pos-tg"><button class="pos-btn" onclick="setLado('adv2','esquerda',this)">Esq</button><button class="pos-btn" onclick="setLado('adv2','direita',this)">Dir</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /adv-scout-wrap -->
 
       <div class="alvo-row">
         <label>Alvo prioritário</label>
@@ -436,15 +543,26 @@ const posData = {}, ladoData = {};
 let alvoAdv = null;
 let fichaMode = 'perc'; // 'perc' | 'scout'
 
+/* ── SKILLS LIST (percepções) ── */
 const SKILLS = ['Saque','Devolução','Forehand','Backhand','Voleio','Smash/OH','Drop shot','Bola alta','Pressão','Movim.','Consistência'];
 
-/* scout counters: { adv1: { Saque:{err,win}, ... }, adv2: {...} } */
-const scoutData = {
-  adv1: Object.fromEntries(SKILLS.map(s => [s, {err:0, win:0}])),
-  adv2: Object.fromEntries(SKILLS.map(s => [s, {err:0, win:0}]))
-};
+/* ── SHOT → SKILL mapping for scout ── */
+const SHOTS = [
+  {id:'FH',    label:'FH',     skill:'Forehand'},
+  {id:'BH',    label:'BH',     skill:'Backhand'},
+  {id:'Saque', label:'Saque',  skill:'Saque'},
+  {id:'Dev',   label:'Dev',    skill:'Devolução'},
+  {id:'Voleio',label:'Voleio', skill:'Voleio'},
+  {id:'Smash', label:'Smash',  skill:'Smash/OH'},
+  {id:'Drop',  label:'Drop',   skill:'Drop shot'},
+  {id:'Lob',   label:'Lob',    skill:'Bola alta'},
+];
 
-/* ── BUILD PROFILE CARDS (minha equipe + percepções adversárias) ── */
+/* point log: [{player:'adv1'|'adv2', shot:'FH'|..., outcome:'err'|'win'|'df'}] */
+let scoutPoints = [];
+let scSel_player = null, scSel_shot = null, scSel_out = null;
+
+/* ── BUILD PROFILE CARDS (percepções) ── */
 function buildProfileCard(prefix, label, isOpp) {
   const cls = isOpp ? 'opp' : 'mine';
   const armaChips = SKILLS.map(v =>
@@ -471,44 +589,6 @@ function buildProfileCard(prefix, label, isOpp) {
   </div>`;
 }
 
-/* ── BUILD SCOUT CARDS ── */
-function buildScoutCard(prefix, label) {
-  const rows = SKILLS.map(s => `
-    <div class="tally-row">
-      <span class="tally-skill">${s}</span>
-      <button class="tally-btn err" id="sc-${prefix}-${s}-err"
-        onclick="tally('${prefix}','${s}','err',1,this)"
-        oncontextmenu="tally('${prefix}','${s}','err',-1,this);return false">
-        <span class="tally-icon">❌</span><span class="tally-n" id="scn-${prefix}-${s}-err">0</span>
-      </button>
-      <button class="tally-btn win" id="sc-${prefix}-${s}-win"
-        onclick="tally('${prefix}','${s}','win',1,this)"
-        oncontextmenu="tally('${prefix}','${s}','win',-1,this);return false">
-        <span class="tally-icon">⚡</span><span class="tally-n" id="scn-${prefix}-${s}-win">0</span>
-      </button>
-    </div>`).join('');
-  return `<div class="scout-card" id="sc-${prefix}">
-    <div class="pc-hd">${label}
-      <button onclick="resetScout('${prefix}')">limpar</button>
-    </div>
-    <input type="text" id="${prefix}-nome-sc" placeholder="Nome (opcional)"
-      oninput="syncScoutName('${prefix}')">
-    ${rows}
-    <div class="pf" style="margin-top:6px"><label>Posição &amp; Lado</label>
-      <div class="pos-row">
-        <div class="pos-tg">
-          <button class="pos-btn" onclick="setPos('${prefix}','fundo',this)">Fundo</button>
-          <button class="pos-btn" onclick="setPos('${prefix}','rede',this)">Rede</button>
-        </div>
-        <div class="pos-tg">
-          <button class="pos-btn" onclick="setLado('${prefix}','esquerda',this)">Esq</button>
-          <button class="pos-btn" onclick="setLado('${prefix}','direita',this)">Dir</button>
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
 document.getElementById('my-profile-grid').innerHTML =
   buildProfileCard('my1','Minha J1',false) +
   buildProfileCard('my2','Minha J2',false);
@@ -517,47 +597,116 @@ document.getElementById('adv-perc-grid').innerHTML =
   buildProfileCard('adv1','Adv J1',true) +
   buildProfileCard('adv2','Adv J2',true);
 
-document.getElementById('adv-scout-grid').innerHTML =
-  buildScoutCard('adv1','Adv J1') +
-  buildScoutCard('adv2','Adv J2');
-
-/* hold-to-decrement on mobile */
-(function addHold() {
-  let timer;
-  document.addEventListener('touchstart', e => {
-    const btn = e.target.closest('.tally-btn');
-    if (!btn) return;
-    const [,prefix,skill,type] = btn.id.split('-');
-    timer = setTimeout(() => tally(prefix, skill, type, -1, btn), 500);
-  }, {passive:true});
-  document.addEventListener('touchend', () => clearTimeout(timer), {passive:true});
-})();
-
-/* ── SCOUT FUNCTIONS ── */
-function tally(prefix, skill, type, delta, btn) {
-  const d = scoutData[prefix][skill];
-  d[type] = Math.max(0, d[type] + delta);
-  document.getElementById(`scn-${prefix}-${skill}-${type}`).textContent = d[type];
-  const errBtn = document.getElementById(`sc-${prefix}-${skill}-err`);
-  const winBtn = document.getElementById(`sc-${prefix}-${skill}-win`);
-  errBtn.classList.toggle('hit', d.err > 0);
-  winBtn.classList.toggle('hit', d.win > 0);
+/* ── SCOUT 3-STEP SELECTION ── */
+function scSel(type, val, btn) {
+  if (type === 'player') {
+    scSel_player = val;
+    document.querySelectorAll('#sbp-adv1,#sbp-adv2').forEach(b => b.className = 'sc-btn');
+    btn.classList.add('sel-player');
+  } else if (type === 'shot') {
+    scSel_shot = val;
+    document.querySelectorAll('#sc-shot-btns .sc-btn').forEach(b => b.classList.remove('sel-shot'));
+    btn.classList.add('sel-shot');
+  } else if (type === 'out') {
+    /* only allow DF if shot is Saque */
+    if (val === 'df' && scSel_shot !== 'Saque') return;
+    scSel_out = val;
+    document.querySelectorAll('#sbo-err,#sbo-win,#sbo-df').forEach(b => b.className = 'sc-btn');
+    btn.classList.add('sel-out-' + val);
+  }
+  if (scSel_player && scSel_shot && scSel_out) scRecord();
 }
 
-function resetScout(prefix) {
-  SKILLS.forEach(s => {
-    scoutData[prefix][s] = {err:0, win:0};
-    document.getElementById(`scn-${prefix}-${s}-err`).textContent = '0';
-    document.getElementById(`scn-${prefix}-${s}-win`).textContent = '0';
-    document.getElementById(`sc-${prefix}-${s}-err`).classList.remove('hit');
-    document.getElementById(`sc-${prefix}-${s}-win`).classList.remove('hit');
+function scRecord() {
+  scoutPoints.push({player: scSel_player, shot: scSel_shot, outcome: scSel_out});
+  /* keep player, clear shot + outcome */
+  scSel_shot = null; scSel_out = null;
+  document.querySelectorAll('#sc-shot-btns .sc-btn').forEach(b => b.classList.remove('sel-shot'));
+  document.querySelectorAll('#sbo-err,#sbo-win,#sbo-df').forEach(b => b.className = 'sc-btn');
+  /* feedback flash */
+  const fb = document.getElementById('sc-feedback');
+  fb.classList.remove('fade');
+  setTimeout(() => fb.classList.add('fade'), 800);
+  scUpdateSummary();
+}
+
+function scoutUndo() {
+  if (!scoutPoints.length) return;
+  scoutPoints.pop();
+  scUpdateSummary();
+}
+
+function scUpdateSummary() {
+  document.getElementById('sc-total').textContent = scoutPoints.length;
+  const body = document.getElementById('sc-sum-body');
+  if (!scoutPoints.length) {
+    body.innerHTML = '<div style="font-size:11.5px;color:var(--dim)">Nenhum ponto registrado ainda.</div>';
+    return;
+  }
+  let html = '';
+  ['adv1','adv2'].forEach(prefix => {
+    const pts = scoutPoints.filter(p => p.player === prefix);
+    if (!pts.length) return;
+    const nameEl = document.getElementById(prefix+'-nome-sc');
+    const name = nameEl?.value?.trim() || (prefix==='adv1'?'Adv J1':'Adv J2');
+    /* stats per shot */
+    const stats = {};
+    pts.forEach(p => {
+      if (!stats[p.shot]) stats[p.shot] = {err:0,win:0,df:0};
+      if (p.outcome==='err') stats[p.shot].err++;
+      else if (p.outcome==='win') stats[p.shot].win++;
+      else if (p.outcome==='df') { stats[p.shot].err++; stats[p.shot].df++; }
+    });
+    const chips = Object.entries(stats).map(([shot,s]) => {
+      const parts = [];
+      if (s.df) parts.push(`DF×${s.df}`);
+      else if (s.err) parts.push(`❌${s.err}`);
+      if (s.win) parts.push(`⚡${s.win}`);
+      const cls = s.err && s.win ? 'scout-chip-both' : s.err ? 'scout-chip-err' : 'scout-chip-win';
+      return `<span class="scout-chip ${cls}">${shot} ${parts.join(' ')}</span>`;
+    }).join('');
+    html += `<div class="scout-player-sum"><div class="scout-player-lbl">${name} (${pts.length} pts)</div>
+      <div class="scout-shot-row">${chips}</div></div>`;
   });
+  body.innerHTML = html;
 }
 
 function syncScoutName(prefix) {
+  /* mirror scout name input to the percepções name field (used in plan) */
   const sc = document.getElementById(prefix+'-nome-sc');
   const ch = document.getElementById(prefix+'-nome');
   if (sc && ch) ch.value = sc.value;
+  scUpdateSummary();
+}
+
+/* ── DERIVE SCOUT PROFILE ── */
+function deriveScoutProfile(prefix) {
+  const pts = scoutPoints.filter(p => p.player === prefix);
+  if (!pts.length) return {armas:[], fracos:[]};
+
+  const stats = {};
+  SHOTS.forEach(s => stats[s.id] = {err:0, win:0, df:0});
+  pts.forEach(p => {
+    if (!stats[p.shot]) return;
+    if (p.outcome === 'err') stats[p.shot].err++;
+    else if (p.outcome === 'win') stats[p.shot].win++;
+    else if (p.outcome === 'df') { stats[p.shot].err++; stats[p.shot].df++; }
+  });
+
+  const fracos = [], armas = [];
+  SHOTS.forEach(s => {
+    const d = stats[s.id];
+    /* Saque: 1 dupla falta já é fraco em amador */
+    if (s.id === 'Saque' && d.df >= 1) { fracos.push(s.skill); return; }
+    if (d.err >= 2) fracos.push(s.skill);
+    if (d.win >= 2) armas.push(s.skill);
+  });
+
+  /* Consistência: ≥5 erros totais em qualquer golpe */
+  const totalErr = pts.filter(p => p.outcome === 'err' || p.outcome === 'df').length;
+  if (totalErr >= 5 && !fracos.includes('Consistência')) fracos.push('Consistência');
+
+  return {armas: [...new Set(armas)], fracos: [...new Set(fracos)]};
 }
 
 /* ── SOURCE TOGGLE ── */
@@ -566,7 +715,7 @@ function setSrc(mode) {
   document.getElementById('src-perc').classList.toggle('on', mode === 'perc');
   document.getElementById('src-scout').classList.toggle('on', mode === 'scout');
   document.getElementById('adv-perc-grid').classList.toggle('f-hidden', mode !== 'perc');
-  document.getElementById('adv-scout-grid').classList.toggle('f-hidden', mode !== 'scout');
+  document.getElementById('adv-scout-wrap').classList.toggle('f-hidden', mode !== 'scout');
 }
 
 /* ── COMMON HELPERS ── */
@@ -600,10 +749,7 @@ function setAlvo(val, btn) {
 function getPf(prefix) {
   const isAdv = prefix.startsWith('adv');
   if (isAdv && fichaMode === 'scout') {
-    /* derive armas/fracos from scout tallies (threshold ≥2) */
-    const d = scoutData[prefix];
-    const armas = SKILLS.filter(s => d[s].win >= 2);
-    const fracos = SKILLS.filter(s => d[s].err >= 2);
+    const {armas, fracos} = deriveScoutProfile(prefix);
     const nameEl = document.getElementById(prefix+'-nome-sc') || document.getElementById(prefix+'-nome');
     return {
       nome: nameEl?.value?.trim() || '',
@@ -732,12 +878,12 @@ function gerarPlano() {
 
   /* scout detail hint */
   function scoutHint(prefix) {
-    if (fichaMode !== 'scout') return '';
-    const d = scoutData[prefix];
-    const rows = SKILLS.filter(s => d[s].err > 0 || d[s].win > 0)
-      .map(s => `${s}: ${d[s].err>0?'❌'+d[s].err+' ':''}${d[s].win>0?'⚡'+d[s].win:''}`.trim())
-      .join(' · ');
-    return rows ? `<div style="font-size:10.5px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,48,160,.15)">${rows}</div>` : '';
+    if (fichaMode !== 'scout' || !scoutPoints.length) return '';
+    const {armas, fracos} = deriveScoutProfile(prefix);
+    const parts = [];
+    if (fracos.length) parts.push(`Fracos: ${fracos.join(', ')}`);
+    if (armas.length) parts.push(`Armas: ${armas.join(', ')}`);
+    return parts.length ? `<div style="font-size:10.5px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid rgba(96,48,160,.15)">${parts.join(' · ')}</div>` : '';
   }
 
   let html = `<div class="matchup-card">
