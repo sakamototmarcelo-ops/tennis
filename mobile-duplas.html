@@ -1,0 +1,975 @@
+<title>Duplas — Guia Rápido</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap">
+
+<style>
+:root{
+  --bg:#f0f5f1;--surf:#e2ece4;--card:#ffffff;--bdr:#b8d4be;
+  --txt:#0d2015;--dim:#3a6a46;--acc:#1a7a30;--acc2:#d4eedb;
+  --a1:#1a5fc0;--a2:#0088aa;--b1:#c04a10;--b2:#907000;
+  --err:#c03030;--warn:#c08000;--ok:#1a7a30;
+  --nav-h:64px;
+  color-scheme:light
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex-direction:column;max-width:480px;margin:0 auto}
+
+/* ── TOP BAR ── */
+.topbar{flex-shrink:0;background:var(--surf);border-bottom:1px solid var(--bdr);padding:10px 16px 8px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.topbar h1{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--acc)}
+.topbar p{font-size:12px;color:var(--dim);margin-top:1px}
+
+/* ── SCROLL AREA ── */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 14px 12px}
+
+/* ── BOTTOM NAV ── */
+.botnav{flex-shrink:0;background:var(--surf);border-top:1px solid var(--bdr);display:flex;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:env(safe-area-inset-bottom,0px)}
+.botnav::-webkit-scrollbar{display:none}
+.navbtn{flex-shrink:0;min-width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 6px 10px;cursor:pointer;border:none;background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:500;transition:.15s;min-height:var(--nav-h)}
+.navbtn.on{color:var(--acc)}
+.navbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── SECTIONS ── */
+.sec{display:none}
+.sec.on{display:block}
+
+/* ── PAGE LABEL ── */
+.pg-lbl{font-size:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:10px}
+
+/* ── CHECK CARDS ── */
+.check-toggle{display:flex;gap:8px;margin-bottom:14px}
+.cht{flex:1;padding:10px;border-radius:8px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}
+.cht.on{background:var(--acc2);color:var(--acc);border-color:var(--acc)}
+.chklist{display:none}
+.chklist.on{display:block}
+.chk-item{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.15s;user-select:none}
+.chk-item.done{background:var(--acc2);border-color:var(--acc)}
+.chk-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;margin-top:1px}
+.chk-item.done .chk-box{background:var(--acc);border-color:var(--acc)}
+.chk-tick{display:none;width:12px;height:10px}
+.chk-item.done .chk-tick{display:block}
+.chk-text{font-size:16px;line-height:1.45;color:var(--txt);font-weight:500}
+.chk-item.done .chk-text{color:var(--acc)}
+.chk-sub{font-size:13px;color:var(--dim);margin-top:2px}
+.chk-item.done .chk-sub{color:var(--acc2)}
+.reset-btn{width:100%;padding:11px;border-radius:10px;background:transparent;border:1px solid var(--bdr);color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px;transition:.15s}
+.reset-btn:active{background:var(--bdr)}
+
+/* ── SITUATION CARDS ── */
+.sit-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sit-chip{padding:8px 14px;border-radius:20px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:.15s}
+.sit-chip.on{background:var(--acc2);color:var(--acc);border-color:var(--acc)}
+.sit-panel{display:none}
+.sit-panel.on{display:block}
+.role-card{border-radius:10px;overflow:hidden;margin-bottom:9px}
+.role-hd{padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:7px;cursor:pointer}
+.role-hd .arr{margin-left:auto;font-size:16px;transition:.2s;display:inline-block}
+.role-hd.open .arr{transform:rotate(180deg)}
+.role-body{display:none;padding:11px 14px 13px;border:1px solid;border-top:none;border-radius:0 0 10px 10px}
+.role-body.open{display:block}
+.role-body ul{padding-left:15px;list-style:disc}
+.role-body li{font-size:15px;line-height:1.6;margin-bottom:6px}
+.role-body li:last-child{margin-bottom:0}
+.role-body li strong{font-weight:700}
+.sit-tip{background:var(--surf);border-left:3px solid var(--acc);padding:10px 12px;border-radius:0 7px 7px 0;font-size:13.5px;color:var(--dim);font-style:italic;margin-top:4px;line-height:1.45}
+.r-a1 .role-hd{background:var(--a1)}
+.r-a1 .role-body{background:#ddeaff;border-color:#8ab4f0;color:#0a2a60}
+.r-a1 li strong{color:#1a50b0}
+.r-a2 .role-hd{background:var(--a2)}
+.r-a2 .role-body{background:#d4f0f8;border-color:#80cce0;color:#003848}
+.r-a2 li strong{color:#006888}
+.r-b1 .role-hd{background:var(--b1)}
+.r-b1 .role-body{background:#ffe8d8;border-color:#e0a080;color:#5c1e00}
+.r-b1 li strong{color:#a03010}
+.r-b2 .role-hd{background:var(--b2)}
+.r-b2 .role-body{background:#fff4cc;border-color:#d4b840;color:#3a2800}
+.r-b2 li strong{color:#7a5800}
+
+/* ── STROKES ── */
+.stroke-acc{background:var(--card);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.sacc-hd{padding:13px 14px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.sacc-hd h3{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--txt);flex:1}
+.sacc-hd .arr{color:var(--dim);font-size:16px;transition:.2s;flex-shrink:0}
+.sacc-hd.open .arr{transform:rotate(180deg)}
+.pbadge{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.pb1{background:#d4eedb;color:#1a6028;border:1px solid #70c080}
+.pb2{background:#d4eaf8;color:#0a4878;border:1px solid #6098d0}
+.pb3{background:#fff4cc;color:#6a4800;border:1px solid #c09820}
+.sacc-body{display:none;padding:0 14px 13px;border-top:1px solid var(--bdr)}
+.sacc-body.open{display:block}
+.sacc-body h4{font-size:11.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--dim);margin:10px 0 5px}
+.sacc-body ul{padding-left:14px;list-style:disc}
+.sacc-body li{font-size:15px;line-height:1.55;margin-bottom:5px;color:var(--txt)}
+.sacc-body li strong{font-weight:700;color:var(--acc)}
+.key-cue{background:var(--acc2);border-radius:6px;padding:9px 12px;font-size:15px;color:var(--acc);font-weight:600;margin-top:8px;line-height:1.4}
+
+/* ── MENTAL ── */
+.mantra-card{background:var(--card);border-left:3px solid var(--acc);border-radius:0 10px 10px 0;padding:13px 14px;margin-bottom:9px}
+.mantra-card .mctx{font-size:11.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--dim);margin-bottom:4px}
+.mantra-card .mctxt{font-size:15.5px;color:var(--txt);line-height:1.5;font-style:italic}
+.mantra-card .mctxt strong{font-style:normal;color:var(--acc);font-weight:700}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sc-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:11px 12px}
+.sc-card .scn{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--acc);line-height:1;margin-bottom:4px}
+.sc-card h4{font-size:11.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--dim);margin-bottom:5px;text-transform:uppercase}
+.sc-card p{font-size:13.5px;line-height:1.45;color:var(--txt)}
+.sc-card p strong{color:var(--acc);font-weight:600}
+
+/* ── SIGNALS ── */
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sig-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:12px 13px;text-align:center}
+.sig-icon{font-size:30px;line-height:1;margin-bottom:6px}
+.sig-card h3{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:700;color:var(--acc);margin-bottom:4px}
+.sig-card p{font-size:13px;color:var(--dim);line-height:1.4}
+.verbal-list{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px;margin-top:8px}
+.verbal-list h3{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--acc);margin-bottom:8px}
+.v-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)}
+.v-item:last-child{border-bottom:none;padding-bottom:0}
+.v-word{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--txt);width:88px;flex-shrink:0}
+.v-desc{font-size:13.5px;color:var(--dim);line-height:1.35}
+
+/* ── ROTINAS ── */
+.rot-block{margin-bottom:18px}
+.rot-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.rot-sub{font-size:12.5px;color:var(--dim);margin-bottom:12px}
+.step-list{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--acc);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-txt{font-size:15px;font-weight:500;color:var(--txt);line-height:1.4}
+.step-hint{font-size:12.5px;color:var(--dim);margin-top:3px;line-height:1.35}
+.step.highlight{border-color:var(--acc);background:var(--acc2)}
+.step.highlight .step-num{background:var(--acc)}
+.tactic-q{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:13px 14px;margin-bottom:8px}
+.tq-label{font-size:11px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);margin-bottom:5px}
+.tq-q{font-size:15.5px;font-weight:700;color:var(--txt);font-family:'Space Grotesk',sans-serif;margin-bottom:8px}
+.tq-opts{display:flex;flex-direction:column;gap:5px}
+.tq-opt{font-size:13.5px;color:var(--dim);padding-left:14px;position:relative;line-height:1.4}
+.tq-opt::before{content:"→";position:absolute;left:0;color:var(--acc)}
+.tq-opt strong{color:var(--txt);font-weight:600}
+.avoid-card{background:#fff4f4;border:1px solid #e0b0b0;border-radius:10px;padding:12px 14px;margin-top:4px}
+.avoid-card h4{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;color:#a03030;margin-bottom:7px;letter-spacing:.4px}
+.avoid-card li{font-size:13.5px;color:#703030;line-height:1.5;margin-bottom:4px;padding-left:14px;position:relative;list-style:none}
+.avoid-card li::before{content:"✗";position:absolute;left:0;color:#c04040;font-weight:700}
+</style>
+
+<div class="topbar">
+  <h1>Guia Rápido — Duplas</h1>
+  <p>56 anos · amador · duplista</p>
+</div>
+
+<div class="content" id="main-content">
+
+<!-- ── CHECK ── -->
+<div class="sec on" id="s-check">
+  <div class="pg-lbl">Antes do Ponto</div>
+  <div class="check-toggle">
+    <button class="cht on" onclick="switchCh('ch-sac',this)">Sacando</button>
+    <button class="cht" onclick="switchCh('ch-dev',this)">Devolvendo</button>
+  </div>
+
+  <div class="chklist on" id="ch-sac">
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Alvo do saque definido</div>
+        <div class="chk-sub">T · corpo · aberto — decidir antes de jogar a bola</div>
+      </div>
+    </div>
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Parceiro sinalizado</div>
+        <div class="chk-sub">Punho = ficar · mão aberta = roubar · confirmação recebida</div>
+      </div>
+    </div>
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Vou avançar à rede</div>
+        <div class="chk-sub">Avançar no impacto do saque — não esperar a devolução</div>
+      </div>
+    </div>
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Primeiro voleio é posicional</div>
+        <div class="chk-sub">Bola baixa nos pés — não tentar winner no 1º voleio</div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetCh('ch-sac')">↺ Reiniciar</button>
+  </div>
+
+  <div class="chklist" id="ch-dev">
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Alvo: cruzado e baixo</div>
+        <div class="chk-sub">Pelo centro da rede — não tentar winner</div>
+      </div>
+    </div>
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Backswing compacto</div>
+        <div class="chk-sub">Máximo 30cm — saque rápido não dá tempo para mais</div>
+      </div>
+    </div>
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Avançar imediatamente após devolver</div>
+        <div class="chk-sub">3 passos em direção à rede — mesmo se a devolução for mediana</div>
+      </div>
+    </div>
+    <div class="chk-item" onclick="toggleChk(this)">
+      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
+      <div>
+        <div class="chk-text">Observar o parceiro do sacador</div>
+        <div class="chk-sub">Se ele se mover → devolver ao longo da linha</div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetCh('ch-dev')">↺ Reiniciar</button>
+  </div>
+</div>
+
+<!-- ── SITUAÇÕES ── -->
+<div class="sec" id="s-sit">
+  <div class="pg-lbl">Situações de Jogo</div>
+  <div class="sit-chips">
+    <button class="sit-chip on" onclick="showSit('sit1',this)">1. Padrão</button>
+    <button class="sit-chip" onclick="showSit('sit2',this)">2. Roubo</button>
+    <button class="sit-chip" onclick="showSit('sit3',this)">3. Austral.</button>
+    <button class="sit-chip" onclick="showSit('sit4',this)">4. 2 Atrás</button>
+    <button class="sit-chip" onclick="showSit('sit5',this)">5. Lob</button>
+    <button class="sit-chip" onclick="showSit('sit6',this)">6. 2 Rede</button>
+    <button class="sit-chip" onclick="showSit('sit7',this)">7. Saque↑</button>
+  </div>
+
+  <!-- S1 -->
+  <div class="sit-panel on" id="sit1">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1 — Sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Saque pelo <strong>T ou corpo</strong> — reduz ângulo de devolução</li>
+        <li>Avançar à rede <strong>no impacto</strong> do saque</li>
+        <li>Split step quando B1 bate · primeiro voleio baixo</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-a2">
+      <div class="role-hd" onclick="toggleRole(this)">A2 — Parceiro do sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Sinal: <strong>punho = ficar · mão aberta = roubar</strong></li>
+        <li>Movimento pendular — nunca parado</li>
+        <li>Bola pelo meio é <strong>sempre sua</strong> — "minha!"</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1 — Recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li><strong>Cruzado e baixo</strong> — não tentar winner</li>
+        <li>Avançar à rede <strong>imediatamente</strong> após devolver</li>
+        <li>Se A2 se move → devolver ao longo da linha</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b2">
+      <div class="role-hd" onclick="toggleRole(this)">B2 — Parceiro do recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Na linha de saque, pronto para avançar</li>
+        <li>Após boa devolução de B1: <strong>sobe junto</strong></li>
+        <li>Observar A2 — se cruzar, cobre o corredor vazio</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">Objetivo: dois na rede o mais rápido possível — dos dois times.</div>
+  </div>
+
+  <!-- S2 -->
+  <div class="sit-panel" id="sit2">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1 — Sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Saque pelo T — forçar devolução cruzada (para onde A2 vai)</li>
+        <li>Após saque: <strong>cobre o lado que A2 deixou</strong> imediatamente</li>
+        <li>Os dois trocam de lado — movimento de equipe</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-a2">
+      <div class="role-hd" onclick="toggleRole(this)">A2 — Parceiro do sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Mover <strong>APÓS o impacto do saque</strong> — não antes</li>
+        <li>Diagonal para a rede — cortar a bola o mais cedo possível</li>
+        <li>Voleio sempre para o <strong>corredor oposto</strong> — nunca cruzado</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1 — Recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Viu A2 mover? → <strong>devolver ao longo da linha</strong></li>
+        <li>Não viu? → cruzado normal (vai direto para A2)</li>
+        <li>Em dúvida: bola baixa pelo meio</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b2">
+      <div class="role-hd" onclick="toggleRole(this)">B2 — Parceiro do recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Observar A2 constantemente</li>
+        <li><strong>Gritar "Linha!"</strong> para B1 quando A2 cruzar</li>
+        <li>Se A2 roubou: recuar para cobrir o corredor exposto</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">A2 move após o impacto. A1 cobre o outro lado. B2 avisa B1 com "Linha!"</div>
+  </div>
+
+  <!-- S3 -->
+  <div class="sit-panel" id="sit3">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1 — Sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Saque no <strong>corpo ou backhand de B1</strong> — dificulta a linha</li>
+        <li>Após saque: deslocar para o <strong>lado oposto de A2</strong></li>
+        <li>Cobrir o corredor que A2 não está cobrindo</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-a2">
+      <div class="role-hd" onclick="toggleRole(this)">A2 — Parceiro do sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Posição: <strong>mesmo lado do sacador</strong> (não o oposto)</li>
+        <li>Se B1 cruza: interceptação fácil — bola vem direto para você</li>
+        <li>Se B1 vai na linha: A1 cobre — sem pânico</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1 — Recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li><strong>NÃO devolver cruzado</strong> — vai direto para A2</li>
+        <li>Opção 1: <strong>devolver ao longo da linha</strong></li>
+        <li>Opção 2: <strong>lob profundo</strong> sobre A2</li>
+        <li>Opção 3: correr ao redor para usar o forehand na linha</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b2">
+      <div class="role-hd" onclick="toggleRole(this)">B2 — Parceiro do recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li><strong>"Australiana!"</strong> antes do saque — avisar B1</li>
+        <li>Se B1 loba com sucesso: avançar à rede enquanto A recua</li>
+        <li>Pronto para cobrir o corredor central se B1 tentar lob</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">B2 avisa antes do saque. B1 nunca pode devolver cruzado — alternativas: linha ou lob.</div>
+  </div>
+
+  <!-- S4 -->
+  <div class="sit-panel" id="sit4">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1 — Sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li><strong>Saque forte e profundo</strong> — forçar devolução fraca</li>
+        <li>Avançar normalmente — voleiar com ângulo para abrir quadra</li>
+        <li>Voleios profundos empurram os dois para trás</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-a2">
+      <div class="role-hd" onclick="toggleRole(this)">A2 — Parceiro do sacador<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Sinal: <strong>punho (ficar)</strong> — sem alvo fácil para roubo</li>
+        <li>Cobrir o centro — bola pelo meio é sempre sua</li>
+        <li>Aproveitar para voleiar com ângulo — adversários estão atrás</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1 — Recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Devolução cruzada e baixa — dificulta primeiro voleio</li>
+        <li>Avançar <strong>somente se a devolução foi boa</strong></li>
+        <li>Se pressionado: ficar atrás com B2</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b2">
+      <div class="role-hd" onclick="toggleRole(this)">B2 — Parceiro do recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Posição: linha de fundo (não linha de saque)</li>
+        <li>Comunicar: "direito meu / esquerdo seu" com B1</li>
+        <li><strong>Lob profundo</strong> é a arma principal quando A domina a rede</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">Dois atrás elimina o alvo fácil para A2. Lob profundo é a arma. Comunicação de cobertura é essencial.</div>
+  </div>
+
+  <!-- S5 -->
+  <div class="sit-panel" id="sit5">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1 — Na rede (lado do lob)<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Se alcança: <strong>"minha!"</strong> e posicionar para smash</li>
+        <li>Se o lob passa: <strong>"switch!"</strong> imediato — A2 cobre, A1 recua</li>
+        <li>Recuar com passos de lado — nunca de costas direto</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-a2">
+      <div class="role-hd" onclick="toggleRole(this)">A2 — Na rede (lado contrário)<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Após "switch!": <strong>avançar para cobrir o corredor de A1</strong></li>
+        <li>Se A1 vai para smash: cobrir toda a rede</li>
+        <li>Resposta imediata: "teu!" / "meu!" / "switch!"</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1 — Equipe que lobou<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Após o lob: <strong>avançar à rede IMEDIATAMENTE</strong></li>
+        <li>Não esperar para ver se o lob entrou — avançar no ato</li>
+        <li>Se lob foi curto e A vai smash: recuar e defender</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b2">
+      <div class="role-hd" onclick="toggleRole(this)">B2 — Equipe que lobou<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li><strong>Avançar junto com B1</strong> enquanto adversários recuam</li>
+        <li>"Vai! Sobe!" — comunicar e confirmar avanço conjunto</li>
+        <li>Se smash for fraca: finalizar com voleio agressivo</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">Quem lobou sobe à rede. Quem foi lobado grita "switch!" e troca. Automático e em voz alta.</div>
+  </div>
+
+  <!-- S6 -->
+  <div class="sit-panel" id="sit6">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1/A2 — No fundo (defensivo)<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Opção 1: <strong>bola pelo meio</strong> — cria hesitação entre os dois</li>
+        <li>Opção 2: <strong>bola nos pés</strong> — força meio-voleio difícil</li>
+        <li>Opção 3: <strong>lob sobre o backhand</strong> do mais próximo</li>
+        <li><strong>Nunca</strong> passe lateral — abre ângulo desnecessário</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1/B2 — Na rede (dominante)<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Dividir a rede ao meio — cada um cobre sua metade</li>
+        <li><strong>Movimento pendular</strong> — nunca parado</li>
+        <li>Voleio: <strong>suave e colocado nos pés</strong> — não força</li>
+        <li>Bola pelo meio: quem tem o forehand chama "minha!"</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">Fundo: pelo meio ou nos pés. Nunca parallel pass. Rede: suave + pendular + cobrir centro.</div>
+  </div>
+
+  <!-- S7 -->
+  <div class="sit-panel" id="sit7">
+    <div class="role-card r-a1">
+      <div class="role-hd" onclick="toggleRole(this)">A1 — Sacador forte<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Variar direção — manter receptor incerto</li>
+        <li>Avançar à rede — receptor terá menos tempo para preparar</li>
+        <li>Saque kick para o BH: dificulta devolução ao longo da linha</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-a2">
+      <div class="role-hd" onclick="toggleRole(this)">A2 — Parceiro<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Saque forte = devolução fraca = <strong>oportunidade de roubo</strong></li>
+        <li>Sinal: mão aberta com frequência quando A1 saca forte</li>
+        <li>Movimento pendular agressivo — pressão psicológica em B1</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b1">
+      <div class="role-hd" onclick="toggleRole(this)">B1 — Recebedor<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li><strong>Bloqueio compacto</strong> — backswing zero, posicionar a raquete</li>
+        <li>Devolver baixo e cruzado — não tentar winner</li>
+        <li>Emergência: <strong>lob alto com topspin</strong> — dá tempo e tira A2</li>
+      </ul></div>
+    </div>
+    <div class="role-card r-b2">
+      <div class="role-hd" onclick="toggleRole(this)">B2 — Parceiro<span class="arr">▾</span></div>
+      <div class="role-body"><ul>
+        <li>Se B1 tem dificuldade: <strong>recuar junto para linha de fundo</strong></li>
+        <li>"Loba!" / "Fica atrás!" — comunicar estratégia antes do saque</li>
+        <li>Dois atrás: cobrir juntos + lob como arma principal</li>
+      </ul></div>
+    </div>
+    <div class="sit-tip">Bloqueio compacto + lob alto são as melhores armas. Dois atrás elimina o alvo fácil para A2.</div>
+  </div>
+</div>
+
+<!-- ── GOLPES ── -->
+<div class="sec" id="s-golpes">
+  <div class="pg-lbl">Golpes — Cues Técnicos</div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Saque</h3><span class="pbadge pb1">P1</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Quadril antes do ombro · lançamento à frente · alvo T</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Lançamento à frente e levemente para dentro — não para o lado</li>
+        <li>Relaxar o braço no backswing — tensão desperdiça energia</li>
+        <li>Pronação do antebraço no impacto — não "empurrar"</li>
+        <li>Avançar à rede imediatamente após o saque</li>
+      </ul>
+      <h4>Para 56 anos</h4>
+      <ul><li>Saque kick protege o ombro · priorizar colocação sobre velocidade</li></ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Devolução</h3><span class="pbadge pb1">P1</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Backswing curto · cruzado baixo · avançar</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Swing compacto — max 30cm de backswing</li>
+        <li>Alvo: cruzado pelo centro da rede (ponto mais baixo)</li>
+        <li>Decidir o alvo antes do adversário bater</li>
+        <li>3 passos em direção à rede após devolver</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Primeiro Voleio</h3><span class="pbadge pb1">P1</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Posicional · split step · bola baixa nos pés</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>É posicional — objetivo: bola baixa que o adversário não finaliza</li>
+        <li>Punho firme — não balançar, deixar a bola entrar</li>
+        <li>Parar (split step) antes de bater — nunca em movimento</li>
+        <li>Após o voleio: avançar mais 2 passos</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Voleio de Bloqueio</h3><span class="pbadge pb2">P2</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Punho travado · cotovelo alto · absorver</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Punho travado no impacto — absorver, não rebater</li>
+        <li>Cotovelo alto, raquete à frente do corpo</li>
+        <li>Follow-through curto — raquete aponta para o alvo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Poach (Roubo)</h3><span class="pbadge pb2">P2</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Move APÓS impacto · corredor oposto · avisar parceiro</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Mover-se APÓS o impacto do adversário — nunca antes</li>
+        <li>Diagonal em direção à rede — cortar a bola cedo</li>
+        <li>Voleio sempre para o corredor oposto</li>
+        <li>"Minha!" para o parceiro ao cruzar</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Smash</h3><span class="pbadge pb2">P2</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Girar de lado · passos cruzados · contato alto</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Girar de lado IMEDIATAMENTE ao ver o lob</li>
+        <li>Passos cruzados para trás — não de costas direto</li>
+        <li>Bola deve descer à frente do ombro — não acima da cabeça</li>
+        <li>Quadril gira antes do ombro — não forçar no braço</li>
+      </ul>
+      <h4>Para 56 anos</h4>
+      <ul><li>Smash colocado &gt; smash forte · evitar smash atrás do corpo</li></ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Bola de Aproximação</h3><span class="pbadge pb2">P2</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Bater em movimento · slice fundo · não parar</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Bola curta do adversário = sinal para avançar</li>
+        <li>Bater em movimento em direção à rede</li>
+        <li>Slice profundo ao longo da linha — não força no centro</li>
+        <li>Após bater: avançar mais 3–4 passos</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Lob</h3><span class="pbadge pb2">P2</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Mín. 2m de altura · profundo · sobre o backhand</div>
+      <h4>Defensivo (slice)</h4>
+      <ul>
+        <li>Face aberta, movimento de baixo para cima</li>
+        <li>Alto o suficiente — mínimo 2m de altura</li>
+        <li>Profundo próximo à linha de fundo adversária</li>
+      </ul>
+      <h4>Ofensivo (topspin)</h4>
+      <ul>
+        <li>Fechar a raquete — gerar spin</li>
+        <li>Avançar à rede imediatamente após o lob</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Half Volley</h3><span class="pbadge pb3">P3</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Joelhos profundos · suave · colocar em jogo</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Joelhos profundamente dobrados — corpo ao nível da bola</li>
+        <li>Raquete paralela ao chão no contato</li>
+        <li>Swing suave e curto — objetivo: colocar em jogo</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stroke-acc">
+    <div class="sacc-hd" onclick="toggleAcc(this)"><h3>Drop Volley</h3><span class="pbadge pb3">P3</span><span class="arr">▾</span></div>
+    <div class="sacc-body">
+      <div class="key-cue">Mão solta · face aberta · só vs adversário no fundo</div>
+      <h4>Cues essenciais</h4>
+      <ul>
+        <li>Soltar o grip antes do impacto — mão relaxada</li>
+        <li>Face bem aberta — bola cai &lt;50cm da rede</li>
+        <li>Usar somente quando adversário está no fundo</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── MENTAL ── -->
+<div class="sec" id="s-mental">
+  <div class="pg-lbl">Mental e Placar</div>
+
+  <div class="mantra-card" style="border-color:#4dc060">
+    <div class="mctx">Mantra central</div>
+    <div class="mctxt">"<strong>Próximo ponto. Próxima bola. Próxima decisão.</strong>" — nunca dois pontos ao mesmo tempo na cabeça.</div>
+  </div>
+
+  <div class="mantra-card" style="border-color:var(--err)">
+    <div class="mctx">Após erro grave</div>
+    <div class="mctxt">"Errei, ok" → <strong>3 respirações</strong> → raquete na mão esquerda → 1 palavra para o parceiro → próximo.</div>
+  </div>
+
+  <div class="mantra-card" style="border-color:var(--warn)">
+    <div class="mctx">Parceiro errando</div>
+    <div class="mctxt"><strong>Linguagem corporal neutra</strong>. Silêncio após erro do parceiro é pior que crítica — "próximo" é suficiente.</div>
+  </div>
+
+  <div class="mantra-card" style="border-color:var(--a2)">
+    <div class="mctx">Perdendo o momento</div>
+    <div class="mctxt"><strong>Pausar</strong> (amarrar tênis). Mudar 1 elemento. "Momentos mudam — não ceder pontos fáceis."</div>
+  </div>
+
+  <div class="mantra-card" style="border-color:var(--ok)">
+    <div class="mctx">Dominando o jogo</div>
+    <div class="mctxt">Manter o padrão. <strong>Não inventar.</strong> "O adversário vai reagir — continuar o que me trouxe até aqui."</div>
+  </div>
+
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin:16px 0 10px">Por Placar</div>
+  <div class="score-grid">
+    <div class="sc-card">
+      <div class="scn">30–40</div>
+      <h4>Break point contra</h4>
+      <p>Rotina mais lenta. Saque para o alvo <strong>mais seguro</strong>. "Eles também estão nervosos."</p>
+    </div>
+    <div class="sc-card">
+      <div class="scn">40–30</div>
+      <h4>Game point a favor</h4>
+      <p>Não mudar o plano. Padrão <strong>mais consistente</strong> — não o mais difícil.</p>
+    </div>
+    <div class="sc-card">
+      <div class="scn">0–40</div>
+      <h4>Desvantagem máxima</h4>
+      <p>Jogar com <strong>mais risco</strong> — o game já está quase perdido. 1 ponto de cada vez.</p>
+    </div>
+    <div class="sc-card">
+      <div class="scn">Deuce</div>
+      <h4>Igualdade</h4>
+      <p>Quem se prepara <strong>melhor entre pontos</strong> vence. Foco no primeiro ponto.</p>
+    </div>
+    <div class="sc-card">
+      <div class="scn">Tiebreak</div>
+      <h4>Morte súbita</h4>
+      <p>Começa do <strong>zero</strong>. Primeiro ponto é o mais importante — define o tom.</p>
+    </div>
+    <div class="sc-card">
+      <div class="scn">0–1 set</div>
+      <h4>Perdeu o 1º set</h4>
+      <p>Nova partida agora. <strong>Mudar 1 coisa</strong>. Pressão maior para quem está na frente.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── SINAIS ── -->
+<div class="sec" id="s-sinais">
+  <div class="pg-lbl">Sinais e Comunicação</div>
+
+  <div class="sig-grid">
+    <div class="sig-card">
+      <div class="sig-icon">✊</div>
+      <h3>Punho</h3>
+      <p>Ficar no corredor — não cruzar</p>
+    </div>
+    <div class="sig-card">
+      <div class="sig-icon">✋</div>
+      <h3>Mão Aberta</h3>
+      <p>Roubar — cruzar para o outro lado</p>
+    </div>
+    <div class="sig-card">
+      <div class="sig-icon">🤞</div>
+      <h3>Dedos Juntos</h3>
+      <p>Pinchar — mover para o centro, mas não cruzar completamente</p>
+    </div>
+    <div class="sig-card">
+      <div class="sig-icon">☝️</div>
+      <h3>1 Dedo → T</h3>
+      <p>Saque pelo centro (T) — reduz ângulo</p>
+    </div>
+    <div class="sig-card">
+      <div class="sig-icon">✌️</div>
+      <h3>2 Dedos → Wide</h3>
+      <p>Saque aberto (wide) — abre o corredor</p>
+    </div>
+    <div class="sig-card">
+      <div class="sig-icon">👊</div>
+      <h3>Soco → Corpo</h3>
+      <p>Saque no corpo — restringe swing</p>
+    </div>
+  </div>
+
+  <div class="verbal-list">
+    <h3>Chamadas verbais durante o ponto</h3>
+    <div class="v-item">
+      <div class="v-word">"Minha!"</div>
+      <div class="v-desc">Bola ambígua — eu pego. Dizer imediatamente.</div>
+    </div>
+    <div class="v-item">
+      <div class="v-word">"Switch!"</div>
+      <div class="v-desc">Trocar de lado após lob que passou. Automático.</div>
+    </div>
+    <div class="v-item">
+      <div class="v-word">"Linha!"</div>
+      <div class="v-desc">Aviso de que A2 cruzou — B1 deve devolver na linha.</div>
+    </div>
+    <div class="v-item">
+      <div class="v-word">"Sai!"</div>
+      <div class="v-desc">Bola longa do adversário — não bater.</div>
+    </div>
+    <div class="v-item">
+      <div class="v-word">"Fica!"</div>
+      <div class="v-desc">Parceiro que avança quando a bola é perigosa.</div>
+    </div>
+    <div class="v-item">
+      <div class="v-word">"Loba!"</div>
+      <div class="v-desc">Sugestão de lob alto para resetar o ponto.</div>
+    </div>
+    <div class="v-item">
+      <div class="v-word">"Próximo"</div>
+      <div class="v-desc">Palavra de reset após qualquer erro. Obrigatória.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── ROTINAS ── -->
+<div class="sec" id="s-rot">
+  <div class="pg-lbl">Rotinas</div>
+
+  <div class="rot-block">
+    <div class="rot-title">Entre Pontos <span style="font-size:13px;color:var(--dim);font-weight:500">~20 segundos</span></div>
+    <div class="rot-sub">Fazer sempre — ganhou ou perdeu o ponto anterior</div>
+    <div class="step-list">
+      <div class="step highlight">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-txt">Raquete na mão esquerda</div>
+          <div class="step-hint">Sinal físico: o ponto acabou. Para tudo mentalmente.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-txt">Caminhar devagar</div>
+          <div class="step-hint">Não correr. Você controla o ritmo — não o adversário.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-txt">Uma respiração funda</div>
+          <div class="step-hint">Expira devagar pelo nariz. Baixa o batimento cardíaco.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-txt">Uma palavra ao parceiro</div>
+          <div class="step-hint">"Próximo" · "Vamos" · "Junto" — nunca análise técnica.</div>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">5</div>
+        <div>
+          <div class="step-txt">Decidir o próximo padrão</div>
+          <div class="step-hint">Mesmo plano ou muda uma coisa? Decidir antes de subir.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div>
+          <div class="step-txt">Sinal ao parceiro (se sacando)</div>
+          <div class="step-hint">Punho = ficar · mão aberta = roubar · confirmar resposta.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rot-block">
+    <div class="rot-title">Troca de Lado <span style="font-size:13px;color:var(--dim);font-weight:500">~90 segundos</span></div>
+    <div class="rot-sub">Sentar + hidratar + 3 perguntas táticas</div>
+
+    <div class="step-list" style="margin-bottom:14px">
+      <div class="step">
+        <div class="step-num" style="background:var(--dim)">0s</div>
+        <div>
+          <div class="step-txt">Sentar, hidratar, toalhar</div>
+          <div class="step-hint">Ritmo deliberado. Não ansioso. Sem falar ainda.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--dim)">30s</div>
+        <div>
+          <div class="step-txt">3 perguntas táticas com o parceiro</div>
+          <div class="step-hint">Ver abaixo. Máximo 1 ajuste por troca de lado.</div>
+        </div>
+      </div>
+      <div class="step highlight">
+        <div class="step-num">70s</div>
+        <div>
+          <div class="step-txt">Levantar — "vamos"</div>
+          <div class="step-hint">Não esperar o árbitro. Levantar com intenção.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tactic-q">
+      <div class="tq-label">Pergunta 1</div>
+      <div class="tq-q">Estamos chegando à rede?</div>
+      <div class="tq-opts">
+        <div class="tq-opt">Se não: lembrar de avançar <strong>3 passos após saque e devolução</strong></div>
+        <div class="tq-opt">Se sim e perdendo pontos na rede: recuar um passo, posição mais conservadora</div>
+      </div>
+    </div>
+
+    <div class="tactic-q">
+      <div class="tq-label">Pergunta 2</div>
+      <div class="tq-q">Qual padrão deles está nos machucando?</div>
+      <div class="tq-opts">
+        <div class="tq-opt">Lobando? → <strong>recuar um passo na rede</strong></div>
+        <div class="tq-opt">Passando por A2? → <strong>A2 pinchar mais, sinal "ficar"</strong></div>
+        <div class="tq-opt">Bola pelo meio caindo? → <strong>definir: forehand chama "minha"</strong></div>
+        <div class="tq-opt">Saque forte demais? → <strong>dois atrás + lob de devolução</strong></div>
+      </div>
+    </div>
+
+    <div class="tactic-q">
+      <div class="tq-label">Pergunta 3</div>
+      <div class="tq-q">Qual fraqueza deles não exploramos?</div>
+      <div class="tq-opts">
+        <div class="tq-opt">Backhand fraco? → <strong>jogar sempre lá</strong></div>
+        <div class="tq-opt">Voleio ruim? → <strong>lob para forçar recuo</strong></div>
+        <div class="tq-opt">Parceiro mais fraco? → <strong>70% das bolas para ele</strong></div>
+        <div class="tq-opt">Comunicação confusa? → <strong>bola pelo meio consistente</strong></div>
+      </div>
+    </div>
+
+    <div class="avoid-card">
+      <h4>Não fazer na troca de lado</h4>
+      <li>Analisar técnica de golpe — não há tempo</li>
+      <li>Discutir quem errou mais — gera atrito</li>
+      <li>Mais de 1 ajuste por vez — o cérebro não processa</li>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main-content -->
+
+<!-- BOTTOM NAV -->
+<nav class="botnav">
+  <button class="navbtn on" onclick="showSec('s-check',this)">
+    <svg viewBox="0 0 24 24"><polyline points="9,11 12,14 22,4"/><path d="M21,12v7a2,2 0 0 1-2,2H5a2,2 0 0 1-2-2V5a2,2 0 0 1 2-2h11"/></svg>
+    Check
+  </button>
+  <button class="navbtn" onclick="showSec('s-sit',this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Situações
+  </button>
+  <button class="navbtn" onclick="showSec('s-golpes',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    Golpes
+  </button>
+  <button class="navbtn" onclick="showSec('s-mental',this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.5 2 6 4.5 6 8c0 2.5 1.5 4.7 3.5 5.7V16h5v-2.3C16.5 12.7 18 10.5 18 8c0-3.5-2.5-6-6-6z"/><line x1="10" y1="20" x2="14" y2="20"/><line x1="10" y1="23" x2="14" y2="23"/></svg>
+    Mental
+  </button>
+  <button class="navbtn" onclick="showSec('s-sinais',this)">
+    <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    Sinais
+  </button>
+  <button class="navbtn" onclick="showSec('s-rot',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+    Rotinas
+  </button>
+</nav>
+
+<script>
+function showSec(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('main-content').scrollTop=0;
+}
+function showSit(id,btn){
+  document.querySelectorAll('.sit-panel').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.sit-chip').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  // Close all roles
+  document.querySelectorAll('.role-hd').forEach(h=>h.classList.remove('open'));
+  document.querySelectorAll('.role-body').forEach(b=>b.classList.remove('open'));
+}
+function toggleRole(hd){
+  const body=hd.nextElementSibling;
+  const isOpen=hd.classList.contains('open');
+  // Close all in this situation
+  hd.closest('.sit-panel').querySelectorAll('.role-hd').forEach(h=>h.classList.remove('open'));
+  hd.closest('.sit-panel').querySelectorAll('.role-body').forEach(b=>b.classList.remove('open'));
+  if(!isOpen){hd.classList.add('open');body.classList.add('open')}
+}
+function toggleAcc(hd){
+  const body=hd.nextElementSibling;
+  const isOpen=hd.classList.contains('open');
+  hd.classList.toggle('open',!isOpen);
+  body.classList.toggle('open',!isOpen);
+}
+function toggleChk(item){item.classList.toggle('done')}
+function switchCh(id,btn){
+  document.querySelectorAll('.chklist').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.cht').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+function resetCh(id){
+  document.getElementById(id).querySelectorAll('.chk-item').forEach(i=>i.classList.remove('done'));
+}
+</script>

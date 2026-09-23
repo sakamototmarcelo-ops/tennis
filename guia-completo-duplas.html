@@ -1,0 +1,2125 @@
+<title>Guia Completo — Duplas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap">
+
+<style>
+/* ── LIGHT THEME (default) ── */
+:root{
+  --bg:#f2f5f1;--surf:#e6ede7;--card:#ffffff;--bdr:#c4d6c8;
+  --txt:#182a1e;--dim:#4a6a55;--acc:#2a7038;--acc2:#d4eeda;--acch:#1f5229;
+  --p1bg:#d4eeda;--p1tx:#1a3e22;--p1bd:#3a8040;
+  --p2bg:#d4e8f8;--p2tx:#0a2040;--p2bd:#2060a0;
+  --p3bg:#fff4cc;--p3tx:#3a2800;--p3bd:#907000;
+  --errbg:#fde8e8;--errtx:#5a1010;--errbd:#c04040;
+  --agebg:#f0e8fc;--agetx:#3a1860;--agebd:#8040c0;
+  --okbg:#d4eeda;--oktx:#1a3e22;
+  --warnbg:#fff4cc;--warntx:#3a2800;
+  --a1h:#1a5fc0;--a1bg:#ddeaff;--a1tx:#0a2a60;
+  --a2h:#0080a0;--a2bg:#d4f0f8;--a2tx:#003848;
+  --b1h:#b84c14;--b1bg:#fff0e4;--b1tx:#5c1e00;
+  --b2h:#907000;--b2bg:#fff8e0;--b2tx:#3a2800;
+  color-scheme:light
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1a10;--surf:#142018;--card:#1a2a1e;--bdr:#2a4030;
+  --txt:#c8e8d0;--dim:#6a9a75;--acc:#50c060;--acc2:#1a3c22;--acch:#70e080;
+  --p1bg:#1a3c22;--p1tx:#90e0a0;--p1bd:#3a8040;
+  --p2bg:#0d2d3c;--p2tx:#80c8e8;--p2bd:#2060a0;
+  --p3bg:#2a2008;--p3tx:#e8d060;--p3bd:#907000;
+  --errbg:#2a0a0a;--errtx:#f08080;--errbd:#c04040;
+  --agebg:#1a0d28;--agetx:#c090f0;--agebd:#8040c0;
+  --okbg:#1a3c22;--oktx:#90e0a0;
+  --warnbg:#2a2008;--warntx:#e8d060;
+  --a1h:#1a5fc0;--a1bg:#0d2040;--a1tx:#a8d0ff;
+  --a2h:#0080a0;--a2bg:#082030;--a2tx:#a0e0f8;
+  --b1h:#b84c14;--b1bg:#2a1008;--b1tx:#ffc8a0;
+  --b2h:#907000;--b2bg:#281e00;--b2tx:#ffe090;
+  color-scheme:dark
+}}
+:root[data-theme="dark"]{
+  --bg:#0d1a10;--surf:#142018;--card:#1a2a1e;--bdr:#2a4030;
+  --txt:#c8e8d0;--dim:#6a9a75;--acc:#50c060;--acc2:#1a3c22;--acch:#70e080;
+  --p1bg:#1a3c22;--p1tx:#90e0a0;--p1bd:#3a8040;
+  --p2bg:#0d2d3c;--p2tx:#80c8e8;--p2bd:#2060a0;
+  --p3bg:#2a2008;--p3tx:#e8d060;--p3bd:#907000;
+  --errbg:#2a0a0a;--errtx:#f08080;--errbd:#c04040;
+  --agebg:#1a0d28;--agetx:#c090f0;--agebd:#8040c0;
+  --okbg:#1a3c22;--oktx:#90e0a0;
+  --warnbg:#2a2008;--warntx:#e8d060;
+  --a1h:#1a5fc0;--a1bg:#0d2040;--a1tx:#a8d0ff;
+  --a2h:#0080a0;--a2bg:#082030;--a2tx:#a0e0f8;
+  --b1h:#b84c14;--b1bg:#2a1008;--b1tx:#ffc8a0;
+  --b2h:#907000;--b2bg:#281e00;--b2tx:#ffe090;
+  color-scheme:dark
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sans-serif;max-width:900px;margin:0 auto;padding:0 0 56px}
+
+/* ── HEADER ── */
+header{background:var(--surf);border-bottom:2px solid var(--acc2);padding:16px 22px 12px;display:flex;align-items:flex-start;gap:12px}
+header .hicon{width:36px;height:36px;background:var(--acc);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+header h1{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--txt)}
+header p{font-size:11.5px;color:var(--dim);margin-top:2px}
+
+/* ── TABS ── */
+.tabs{display:flex;overflow-x:auto;gap:3px;padding:8px 22px;background:var(--surf);border-bottom:1px solid var(--bdr);scrollbar-width:none;position:sticky;top:0;z-index:10}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:5px 13px;border-radius:20px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:500;cursor:pointer;white-space:nowrap;transition:.15s}
+.tab.on{background:var(--acc);color:#fff}
+
+/* ── SECTION CONTAINER ── */
+.sec{display:none;padding:18px 22px}
+.sec.on{display:block}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;color:var(--acc);margin-bottom:11px;margin-top:16px;padding-bottom:4px;border-bottom:1px solid var(--bdr)}
+.sec-title:first-child{margin-top:0}
+
+/* ── STAT TILES ── */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:12px 13px}
+.stat-n{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--acc);line-height:1}
+.stat-l{font-size:11px;color:var(--dim);margin-top:4px;line-height:1.4}
+.stat-l strong{color:var(--txt);font-weight:500}
+
+/* ── PYRAMID ── */
+.pyramid{display:grid;gap:7px;margin-bottom:14px}
+.plv{border-radius:9px;overflow:hidden}
+.plv-hd{padding:8px 13px;font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.plv-hd .pn{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;flex-shrink:0}
+.plv-body{padding:9px 13px;display:flex;flex-wrap:wrap;gap:5px}
+.pchip{font-size:11px;font-family:'Space Grotesk',sans-serif;font-weight:500;padding:3px 9px;border-radius:20px}
+.lv1 .plv-hd{background:var(--p1bd);color:var(--card)}
+.lv1 .plv-hd .pn{background:rgba(0,0,0,.2);color:var(--card)}
+.lv1 .plv-body{background:var(--p1bg)}
+.lv1 .pchip{background:var(--p1bd);color:var(--card)}
+.lv2 .plv-hd{background:var(--p2bd);color:var(--card)}
+.lv2 .plv-hd .pn{background:rgba(0,0,0,.2);color:var(--card)}
+.lv2 .plv-body{background:var(--p2bg)}
+.lv2 .pchip{background:var(--p2bd);color:var(--card)}
+.lv3 .plv-hd{background:var(--p3bd);color:var(--card)}
+.lv3 .plv-hd .pn{background:rgba(0,0,0,.2);color:var(--card)}
+.lv3 .plv-body{background:var(--p3bg)}
+.lv3 .pchip{background:var(--p3bd);color:var(--card)}
+
+/* ── GENERIC GRID / CARD ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+@media(max-width:560px){.g2,.g3{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:12px 14px;margin-bottom:9px}
+.card:last-child{margin-bottom:0}
+.card h3{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--txt);margin-bottom:6px}
+.card h4{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--dim);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.4px}
+.card ul,.card ol{padding-left:14px}
+.card li{font-size:12px;line-height:1.5;margin-bottom:3px;color:var(--txt)}
+.card li:last-child{margin-bottom:0}
+.card li strong,.card p strong{color:var(--acc);font-weight:600}
+.card p{font-size:12px;line-height:1.55;color:var(--txt);margin-bottom:5px}
+.card p:last-child{margin-bottom:0}
+.tag{display:inline-block;font-size:10px;font-weight:700;font-family:'Space Grotesk',sans-serif;padding:2px 8px;border-radius:20px;margin-bottom:6px;letter-spacing:.3px}
+.tag-off{background:var(--p1bg);color:var(--p1tx);border:1px solid var(--p1bd)}
+.tag-def{background:var(--errbg);color:var(--errtx);border:1px solid var(--errbd)}
+.tag-tac{background:var(--p2bg);color:var(--p2tx);border:1px solid var(--p2bd)}
+.tag-sig{background:var(--agebg);color:var(--agetx);border:1px solid var(--agebd)}
+
+/* ── RULE QUOTE ── */
+.rule{background:var(--surf);border-left:3px solid var(--acc);padding:9px 13px;border-radius:0 7px 7px 0;font-size:12px;color:var(--dim);margin:9px 0;line-height:1.55;font-style:italic}
+.rule strong{color:var(--txt);font-style:normal}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{background:var(--surf);color:var(--acc);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:10.5px;text-align:left;padding:7px 10px;border-bottom:1px solid var(--bdr);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--bdr);color:var(--txt);vertical-align:top;line-height:1.4}
+tr:last-child td{border-bottom:none}
+
+/* ── SITUATIONS ── */
+.sit-nav{display:flex;overflow-x:auto;gap:4px;padding:0 0 11px;scrollbar-width:none;margin-bottom:2px}
+.sit-nav::-webkit-scrollbar{display:none}
+.sit-btn{padding:5px 11px;border-radius:20px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;transition:.15s;flex-shrink:0}
+.sit-btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.sit{display:none}
+.sit.on{display:block}
+.sit-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--txt);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sit-num{width:24px;height:24px;border-radius:50%;background:var(--acc);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.roles{grid-template-columns:1fr}}
+.role{border-radius:9px;overflow:hidden}
+.role-hd{padding:8px 12px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:#fff;display:flex;align-items:center;gap:6px}
+.role-hd .rdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5)}
+.role-body{padding:10px 12px}
+.role-body ul{padding-left:13px;list-style:disc}
+.role-body li{font-size:11.5px;line-height:1.5;margin-bottom:3px}
+.role-body li:last-child{margin-bottom:0}
+.role-body li strong{font-weight:600}
+.r-a1 .role-hd{background:var(--a1h)}
+.r-a1 .role-body{background:var(--a1bg)}
+.r-a1 li{color:var(--a1tx)}
+.r-a1 strong{color:var(--a1h)}
+.r-a2 .role-hd{background:var(--a2h)}
+.r-a2 .role-body{background:var(--a2bg)}
+.r-a2 li{color:var(--a2tx)}
+.r-a2 strong{color:var(--a2h)}
+.r-b1 .role-hd{background:var(--b1h)}
+.r-b1 .role-body{background:var(--b1bg)}
+.r-b1 li{color:var(--b1tx)}
+.r-b1 strong{color:var(--b1h)}
+.r-b2 .role-hd{background:var(--b2h)}
+.r-b2 .role-body{background:var(--b2bg)}
+.r-b2 li{color:var(--b2tx)}
+.r-b2 strong{color:var(--b2h)}
+.tip{margin-top:8px;background:var(--surf);border-left:3px solid var(--acc);padding:8px 12px;border-radius:0 6px 6px 0;font-size:11.5px;color:var(--dim);font-style:italic}
+
+/* ── STROKE CARDS ── */
+.stroke-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:9px}
+.stroke{background:var(--card);border:1px solid var(--bdr);border-radius:10px;overflow:hidden}
+.stroke-hd{padding:8px 13px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--bdr)}
+.stroke-hd h3{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;flex:1;color:var(--txt)}
+.pbadge{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.pb1{background:var(--p1bg);color:var(--p1tx);border:1px solid var(--p1bd)}
+.pb2{background:var(--p2bg);color:var(--p2tx);border:1px solid var(--p2bd)}
+.pb3{background:var(--p3bg);color:var(--p3tx);border:1px solid var(--p3bd)}
+.stroke-body{padding:10px 13px 12px}
+.stroke-body h4{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;font-family:'Space Grotesk',sans-serif;color:var(--dim)}
+.stroke-body h4:first-child{margin-top:0}
+.stroke-body ul{padding-left:13px;list-style:disc}
+.stroke-body li{font-size:11.5px;line-height:1.5;margin-bottom:3px;color:var(--txt)}
+.stroke-body li:last-child{margin-bottom:0}
+.stroke-body strong{font-weight:600;color:var(--acc)}
+.errblock{background:var(--errbg);border-radius:6px;padding:7px 10px;margin-top:7px}
+.errblock h4{color:var(--errtx)}
+.errblock li{color:var(--errtx)!important}
+.ageblock{background:var(--agebg);border-radius:6px;padding:7px 10px;margin-top:7px}
+.ageblock h4{color:var(--agetx)}
+.ageblock li{color:var(--agetx)!important}
+
+/* ── MENTAL SITUATIONS ── */
+.msit{background:var(--card);border:1px solid var(--bdr);border-radius:9px;overflow:hidden;margin-bottom:8px}
+.msit-hd{padding:8px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bdr)}
+.msit-tag{font-size:9.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.mtag-p{background:var(--errbg);color:var(--errtx);border:1px solid var(--errbd)}
+.mtag-m{background:var(--warnbg);color:var(--warntx);border:1px solid var(--p3bd)}
+.mtag-s{background:var(--p1bg);color:var(--p1tx);border:1px solid var(--p1bd)}
+.mtag-c{background:var(--p2bg);color:var(--p2tx);border:1px solid var(--p2bd)}
+.msit-hd h3{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--txt)}
+.msit-body{padding:9px 13px 11px;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:480px){.msit-body{grid-template-columns:1fr}}
+.msit-col h4{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-family:'Space Grotesk',sans-serif;margin-bottom:4px;color:var(--dim)}
+.msit-col ul{padding-left:13px;list-style:disc}
+.msit-col li{font-size:11.5px;line-height:1.5;margin-bottom:3px;color:var(--txt)}
+.msit-anchor{background:var(--surf);border-radius:6px;padding:7px 10px;grid-column:1/-1;font-size:11.5px;color:var(--dim);font-style:italic;line-height:1.4}
+.msit-anchor strong{color:var(--txt);font-style:normal}
+
+/* ── SCORE GRID ── */
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.score-grid{grid-template-columns:1fr}}
+.sc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:11px 13px}
+.sc .scn{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--acc);line-height:1;margin-bottom:3px}
+.sc h4{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;color:var(--dim);margin-bottom:5px}
+.sc ul{padding-left:13px;list-style:disc}
+.sc li{font-size:11.5px;line-height:1.5;margin-bottom:3px;color:var(--txt)}
+.sc li strong{font-weight:600;color:var(--acc)}
+
+/* ── COMM GRID ── */
+.comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+@media(max-width:480px){.comm-grid{grid-template-columns:1fr}}
+.cc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:12px 14px}
+.cc h3{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;margin-bottom:7px}
+.cc ul{padding-left:13px;list-style:disc}
+.cc li{font-size:11.5px;line-height:1.5;margin-bottom:3px;color:var(--txt)}
+.cc li strong{color:var(--acc);font-weight:600}
+.cc-ok h3{color:var(--p1tx);background:var(--p1bg);padding:4px 8px;border-radius:5px;display:inline-block}
+.cc-warn h3{color:var(--p3tx);background:var(--p3bg);padding:4px 8px;border-radius:5px;display:inline-block}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 12px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;font-family:'Space Grotesk',sans-serif;font-weight:500;color:var(--dim)}
+.ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── PHYS CARDS ── */
+.phys-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:480px){.phys-grid{grid-template-columns:1fr}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){.sec{padding:14px 16px}.tabs{padding:8px 16px}header{padding:12px 16px}}
+
+/* ── EXERCISE CARDS ── */
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:9px}
+.ex-card{background:var(--card);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:0 9px 9px 0;padding:12px 14px}
+.ex-lbl{font-size:9.5px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--acc);margin-bottom:3px}
+.ex-card h3{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:var(--txt);margin-bottom:6px}
+.ex-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.ex-mt{font-size:10px;background:var(--surf);color:var(--dim);padding:2px 7px;border-radius:20px;font-family:'Space Grotesk',sans-serif;font-weight:500}
+.ex-card ul{padding-left:13px;list-style:disc}
+.ex-card li{font-size:11.5px;line-height:1.5;margin-bottom:2px;color:var(--txt)}
+.ex-card li strong{font-weight:600;color:var(--acc)}
+.ex-cue{background:var(--acc2);border-radius:5px;padding:5px 9px;font-size:11.5px;color:var(--acch);font-style:italic;margin-top:7px;line-height:1.4}
+</style>
+
+<header>
+  <div class="hicon">🎾</div>
+  <div>
+    <h1>Guia Completo de Duplas</h1>
+    <p>56 anos · amador · duplista — táticas, técnica, mental e físico consolidados</p>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab on" onclick="show('t1',this)">Visão Geral</button>
+  <button class="tab" onclick="show('t2',this)">Táticas</button>
+  <button class="tab" onclick="show('t3',this)">Situações</button>
+  <button class="tab" onclick="show('t4',this)">Golpes</button>
+  <button class="tab" onclick="show('t5',this)">Mental</button>
+  <button class="tab" onclick="show('t6',this)">Físico</button>
+</div>
+
+<!-- ════════════════════════════════
+     TAB 1 — VISÃO GERAL
+═══════════════════════════════════ -->
+<div class="sec on" id="t1">
+
+  <div class="sec-title">Estatísticas de base</div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n">84%</div><div class="stat-l">dos winners saem do jogador <strong>na rede</strong></div></div>
+    <div class="stat"><div class="stat-n">81%</div><div class="stat-l">dos pontos terminam em <strong>4 bolas ou menos</strong></div></div>
+    <div class="stat"><div class="stat-n">74%</div><div class="stat-l">pontos ganhos com <strong>1º saque</strong> (vs 54% no 2º)</div></div>
+    <div class="stat"><div class="stat-n">64%</div><div class="stat-l">das vezes quem saca acerta <strong>a última bola</strong></div></div>
+    <div class="stat"><div class="stat-n">38%</div><div class="stat-l">dos pontos por <strong>erros forçados</strong> — não winners</div></div>
+    <div class="stat"><div class="stat-n">46%</div><div class="stat-l">dos pontos profissionais com <strong>formação I</strong> no 1º saque</div></div>
+  </div>
+  <div class="rule">Ir à rede não é apenas agressão — é a posição estatisticamente correta em duplas.</div>
+
+  <div class="sec-title">Pirâmide de prioridades</div>
+  <div class="pyramid">
+    <div class="plv lv1">
+      <div class="plv-hd"><div class="pn">1</div>CRÍTICO — trabalhar em toda sessão · determina 81% dos pontos</div>
+      <div class="plv-body">
+        <span class="pchip">Saque — consistência + colocação</span>
+        <span class="pchip">Devolução — direção controlada</span>
+        <span class="pchip">Primeiro voleio — baixo e suave</span>
+        <span class="pchip">Posicionamento na rede</span>
+      </div>
+    </div>
+    <div class="plv lv2">
+      <div class="plv-hd"><div class="pn">2</div>ALTA PRIORIDADE — trabalhar com frequência</div>
+      <div class="plv-body">
+        <span class="pchip">Smash</span>
+        <span class="pchip">Voleio de bloqueio</span>
+        <span class="pchip">Voleio de interceptação</span>
+        <span class="pchip">Bola de aproximação</span>
+        <span class="pchip">Lob defensivo</span>
+      </div>
+    </div>
+    <div class="plv lv3">
+      <div class="plv-hd"><div class="pn">3</div>COMPLEMENTAR — quando os anteriores estiverem sólidos</div>
+      <div class="plv-body">
+        <span class="pchip">Half volley</span>
+        <span class="pchip">Lob ofensivo topspin</span>
+        <span class="pchip">Drop volley</span>
+        <span class="pchip">Passing shot</span>
+        <span class="pchip">Saque kick variado</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">Os 3 padrões fundamentais</div>
+  <div class="g3">
+    <div class="card">
+      <h3>Padrão A — Serve + Volley</h3>
+      <ul>
+        <li>Saque direcionado (T ou corpo)</li>
+        <li>Avançar à rede <strong>no impacto</strong></li>
+        <li>Split step quando adversário bate</li>
+        <li>Primeiro voleio: baixo, nos pés</li>
+        <li>A1 e A2 fecham rede juntos</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Padrão B — Return + Advance</h3>
+      <ul>
+        <li>Devolução cruzada e baixa</li>
+        <li>Avançar à rede <strong>imediatamente</strong></li>
+        <li>B2 sobe junto da linha de saque</li>
+        <li>Objetivo: 2 vs 2 na rede</li>
+        <li>Bola baixa pelo centro da rede</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Padrão C — Net Dominance</h3>
+      <ul>
+        <li>Cobrir a janela central (≈2,7m)</li>
+        <li>Voleios suaves e colocados</li>
+        <li>Pelo meio: quem tem o forehand</li>
+        <li>Movimento pendular constante</li>
+        <li>"Minha!" / "Sua!" em toda bola ambígua</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">Posições-chave e zona proibida</div>
+  <div class="g2">
+    <div class="card">
+      <h3>Posição dominante — rede</h3>
+      <ul>
+        <li>Linha de saque + ~1,5m em direção à rede</li>
+        <li>Cobre janela central e os dois corredores</li>
+        <li><strong>Objetivo de toda a dupla: chegar aqui</strong></li>
+        <li>Ângulos curtos, menos tempo para o adversário</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Zona proibida — evitar</h3>
+      <ul>
+        <li>Região entre linha de fundo e linha de saque</li>
+        <li>Bolas aos pés, tempo de reação baixo</li>
+        <li><strong>Regra:</strong> avançar ou recuar — nunca ficar parado</li>
+        <li>Única exceção: durante a transição (movimento ativo)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Regra do Elástico</h3>
+      <ul>
+        <li>Parceiro vai para a direita → você vai para a esquerda</li>
+        <li>Parceiro recua → você cobre o centro</li>
+        <li>Cobrir sempre o espaço que o parceiro deixou</li>
+        <li><strong>Corredor central nunca desprotegido</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>O que nunca fazer</h3>
+      <ul>
+        <li>Sacar e ficar na linha de fundo esperando</li>
+        <li>Devolver e ficar parado</li>
+        <li>Bater forte em voleios baixos</li>
+        <li>Tentar winner na devolução</li>
+        <li>Ficar na zona proibida sem objetivo</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="sec-title">Exercícios de Treino</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 1 · Padrão fundamental</div>
+      <h3>4 na Rede</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">15 min</span><span class="ex-mt">jogo real</span>
+      </div>
+      <ul>
+        <li>A1 saca e avança à rede; A2 já está na rede</li>
+        <li>B1 devolve e avança; B2 avança junto</li>
+        <li>Todos os 4 devem estar na rede antes do 3º golpe</li>
+        <li>Jogar o ponto normalmente a partir daí</li>
+        <li>Contar: quem atingiu a rede primeiro vence mais pontos?</li>
+      </ul>
+      <div class="ex-cue">"Quem controla a rede, controla o ponto. 84% dos winners saem daqui."</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 2 · Padrões A-B-C</div>
+      <h3>Rotação de Padrões</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">20 min</span><span class="ex-mt">cesta de bolas</span>
+      </div>
+      <ul>
+        <li>Série A (10 pontos): saque + voleio apenas; jogar até 2 golpes</li>
+        <li>Série B (10 pontos): devolução + avanço; jogar até 3 golpes</li>
+        <li>Série C (10 pontos): jogo livre, mas contar pontos ganhos na rede</li>
+        <li>Registrar % de pontos ganhos na rede nas 3 séries</li>
+      </ul>
+      <div class="ex-cue">Meta: série C acima de 70% dos pontos na rede. Abaixo disso, mais série A e B.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 3 · Consciência tática</div>
+      <h3>Métrica de Posicionamento</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">20 min</span><span class="ex-mt">caderno opcional</span>
+      </div>
+      <ul>
+        <li>Jogar set normal com um "árbitro" observando</li>
+        <li>Árbitro anota: ponto ganho na rede (✓) ou no fundo (✗)</li>
+        <li>Anota também: houve zona proibida? (jogador parado no meio)</li>
+        <li>Revisar os dados na troca de lados</li>
+        <li>Meta: &gt;75% dos pontos ganhos na rede</li>
+      </ul>
+      <div class="ex-cue">O que não é medido não melhora. Traquear posicionamento revela hábitos que a memória não captura.</div>
+    </div>
+  </div>
+
+</div><!-- /t1 -->
+
+<!-- ════════════════════════════════
+     TAB 2 — TÁTICAS
+═══════════════════════════════════ -->
+<div class="sec" id="t2">
+
+  <div class="sec-title">Formações de saque</div>
+  <div class="card">
+    <span class="tag tag-tac">FORMAÇÃO PADRÃO</span>
+    <h3>Um na frente / um atrás</h3>
+    <p>Sacador atrás na linha de fundo; parceiro na rede do lado oposto. Cobre bem a quadra sem grandes brechas. Indicada para a maioria das situações.</p>
+  </div>
+  <div class="card">
+    <span class="tag tag-off">FORMAÇÃO AUSTRALIANA</span>
+    <h3>Parceiro do mesmo lado do sacador</h3>
+    <p>O parceiro posiciona-se na rede <strong>do mesmo lado</strong> do sacador. Força o receptor a devolver ao longo da linha (baixo percentual) em vez do cruzado habitual.</p>
+    <h4>Quando usar</h4>
+    <ul>
+      <li>Contra receptores com devolução cruzada muito forte</li>
+      <li>Para confundir adversários confortáveis com o padrão cruzado</li>
+      <li>Como recurso psicológico para tirar o adversário do ritmo</li>
+    </ul>
+    <h4>Como defender (adversário usa contra você)</h4>
+    <ul>
+      <li>Correr ao redor do saque para usar o forehand ao longo da linha</li>
+      <li>Lob profundo no canto do ad, empurrando o jogador de rede para trás</li>
+    </ul>
+  </div>
+  <div class="card">
+    <span class="tag tag-off">FORMAÇÃO I — 46% dos pontos profissionais</span>
+    <h3>Os dois próximos ao centro — parceiro agachado na linha central</h3>
+    <p>O parceiro agacha-se na linha central. O receptor não sabe para qual lado o parceiro vai se mover. <strong>Obrigatório:</strong> usar sinais manuais para combinar o movimento.</p>
+    <h4>Quando usar</h4>
+    <ul>
+      <li>Contra adversários com devolução cruzada muito consistente</li>
+      <li>Para variar o padrão e criar imprevisibilidade</li>
+    </ul>
+  </div>
+
+  <div class="sec-title">Táticas de saque</div>
+  <div class="card">
+    <h3>Direção do saque</h3>
+    <ul>
+      <li><strong>Pelo T (centro):</strong> reduz ângulos de devolução, facilita interceptação do parceiro</li>
+      <li><strong>No corpo:</strong> restringe o swing do receptor, facilita interceptação</li>
+      <li><strong>Aberto (wide):</strong> abre o corredor — usar com parcimônia</li>
+      <li>Adaptar ao ponto fraco do receptor (backhand ou forehand)</li>
+      <li>Sempre comunicar ao parceiro qual será o saque antes do ponto</li>
+    </ul>
+  </div>
+  <div class="rule">Saque-voleio: usar o momentum do saque para avançar imediatamente. <strong>Avançar no impacto</strong> — não esperar a devolução quicar.</div>
+
+  <div class="sec-title">Táticas de devolução</div>
+  <div class="rule">Objetivo da devolução: entrar no ponto e dar oportunidade ao parceiro — <strong>não fazer winner</strong>.</div>
+  <div class="card">
+    <h3>Alvo principal: cruzado baixo pelo centro da rede</h3>
+    <ul>
+      <li>Centro da rede = ponto mais baixo = menor margem de erro</li>
+      <li>Mantém a bola baixa, forçando voleio difícil do parceiro do sacador</li>
+      <li>Limita as opções de ângulo do adversário</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Return Plus One</h3>
+    <p>Receptor devolve baixo e cruzado, avança imediatamente à rede. Parceiro do receptor (já na linha de saque) avança também. Os dois chegam à rede juntos.</p>
+    <h4>Variações táticas</h4>
+    <ul>
+      <li><strong>Devolução ao longo da linha:</strong> usar esporadicamente para manter parceiro do sacador honesto</li>
+      <li><strong>Lob alto na devolução:</strong> contra sacadores muito fortes — força o parceiro do sacador para trás</li>
+      <li><strong>Dois atrás na devolução:</strong> elimina o alvo fácil quando saque é muito forte</li>
+    </ul>
+  </div>
+  <div class="rule"><strong>Decidir o alvo antes de iniciar o swing</strong> — nunca mudar de ideia na metade do movimento.</div>
+
+  <div class="sec-title">Jogo na rede</div>
+  <div class="card">
+    <span class="tag tag-off">ROUBO (POACHING)</span>
+    <h3>Jogador de rede cruza para interceptar</h3>
+    <ul>
+      <li>Mover <strong>após o adversário iniciar o swing</strong> — ele já está comprometido</li>
+      <li>Diagonal em direção à rede — cortar a bola mais cedo</li>
+      <li>Sinalizar ao parceiro antes (mão aberta = vai roubar)</li>
+      <li>Voleio angulado para o corredor oposto — nunca devolver no cruzado</li>
+    </ul>
+    <h4>Quando roubar</h4>
+    <ul>
+      <li>Após saque pelo T — devolução cruzada é provável</li>
+      <li>Após vários cruzados seguidos — adversário está confortável</li>
+      <li>Com desvantagem de placar — pode mudar o momentum</li>
+    </ul>
+  </div>
+  <div class="card">
+    <span class="tag tag-off">ROUBO FALSO (FAKE POACH)</span>
+    <p>Mover em direção ao centro antes do adversário bater, depois voltar. O adversário hesita ou muda a devolução = erro. <strong>Requer</strong> ter roubado de verdade antes (para ter credibilidade).</p>
+  </div>
+  <div class="card">
+    <span class="tag tag-tac">PINCHAR + MOVIMENTO PENDULAR</span>
+    <p><strong>Pinchar:</strong> mover diagonalmente em direção ao centro sem cruzar completamente. Fecha o ângulo cruzado sem expor o corredor.<br>
+    <strong>Pendular:</strong> mover-se constantemente de lado a lado na rede. Força adversários a ajustar o swing na última hora — gera erros.</p>
+  </div>
+
+  <div class="sec-title">Alvos para voleios</div>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Posição</th><th>Prioridade 1</th><th>Prioridade 2</th></tr>
+      <tr><td>Ofensiva (bola alta)</td><td>Pelo meio — confusão entre os dois adversários</td><td>Ângulo aberto / toque curto</td></tr>
+      <tr><td>Defensiva (bola baixa)</td><td>Suave profundo para adversário no fundo</td><td>Nos pés do adversário de rede</td></tr>
+    </table>
+  </div>
+  <div class="rule">Em voleios baixos: bolas suaves e colocadas superam bolas fortes. Bola curta e angulada dificulta mais que bola forte no fundo.</div>
+
+  <div class="sec-title">Cenários defensivos</div>
+  <div class="card">
+    <span class="tag tag-def">DOIS ADVERSÁRIOS NA REDE</span>
+    <h3>4 opções quando você está no fundo</h3>
+    <ol>
+      <li><strong>Atacar pelo meio:</strong> força os dois a decidirem quem pega — cria confusão</li>
+      <li><strong>Bola nos pés do jogador de rede:</strong> força meio-voleio difícil</li>
+      <li><strong>Lob sobre o backhand:</strong> alto e profundo — difícil de smashear</li>
+      <li><strong>Atacar o backhand:</strong> geralmente o voleio mais fraco</li>
+    </ol>
+  </div>
+  <div class="card">
+    <span class="tag tag-def">CONTRA POACHER AGRESSIVO — 6 táticas</span>
+    <ol>
+      <li>Lob na devolução — alto com topspin, profundo no canto</li>
+      <li>Devolver direto para o jogador de rede — bola dura no backhand</li>
+      <li>Ambos ficam atrás na devolução — elimina alvo fácil</li>
+      <li>Não mudar de ideia na hora da bola — indecisão alimenta o poacher</li>
+      <li>Jogar com lobs constantes — desgasta adversários na rede</li>
+      <li>Trocar de lado com o parceiro — perturba o ritmo do poacher</li>
+    </ol>
+  </div>
+
+  <div class="sec-title">Sinais entre parceiros</div>
+  <div class="g2">
+    <div class="card">
+      <span class="tag tag-sig">PARCEIRO DO SACADOR</span>
+      <h4>Direção do saque (sinaliza o sacador)</h4>
+      <ul>
+        <li>Dedo → T (centro)</li>
+        <li>Dedo → lado (wide)</li>
+        <li>Dedo → corpo</li>
+      </ul>
+      <h4>Seu próprio movimento</h4>
+      <ul>
+        <li><strong>Punho fechado</strong> → ficar no corredor</li>
+        <li><strong>Mão aberta</strong> → roubar (cruzar)</li>
+        <li><strong>Dedos juntos</strong> → pinchar condicional</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag tag-sig">DURANTE O PONTO</span>
+      <h4>Chamadas verbais</h4>
+      <ul>
+        <li><strong>"Minha!"</strong> — bola ambígua pelo meio</li>
+        <li><strong>"Switch!"</strong> — trocar de lado após lob</li>
+        <li><strong>"Fica!"</strong> — parceiro que avança quando bola é perigosa</li>
+        <li><strong>"Linha!"</strong> — aviso que adversário cruzou</li>
+        <li><strong>"Sai!"</strong> — bola longa do adversário</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">Padrões táticos fundamentais</div>
+  <div class="g2">
+    <div class="card">
+      <span class="tag tag-tac">REGRA "NÃO ABRIR ÂNGULO"</span>
+      <p>Não criar novos ângulos desnecessariamente — manter a bola na mesma direção e construir o ponto. Mudar de direção dá ao adversário um ângulo novo. <strong>Exceção:</strong> quadra claramente aberta.</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-tac">REGRA DOS 3 PASSES</span>
+      <p>Ceder ao adversário até 3 winners ao longo da linha antes de ajustar posição. Não sacrificar a cobertura do centro por 1–2 passes laterais.</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-tac">ESPADA OU ESCUDO</span>
+      <p>Em posição desequilibrada: jogar defensivo (escudo). Esperar a próxima oportunidade para atacar em boa posição (espada). A maioria dos pontos é decidida por erros — menos erros = mais vitórias.</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-tac">PRINCÍPIO 80/20</span>
+      <p><strong>80% da prática:</strong> saque, devolução e primeiro voleio — determinam 81% dos pontos.<br><strong>20%:</strong> lob, smash, defesas especiais, trocas longas.</p>
+    </div>
+  </div>
+
+  <div class="sec-title">Cobertura de quadra</div>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>Situação</th><th>Jogador de rede</th><th>Jogador de fundo</th></tr>
+      <tr><td>Bola pelo meio (alta)</td><td>Interceptação — sua responsabilidade</td><td>Preparar para finalizar se escapar</td></tr>
+      <tr><td>Bola cruzada alta</td><td>Interceptar se possível</td><td>Cobrir o fundo cruzado</td></tr>
+      <tr><td>Bola ao longo da linha</td><td>Cobrir o corredor</td><td>Cobertura de fundo lateral</td></tr>
+      <tr><td>Lob sobre jogador de rede</td><td>Recua para smash</td><td>Avança para cobrir a rede</td></tr>
+      <tr><td>Lob sobre jogador de fundo</td><td>Avança para a rede</td><td>Executa smash ou defesa de lob</td></tr>
+      <tr><td>Ambos na rede</td><td colspan="2">Dividir a rede ao meio — responsabilidade clara de cada metade</td></tr>
+      <tr><td>Ambos atrás</td><td colspan="2">Cobrir metade cada um — comunicação obrigatória</td></tr>
+    </table>
+  </div>
+
+  <div class="sec-title">Checklist antes de cada ponto</div>
+  <div class="g2">
+    <div class="card">
+      <h3>Sacador</h3>
+      <ul>
+        <li>Qual o saque? T / corpo / aberto?</li>
+        <li>Parceiro: roubar, ficar ou pinchar? (sinal confirmado)</li>
+        <li>Avançar à rede após o saque?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Receptor</h3>
+      <ul>
+        <li>Alvo da devolução: cruzada / centro / linha?</li>
+        <li>Parceiro: avançar ou ficar?</li>
+        <li>Avançar à rede após a devolução?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Durante o ponto</h3>
+      <ul>
+        <li>Ambos avançando para a rede?</li>
+        <li>O centro está controlado?</li>
+        <li>Se pressionados: lob ou bola nos pés?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Comunicação</h3>
+      <ul>
+        <li>"Minha!" em bolas ambíguas</li>
+        <li>"Switch!" após lob que passa</li>
+        <li>Tom positivo independente do placar</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="sec-title">Exercícios de Treino</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 1 · Saque</div>
+      <h3>Saque + Primeiro Voleio</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">3 jogadores</span><span class="ex-mt">10 min</span><span class="ex-mt">10 reps cada</span>
+      </div>
+      <ul>
+        <li>A1 saca (combinado com A2 o alvo: T, corpo ou wide)</li>
+        <li>B1 devolve com compacto e baixo — não tenta winner</li>
+        <li>A1 avança e joga <strong>somente o primeiro voleio</strong> — ponto termina aí</li>
+        <li>Feedback: o voleio foi baixo? Entrou no meio ou nos pés?</li>
+        <li>10 reps por jogador, alternar posições</li>
+      </ul>
+      <div class="ex-cue">O primeiro voleio é posicional — sucesso = bola baixa que o adversário não finaliza.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 2 · Poach</div>
+      <h3>Roubo Combinado com Sinal</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">10 min</span><span class="ex-mt">8 reps por set</span>
+      </div>
+      <ul>
+        <li>A2 dá sinal antes de cada ponto: punho (ficar) ou mão aberta (roubar)</li>
+        <li>A1 confirma com toque na raquete</li>
+        <li>A1 saca pelo T (forçar devolução cruzada)</li>
+        <li>Se sinal = roubo: A2 cruza <strong>após o impacto</strong>, A1 cobre o lado oposto</li>
+        <li>B2 treina avisar B1: "Linha!" quando vê A2 cruzar</li>
+        <li>8 reps, alternar sinal (ficar/roubar aleatório)</li>
+      </ul>
+      <div class="ex-cue">A2 se move DEPOIS do impacto. Mover antes = adversário muda a direção e você intercepta o ar.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 3 · Formação</div>
+      <h3>Australiana — 20 Pontos</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">15 min</span><span class="ex-mt">jogo real</span>
+      </div>
+      <ul>
+        <li>Time A joga com formação australiana em <strong>todos</strong> os pontos</li>
+        <li>B2 avisa B1 antes de cada saque: "Australiana!"</li>
+        <li>B1 deve encontrar soluções: paralela, lob, ou correr ao redor</li>
+        <li>Contar: quantas devoluções cruzadas B1 deu (erro) vs paralelas (correto)</li>
+        <li>Depois de 20 pontos, inverter: time B usa australiana</li>
+      </ul>
+      <div class="ex-cue">B2 deve avisar antes do saque. Sem o aviso, B1 devolve no padrão e vai direto para A2.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 4 · Rede</div>
+      <h3>Janela Central — Ponto Duplo</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">15 min</span><span class="ex-mt">placar especial</span>
+      </div>
+      <ul>
+        <li>2 jogadores na rede vs 2 na linha de fundo</li>
+        <li>Regra: bola que passa pelo <strong>centro da rede</strong> vale 2 pontos</li>
+        <li>Bola que passa pelo corredor vale 1 ponto</li>
+        <li>Time da rede: mover para interceptar bolas pelo centro</li>
+        <li>Time do fundo: treinar jogar pelo meio em vez de paralelas</li>
+        <li>Alternar posições a cada 10 pontos</li>
+      </ul>
+      <div class="ex-cue">A janela central (≈2,7m) é onde passa a maioria dos winners. Dominar o centro = dominar o ponto.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Exercício 5 · Devolução</div>
+      <h3>Return Plus One — Série Fechada</h3>
+      <div class="ex-meta">
+        <span class="ex-mt">4 jogadores</span><span class="ex-mt">15 min</span><span class="ex-mt">10 séries</span>
+      </div>
+      <ul>
+        <li>A1 saca e avança; A2 na rede com sinal</li>
+        <li>B1 devolve cruzado e baixo e avança imediatamente</li>
+        <li>B2 avança junto — meta: dois na rede antes do 3º golpe</li>
+        <li>Jogar apenas até o <strong>3º golpe</strong> — parar e avaliar: os 4 estão na rede?</li>
+        <li>Se B1/B2 não chegaram: repetir a série, identificar onde pararam</li>
+      </ul>
+      <div class="ex-cue">Return Plus One: a devolução já é o passo 1 da chegada à rede — não é o fim do trabalho.</div>
+    </div>
+  </div>
+
+</div><!-- /t2 -->
+
+<!-- ════════════════════════════════
+     TAB 3 — SITUAÇÕES
+═══════════════════════════════════ -->
+<div class="sec" id="t3">
+
+  <div class="legend">
+    <div class="leg"><div class="ldot" style="background:#1a5fc0"></div>A1 — Sacador</div>
+    <div class="leg"><div class="ldot" style="background:#0080a0"></div>A2 — Parceiro do sacador</div>
+    <div class="leg"><div class="ldot" style="background:#b84c14"></div>B1 — Recebedor</div>
+    <div class="leg"><div class="ldot" style="background:#907000"></div>B2 — Parceiro do recebedor</div>
+  </div>
+
+  <nav class="sit-nav">
+    <button class="sit-btn on" onclick="showSit('s1',this)">1. Ponto padrão</button>
+    <button class="sit-btn" onclick="showSit('s2',this)">2. Roubo combinado</button>
+    <button class="sit-btn" onclick="showSit('s3',this)">3. Form. Australiana</button>
+    <button class="sit-btn" onclick="showSit('s4',this)">4. 2 recebedores atrás</button>
+    <button class="sit-btn" onclick="showSit('s5',this)">5. Lob sobre a rede</button>
+    <button class="sit-btn" onclick="showSit('s6',this)">6. 2 advers. na rede</button>
+    <button class="sit-btn" onclick="showSit('s7',this)">7. Saque muito forte</button>
+  </nav>
+
+  <!-- S1 -->
+  <div class="sit on" id="s1">
+    <div class="sit-title"><div class="sit-num">1</div>Ponto padrão — 1º saque e voleio</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — Sacador</div>
+        <div class="role-body"><ul>
+          <li>Combinar saque com A2 antes do ponto (T / corpo / wide)</li>
+          <li><strong>Saque pelo T ou no corpo</strong> — reduz ângulos de devolução</li>
+          <li>Avançar à rede <strong>no impacto</strong> — não esperar ver onde foi a bola</li>
+          <li>Split step no momento em que B1 bate</li>
+          <li>Primeiro voleio: baixo, nos pés ou pelo meio</li>
+          <li>Objetivo: chegar à rede junto com A2</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — Parceiro do sacador</div>
+        <div class="role-body"><ul>
+          <li>Dar sinal: <strong>punho = ficar · mão aberta = roubar</strong></li>
+          <li>Se ficar: cobrir o corredor, interceptar qualquer bola do seu lado</li>
+          <li>Movimento pendular — nunca ficar parado na rede</li>
+          <li>Fake poach para pressionar B1 psicologicamente</li>
+          <li>Bola pelo meio é <strong>sempre sua</strong> — chamar "minha!"</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Recebedor</div>
+        <div class="role-body"><ul>
+          <li><strong>Devolução cruzada e baixa</strong> — nos pés de A1 que está avançando</li>
+          <li>Swing compacto — não tentar winner; entrar no ponto é o objetivo</li>
+          <li>Avançar à rede <strong>imediatamente</strong> após a devolução</li>
+          <li>Se A2 se move: devolver ao longo da linha para o corredor vazio</li>
+          <li>Em dúvida: bola baixa pelo meio — dificulta qualquer interceptação</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Parceiro do recebedor</div>
+        <div class="role-body"><ul>
+          <li>Posição: linha de saque do seu lado, pronto para avançar</li>
+          <li>Após boa devolução de B1: <strong>avançar à rede junto</strong></li>
+          <li>Observar A2 — se cruzar, mover para cobrir o corredor vazio</li>
+          <li>Comunicar: "Boa!" / "Sobe!" para encorajar B1 a avançar</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">Objetivo sacadora: dois na rede o mais rápido possível. Objetivo receptora: devolução baixa + ambos sobem.</div>
+  </div>
+
+  <!-- S2 -->
+  <div class="sit" id="s2">
+    <div class="sit-title"><div class="sit-num">2</div>Roubo combinado (poach)</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — Sacador</div>
+        <div class="role-body"><ul>
+          <li>Combinar com A2: saque no T para forçar devolução cruzada</li>
+          <li><strong>Após o saque: cobrir o corredor que A2 vai deixar</strong></li>
+          <li>Deslocar imediatamente — não ficar esperando</li>
+          <li>Os dois trocam de lado: A2 fica no lado de A1, A1 no de A2</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — Parceiro do sacador</div>
+        <div class="role-body"><ul>
+          <li>Sinal: <strong>mão aberta (roubar confirmado)</strong></li>
+          <li>Mover <strong>após o impacto do saque</strong> — não antes</li>
+          <li>Diagonal em direção à rede — cortar a bola o mais cedo possível</li>
+          <li><strong>Voleio angulado para o corredor oposto</strong> — nunca cruzado</li>
+          <li>Chamar "minha!" ao cruzar para A1 saber que deve cobrir o outro lado</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Recebedor</div>
+        <div class="role-body"><ul>
+          <li>Se viu A2 mover: <strong>devolver ao longo da linha</strong></li>
+          <li>Se não viu: devolução cruzada normal vai direto para A2</li>
+          <li>Em dúvida: bola baixa pelo meio</li>
+          <li>Lob se a situação ficar muito arriscada</li>
+          <li>Variar: cruzada + linha — manter A2 na dúvida</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Parceiro do recebedor</div>
+        <div class="role-body"><ul>
+          <li><strong>Observar A2 — antecipar o roubo antes que aconteça</strong></li>
+          <li>Avisar B1 imediatamente: "Linha!" se A2 cruzar</li>
+          <li>Se A2 roubou: recuar para defender o corredor exposto</li>
+          <li>Se B1 fez boa devolução ao longo da linha: avançar à rede</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">A regra do roubo: A2 se move após o impacto. A1 cobre o corredor de A2. B2 avisa B1 com "linha!" quando A2 cruzar.</div>
+  </div>
+
+  <!-- S3 -->
+  <div class="sit" id="s3">
+    <div class="sit-title"><div class="sit-num">3</div>Formação Australiana</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — Sacador</div>
+        <div class="role-body"><ul>
+          <li>Combinar com A2 antes: "Vamos de australiana"</li>
+          <li><strong>Saque profundo no corpo ou no backhand de B1</strong></li>
+          <li>Após o saque: deslocar para o <strong>lado oposto de onde A2 está</strong></li>
+          <li>Cobrir o corredor que A2 não cobre</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — Parceiro do sacador</div>
+        <div class="role-body"><ul>
+          <li>Posicionar na rede <strong>do mesmo lado do sacador</strong></li>
+          <li>Se B1 devolver cruzado: <strong>fácil interceptação</strong> — bola vem direto</li>
+          <li>Se B1 devolver ao longo da linha: A1 vai cobrir</li>
+          <li>Comunicar "minha!" em qualquer bola pelo centro</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Recebedor</div>
+        <div class="role-body"><ul>
+          <li>Identificar a formação: A2 do <strong>mesmo lado do sacador</strong></li>
+          <li><strong>NÃO devolver cruzado</strong> — vai direto para A2</li>
+          <li>Opção 1: devolver ao longo da linha</li>
+          <li>Opção 2: <strong>lob profundo</strong> para o canto do ad</li>
+          <li>Opção 3: correr ao redor para usar o forehand na linha</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Parceiro do recebedor</div>
+        <div class="role-body"><ul>
+          <li><strong>Comunicar para B1: "Australiana!"</strong></li>
+          <li>Ficar na linha de saque, observar onde A2 está</li>
+          <li>Se B1 loba com sucesso: avançar à rede enquanto A recua</li>
+          <li>Se B1 devolver ao longo da linha: avançar junto</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">A australiana força B1 a devolver ao longo da linha (mais difícil) ou lob. B2 deve avisar B1 antes que a bola seja sacada.</div>
+  </div>
+
+  <!-- S4 -->
+  <div class="sit" id="s4">
+    <div class="sit-title"><div class="sit-num">4</div>Dois recebedores atrás</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — Sacador</div>
+        <div class="role-body"><ul>
+          <li>Saque forte e profundo — forçar devolução fraca</li>
+          <li>Avançar à rede normalmente — B2 não está para ser alvo de A2</li>
+          <li>Voleiar profundo para empurrar B1 e B2 para trás</li>
+          <li>Preferir voleios cruzados com ângulo — abre espaço para winner</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — Parceiro do sacador</div>
+        <div class="role-body"><ul>
+          <li>Sinal: <strong>punho (ficar)</strong> — sem alvo fácil para roubo</li>
+          <li>Cobrir o centro da rede — alvo principal é o corredor central</li>
+          <li><strong>Bola pelo meio é sempre sua</strong></li>
+          <li>Aproveitar para voleiar com ângulo — os dois estão atrás</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Recebedor</div>
+        <div class="role-body"><ul>
+          <li>Devolução cruzada e baixa: dificulta primeiro voleio de A1</li>
+          <li>Avançar à rede <strong>não é obrigatório</strong> — depende da qualidade da devolução</li>
+          <li>Se devolução boa e baixa: avançar. Se pressionada: ficar atrás</li>
+          <li>Lob estratégico sobre A2 se estiver muito à frente</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Parceiro do recebedor</div>
+        <div class="role-body"><ul>
+          <li>Posicionado na linha de fundo — não é o alvo fácil habitual</li>
+          <li>Cobrir o corredor junto com B1 — comunicar qual cobre qual lado</li>
+          <li>Se B1 devolver bem e baixo: <strong>avançar à rede junto</strong></li>
+          <li>Lob profundo é a principal arma quando A domina a rede</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">Dois atrás: elimina o alvo fácil para A2, mas exige comunicação clara de quem cobre qual corredor. Lob profundo é a arma principal.</div>
+  </div>
+
+  <!-- S5 -->
+  <div class="sit" id="s5">
+    <div class="sit-title"><div class="sit-num">5</div>Lob sobre a equipe na rede</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — Na rede (lado do lob)</div>
+        <div class="role-body"><ul>
+          <li>Ler o lob imediatamente — identificar no movimento do adversário</li>
+          <li>Se consegue alcançar: gritar <strong>"minha!"</strong> e posicionar para smash</li>
+          <li>Se o lob passa fundo: gritar <strong>"switch!"</strong> — A2 cobre, A1 recua</li>
+          <li>Recuar com <strong>passos de lado</strong> — nunca de costas direto</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — Na rede (lado contrário)</div>
+        <div class="role-body"><ul>
+          <li>Após "switch!": <strong>avançar para cobrir o corredor de A1</strong></li>
+          <li>Se A1 vai para a smash: A2 cobre toda a rede</li>
+          <li>Se o lob passou sobre os dois: recuar junto e reorganizar</li>
+          <li>Comunicação imediata: "teu!" / "meu!" / "switch!"</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Equipe que lobou</div>
+        <div class="role-body"><ul>
+          <li>Após o lob: <strong>avançar à rede IMEDIATAMENTE</strong></li>
+          <li>Não esperar para ver se o lob entrou — avançar no ato</li>
+          <li>Posicionar perto do centro para cobrir os dois corredores</li>
+          <li>Se lob foi curto e A vai smash: recuar e defender</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Equipe que lobou</div>
+        <div class="role-body"><ul>
+          <li><strong>Avançar junto com B1</strong> enquanto adversários recuam</li>
+          <li>Comunicar: "Vai! / Sobe!" para confirmar que ambos avançam</li>
+          <li>Posição: dividir a rede ao meio com B1</li>
+          <li>Se smash for fraca: finalizar com voleio agressivo</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">Após o lob: quem lobou sobe à rede. Quem foi lobado grita "switch!" e troca de lado. A troca deve ser automática e em voz alta.</div>
+  </div>
+
+  <!-- S6 -->
+  <div class="sit" id="s6">
+    <div class="sit-title"><div class="sit-num">6</div>Dois adversários na rede (sua dupla está no fundo)</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — No fundo (defensivo)</div>
+        <div class="role-body"><ul>
+          <li><strong>Opção 1: bola pelo meio</strong> — força os dois a decidirem, cria confusão</li>
+          <li>Opção 2: <strong>bola nos pés</strong> do B mais próximo da rede</li>
+          <li>Opção 3: lob sobre o backhand do B mais próximo</li>
+          <li>NÃO tentar passe lateral — abre ângulo desnecessário</li>
+          <li>Se bola ficar fraca: avançar à rede imediatamente</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — No fundo (junto com A1)</div>
+        <div class="role-body"><ul>
+          <li>Espelhar o posicionamento de A1 — cobrir a quadra juntos</li>
+          <li><strong>Comunicar o alvo antes de bater</strong>: "Meio!" / "Lob!"</li>
+          <li>Pronto para avançar após bola que empurra B para trás</li>
+          <li>Nunca ficar parado no meio da quadra — avançar ou recuar</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Na rede (posição dominante)</div>
+        <div class="role-body"><ul>
+          <li>Ficar compacto — cobrir a janela central</li>
+          <li>Movimento pendular para pressionar adversários</li>
+          <li><strong>Voleio suave e colocado nos pés do adversário de fundo</strong></li>
+          <li>Bola pelo meio: chamar "minha!" — responsabilidade de quem tem o forehand</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Na rede (junto com B1)</div>
+        <div class="role-body"><ul>
+          <li><strong>Dividir a rede ao meio com B1</strong></li>
+          <li>Movimento pendular independente de B1</li>
+          <li>Cobrir o corredor quando B1 vai para o centro</li>
+          <li>Voleio de finalização: nos pés ou no corredor vazio</li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">Com dois adversários na rede: jogar pelo meio cria confusão. Bola nos pés força meio-voleio difícil. Nunca abrir ângulo com passe lateral.</div>
+  </div>
+
+  <!-- S7 -->
+  <div class="sit" id="s7">
+    <div class="sit-title"><div class="sit-num">7</div>Recebendo saque muito forte</div>
+    <div class="roles">
+      <div class="role r-a1">
+        <div class="role-hd"><div class="rdot"></div>A1 — Sacador (saque forte)</div>
+        <div class="role-body"><ul>
+          <li>Variar a direção — manter o receptor incerto</li>
+          <li><strong>Avançar à rede após o saque</strong> — receptor terá menos tempo</li>
+          <li>Saque kick para o backhand: dificulta devolução ao longo da linha</li>
+          <li>Com saque forte a devolução tende a ser fraca → boa chance de roubo para A2</li>
+        </ul></div>
+      </div>
+      <div class="role r-a2">
+        <div class="role-hd"><div class="rdot"></div>A2 — Parceiro (saque forte)</div>
+        <div class="role-body"><ul>
+          <li>Devolução de B1 tende a ser mais fraca — <strong>oportunidade de roubo</strong></li>
+          <li>Sinal: mão aberta (roubar) com frequência quando A1 saca forte</li>
+          <li>Movimento pendular agressivo — pressionar B1 psicologicamente</li>
+          <li>Se B1 recua com lob: preparar para recuar e defender</li>
+        </ul></div>
+      </div>
+      <div class="role r-b1">
+        <div class="role-hd"><div class="rdot"></div>B1 — Recebedor (saque forte)</div>
+        <div class="role-body"><ul>
+          <li><strong>Reduzir o backswing ao mínimo</strong> — bloqueio compacto</li>
+          <li>Devolver baixo e cruzado — não tentar winner</li>
+          <li>Opção de emergência: <strong>lob alto com topspin</strong> — dá tempo e tira A2</li>
+          <li>Se A2 está roubando muito: devolver ao longo da linha esporadicamente</li>
+        </ul></div>
+      </div>
+      <div class="role r-b2">
+        <div class="role-hd"><div class="rdot"></div>B2 — Parceiro do recebedor</div>
+        <div class="role-body"><ul>
+          <li>Se B1 tem muita dificuldade: <strong>recuar para linha de fundo junto</strong></li>
+          <li>Comunicar: "Fica atrás!" / "Loba!" para B1 ajustar</li>
+          <li>Dois atrás: cobrir a quadra juntos — lob como arma principal</li>
+          <li>Se B1 fizer boa devolução: <strong>subir junto à rede imediatamente</strong></li>
+        </ul></div>
+      </div>
+    </div>
+    <div class="tip">Contra saque forte: bloqueio compacto + lob alto são as melhores armas. Dois atrás elimina o alvo fácil para A2.</div>
+  </div>
+
+
+  <div class="sec-title" style="margin-top:16px">Exercícios por Situação</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 1 · Ponto padrão</div>
+      <h3>Saque-Voleio Duplo</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">20 pontos</span></div>
+      <ul>
+        <li>Regra obrigatória: sacador DEVE avançar à rede — se não avançar, ponto é do adversário</li>
+        <li>B1 devolve e DEVE avançar — mesma regra</li>
+        <li>Jogar o ponto normalmente a partir da rede</li>
+        <li>Após 10 pontos, contar quem chegou à rede em todos os pontos</li>
+      </ul>
+      <div class="ex-cue">A regra forçada cria o hábito. Depois de 200 repetições, avançar passa a ser o instinto.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 2 · Roubo combinado</div>
+      <h3>Poach Obrigatório</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">16 pontos</span></div>
+      <ul>
+        <li>A2 DEVE roubar nos pontos ímpares (1, 3, 5…) e ficar nos pares (2, 4, 6…)</li>
+        <li>B2 sabe a regra e treina avisar B1: "Linha!" nos ímpares</li>
+        <li>B1 treina variar: cruzado nos pares, paralela nos ímpares</li>
+        <li>Após 8 pontos, inverter: A2 vai nos pares</li>
+      </ul>
+      <div class="ex-cue">B2 que avisa B1 a tempo vale mais do que B1 que adivinha. Comunicação é técnica.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 3 · Australiana</div>
+      <h3>Australiana com Placar Real</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">1 set</span></div>
+      <ul>
+        <li>A usa formação australiana em <strong>todos</strong> os games de saque</li>
+        <li>B tem 3 opções táticas: paralela, lob ou forehand ao redor</li>
+        <li>Após o set, B deve conseguir vencer 40%+ dos pontos de devolução</li>
+        <li>Se não conseguir, B treina as opções individualmente depois</li>
+      </ul>
+      <div class="ex-cue">A formação australiana só funciona se B não souber responder. Prepare sua resposta.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 4 · Dois atrás</div>
+      <h3>Defesa com Dois Atrás</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">15 pontos</span></div>
+      <ul>
+        <li>B2 sempre começa na linha de fundo (não na linha de saque)</li>
+        <li>B1 e B2 comunicam: "direito meu / esquerdo seu" antes de cada ponto</li>
+        <li>Regra: lob profundo conta duplo se passar sobre a cabeça de A2</li>
+        <li>B avança à rede somente após devolução baixa que empurra A para trás</li>
+      </ul>
+      <div class="ex-cue">Dois atrás é defensivo mas não passivo. O lob profundo é a arma — treinar a profundidade primeiro.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 5 · Lob sobre a rede</div>
+      <h3>Lob-Switch-Smash</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">10 reps</span></div>
+      <ul>
+        <li>A1 e A2 estão na rede; B1 e B2 na linha de fundo</li>
+        <li>B1 loba sobre A1 (combinado, lob sempre sobre A1)</li>
+        <li>A1 grita "switch!" → A2 avança para o lado de A1; A1 recua</li>
+        <li>A1 tenta smash ou defende com lob de volta</li>
+        <li>10 reps, depois inverter (lob sempre sobre A2)</li>
+      </ul>
+      <div class="ex-cue">Switch deve ser verbal e imediato — praticar a chamada alta até virar automático.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 6 · 2 na rede</div>
+      <h3>2 na Rede vs 2 no Fundo</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">20 pontos</span></div>
+      <ul>
+        <li>B fixo na rede, A fixo no fundo — sem avançar</li>
+        <li>A treina as 3 opções: pelo meio, nos pés, lob</li>
+        <li>B treina: voleio suave + pendular + cobrir centro</li>
+        <li>Regra: bola pelo meio que cria hesitação vale ponto bônus para A</li>
+        <li>Após 10 pontos, inverter posições</li>
+      </ul>
+      <div class="ex-cue">A dominação de rede não é só atacar — é o posicionamento e o pendular que pressiona antes do golpe.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Situação 7 · Saque forte</div>
+      <h3>Bloqueio Compacto + Lob de Emergência</h3>
+      <div class="ex-meta"><span class="ex-mt">3 jogadores</span><span class="ex-mt">10 min</span></div>
+      <ul>
+        <li>A1 saca a 80%+ da velocidade — não precisa de parceiro</li>
+        <li>B1 pratica: bloqueio compacto (backswing zero, só posicionar a raquete)</li>
+        <li>Após 5 bloqueios, B1 alterna: 1 lob alto por cada 2 bloqueios</li>
+        <li>A2 está na rede — B1 deve variar para não dar alvo fácil</li>
+        <li>B2 pode treinar avisar B1: "Loba!" em qualquer saque</li>
+      </ul>
+      <div class="ex-cue">Bloqueio compacto: a velocidade do saque faz o trabalho. Bola que entra em jogo já é sucesso.</div>
+    </div>
+  </div>
+
+</div><!-- /t3 -->
+
+<!-- ════════════════════════════════
+     TAB 4 — GOLPES
+═══════════════════════════════════ -->
+<div class="sec" id="t4">
+  <div class="sec-title">Técnica por golpe — do mais ao menos prioritário</div>
+  <div class="stroke-grid">
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p1bg)">
+        <h3>Saque</h3><span class="pbadge pb1">PRIORIDADE 1</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Lançamento <strong>à frente e levemente para dentro</strong> — não para o lado</li>
+          <li>Quadril gira <strong>antes</strong> do ombro — gera potência</li>
+          <li>Contato no ponto mais alto possível — braço completamente estendido</li>
+          <li>Pronação do antebraço no impacto — não "empurrar" com o pulso</li>
+          <li>Relaxar o braço no backswing — tensão desperdiça energia</li>
+          <li><strong>Alvo prioritário: T (linha central)</strong></li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Lançamento muito atrás do corpo — força o ombro</li>
+            <li>Punho rígido no impacto — perde velocidade de cabeça</li>
+            <li>Não avançar após o saque</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Saque kick (topspin) protege o ombro mais que o flat</li>
+            <li>Priorizar colocação sobre velocidade</li>
+            <li>Aquecimento do ombro obrigatório antes de sacar com força</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p1bg)">
+        <h3>Devolução de saque</h3><span class="pbadge pb1">PRIORIDADE 1</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li><strong>Swing compacto</strong> — backswing curto</li>
+          <li>Peso do corpo vai para frente no impacto</li>
+          <li>Contato adiantado — antes de a bola chegar ao lado do corpo</li>
+          <li>Alvo: <strong>cruzado e baixo</strong>, pelo centro da rede</li>
+          <li>Decidir o alvo antes do saque ser batido</li>
+          <li>Avançar imediatamente após bater</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Backswing grande — sem tempo com saque rápido</li>
+            <li>Tentar winner na devolução</li>
+            <li>Ficar parado após devolver</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Bloqueio puro é válido com saques muito fortes</li>
+            <li>Posicionamento antecipado compensa reflexo mais lento</li>
+            <li>Lob alto como devolução de emergência</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p1bg)">
+        <h3>Primeiro voleio (transição)</h3><span class="pbadge pb1">PRIORIDADE 1</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>É um voleio <strong>defensivo-posicional</strong>, não ofensivo</li>
+          <li>Objetivo: bola baixa, nos pés do adversário — não ganhar o ponto</li>
+          <li>Punho firme — não balançar, deixar a bola entrar</li>
+          <li>Inclinar o corpo para frente no impacto</li>
+          <li>Face da raquete levemente aberta para bolas baixas</li>
+          <li><strong>Parar (split step) antes de bater</strong></li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Tentar winner no primeiro voleio</li>
+            <li>Bater enquanto ainda está em movimento</li>
+            <li>Raquete abaixo do pulso na bola baixa</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Split step mais cedo — compensar tempo de reação</li>
+            <li>Aceitar que é um voleio posicional, não finalizador</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p2bg)">
+        <h3>Voleio de bloqueio (rede)</h3><span class="pbadge pb2">PRIORIDADE 2</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Cotovelo alto, raquete à frente do corpo</li>
+          <li><strong>Punho travado no impacto</strong> — absorver a bola, não rebater</li>
+          <li>Movimento pequeno para frente — empurrar levemente</li>
+          <li>Follow-through curto — raquete aponta para o alvo</li>
+          <li>Não usar o pulso — antebraço e ombro controlam</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Recuar para bater o voleio</li>
+            <li>Punho flexionado — perde direção</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Bloqueio é mais consistente e menos danoso ao ombro que swing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p2bg)">
+        <h3>Voleio de interceptação (poach)</h3><span class="pbadge pb2">PRIORIDADE 2</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Mover-se <strong>após o impacto do adversário</strong> — não antes</li>
+          <li>Mover em diagonal em direção à rede</li>
+          <li>Contato o mais próximo da rede possível</li>
+          <li><strong>Direcionar para o corredor oposto</strong></li>
+          <li>Raquete já posicionada antes de cruzar</li>
+          <li>Chamar "minha!" para o parceiro ao cruzar</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Mover muito cedo — adversário vê e desvia</li>
+            <li>Devolver no mesmo cruzado</li>
+            <li>Não avisar o parceiro</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Combinação antecipada com parceiro reduz a necessidade de velocidade</li>
+            <li>Fake poach também pressiona sem esforço</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p2bg)">
+        <h3>Smash (overhead)</h3><span class="pbadge pb2">PRIORIDADE 2</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Girar de lado <strong>imediatamente</strong> ao ver o lob</li>
+          <li>Passos cruzados para trás — mais rápido que passos normais</li>
+          <li>Bola deve descer <strong>à frente</strong> do ombro</li>
+          <li>Quadril gira antes do ombro</li>
+          <li>Contato no ponto mais alto — braço completamente estendido</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Não girar de lado — perde potência</li>
+            <li>Esperar a bola descer demais</li>
+            <li>Bater com força no braço — lesão no ombro</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Smash colocado &gt; smash forte</li>
+            <li>Evitar smashes atrás do corpo — risco de lesão</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p2bg)">
+        <h3>Bola de aproximação</h3><span class="pbadge pb2">PRIORIDADE 2</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Bola curta ou fraca do adversário = sinal para avançar</li>
+          <li><strong>Bater em movimento</strong> em direção à rede</li>
+          <li>Alvo: funda e no corredor</li>
+          <li>Slice é mais controlado em aproximações</li>
+          <li>Após bater: avançar mais 3–4 passos em direção à rede</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Parar após a bola de aproximação</li>
+            <li>Bater forte e no centro — facilita o passing</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Slice de aproximação economiza energia e é mais seguro</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p2bg)">
+        <h3>Lob (defensivo e ofensivo)</h3><span class="pbadge pb2">PRIORIDADE 2</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Lob defensivo (slice)</h4>
+        <ul>
+          <li>Face aberta, movimento de baixo para cima e para frente</li>
+          <li>Alto o suficiente para não ser alcançado — mínimo 2m</li>
+          <li>Profundo — próximo à linha de fundo adversária</li>
+          <li>Alvo: sobre o backhand do jogador mais próximo</li>
+        </ul>
+        <h4>Lob ofensivo (topspin)</h4>
+        <ul>
+          <li>Swing de baixo para cima fechando a raquete</li>
+          <li><strong>Avançar à rede imediatamente após o lob</strong></li>
+          <li>Usar quando estiver em boa posição</li>
+        </ul>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Lob defensivo é uma das armas mais valiosas — economiza energia</li>
+            <li>Usar como reset quando pressionado</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p3bg)">
+        <h3>Half volley (bola no pé)</h3><span class="pbadge pb3">PRIORIDADE 3</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Joelhos <strong>profundamente dobrados</strong> — corpo vai ao nível da bola</li>
+          <li>Raquete paralela ao chão no contato</li>
+          <li>Cabeça da raquete sempre acima do pulso</li>
+          <li>Swing suave e curto — a quica ajuda a subir</li>
+          <li>Objetivo: colocar a bola em jogo, não ganhar o ponto</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Não dobrar os joelhos</li>
+            <li>Tentar winner</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Força nas pernas é limitante — trabalhar squats e lunges</li>
+            <li>Alternativa: antecipar a bola e interceptar mais alto</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="stroke">
+      <div class="stroke-hd" style="background:var(--p3bg)">
+        <h3>Drop volley (toque curto)</h3><span class="pbadge pb3">PRIORIDADE 3</span>
+      </div>
+      <div class="stroke-body">
+        <h4>Pontos técnicos essenciais</h4>
+        <ul>
+          <li>Absorver a bola — mão solta, não rígida</li>
+          <li>Face da raquete bem aberta — bola deve cair próxima à rede</li>
+          <li>Usar <strong>somente quando adversário está no fundo</strong></li>
+          <li>Disfarçar com o mesmo backswing de um voleio normal</li>
+        </ul>
+        <div class="errblock">
+          <h4>Erros mais comuns</h4>
+          <ul>
+            <li>Usar quando adversário está próximo</li>
+            <li>Bola que cai longe demais da rede</li>
+          </ul>
+        </div>
+        <div class="ageblock">
+          <h4>Para 56 anos</h4>
+          <ul>
+            <li>Excelente para economizar energia — adversário é quem corre</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /stroke-grid -->
+
+  <div class="sec-title">Exercícios por Golpe</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-lbl">Saque · Exercício</div>
+      <h3>Cones T-Corpo-Aberto</h3>
+      <div class="ex-meta"><span class="ex-mt">1–2 jogadores</span><span class="ex-mt">25 saques</span><span class="ex-mt">3 cones</span></div>
+      <ul>
+        <li>Colocar cone no T, no corpo e no aberto de cada lado</li>
+        <li>Série 1 (10 saques): todos para o T — registrar % que acerta o alvo</li>
+        <li>Série 2 (10 saques): todos no corpo — registrar %</li>
+        <li>Série 3 (5 saques): misturar aleatório, parceiro escolhe alvo com sinal</li>
+        <li>Meta: 70%+ de 1ºs saques nos alvos de T e corpo</li>
+      </ul>
+      <div class="ex-cue">Velocidade sem direção é 50% de erro. Colocação no T elimina ângulo — treinar isso primeiro.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Devolução · Exercício</div>
+      <h3>Compacto + 3 Passos</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">15 min</span><span class="ex-mt">cesta de bolas</span></div>
+      <ul>
+        <li>Feeder saca variado (T, corpo, aberto) a 60–80% de velocidade</li>
+        <li>Receptor: backswing máximo de 30cm — bater compacto e cruzado</li>
+        <li>Após cada devolução: <strong>3 passos obrigatórios</strong> em direção à rede</li>
+        <li>Feedback: a bola ficou baixa? Cruzou pelo centro da rede?</li>
+        <li>15 devoluções, depois inverter funções</li>
+      </ul>
+      <div class="ex-cue">Os 3 passos depois da devolução criam o hábito de avançar. Parar é o erro mais comum em duplas.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Primeiro Voleio · Exercício</div>
+      <h3>Baixo e Nos Pés</h3>
+      <div class="ex-meta"><span class="ex-mt">2–3 jogadores</span><span class="ex-mt">10 reps</span></div>
+      <ul>
+        <li>Feeder devolve cruzado e baixo a partir da linha de fundo</li>
+        <li>Jogador avança da posição de saque até a linha de saque e executa o primeiro voleio</li>
+        <li>Alvo: bola que <strong>quica antes</strong> da linha de serviço adversária (não voleio finalizado)</li>
+        <li>Após o voleio: avançar mais 2 passos em direção à rede</li>
+        <li>10 reps com forehand, 10 com backhand</li>
+      </ul>
+      <div class="ex-cue">O primeiro voleio bem-feito tem quica baixa — não é winner. Sucesso = adversário em dificuldade no 2º voleio.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Voleio de Bloqueio · Exercício</div>
+      <h3>Bloqueio 20×</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">20 reps</span><span class="ex-mt">curta distância</span></div>
+      <ul>
+        <li>Feeder a 5m, bate bolas de velocidade média e alta direto para o voleador</li>
+        <li>Voleador: punho travado, cotovelo alto — absorver a bola, não rebater</li>
+        <li>Alvo: bola que cai nos pés do feeder (profundidade baixa, não fundo)</li>
+        <li>Proibido: backswing maior que 15cm</li>
+        <li>20 bolas de cada lado (FH e BH)</li>
+      </ul>
+      <div class="ex-cue">Punho travado é a diferença. Testar: apertar a raquete forte antes do impacto — não relaxar até a bola ir.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Poach · Exercício</div>
+      <h3>Cruzar e Direcionar</h3>
+      <div class="ex-meta"><span class="ex-mt">3 jogadores</span><span class="ex-mt">10 reps</span></div>
+      <ul>
+        <li>A1 saca pelo T; A2 na rede com sinal de roubo (mão aberta)</li>
+        <li>B1 devolve cruzado (não sabe que vai ser roubado)</li>
+        <li>A2 cruza após o impacto de B1 — cortar bola o mais perto da rede possível</li>
+        <li>Voleio: <strong>sempre para o corredor oposto</strong> — nunca devolver cruzado</li>
+        <li>A1 cobre o lado de A2 automaticamente</li>
+        <li>10 reps FH, 10 reps BH (variar de qual lado A2 parte)</li>
+      </ul>
+      <div class="ex-cue">Cruzar sem mover A1 deixa o corredor aberto. A dupla se move como uma unidade — A2 cruza, A1 cobre.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Smash · Exercício</div>
+      <h3>15 Lobs Progressivos</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">15 reps</span><span class="ex-mt">marcador de profundidade</span></div>
+      <ul>
+        <li>Parceiro loba de 6m (série 1: lob curto / série 2: lob médio / série 3: lob fundo)</li>
+        <li>Jogador: <strong>girar de lado imediatamente</strong> — ombro dominante para a rede</li>
+        <li>Passos cruzados para trás, posicionar para contato à frente do ombro</li>
+        <li>Smash colocado para o corredor aberto — não smash para cima</li>
+        <li>5 de cada série (15 total). Feedback: girou de lado? Contato alto?</li>
+      </ul>
+      <div class="ex-cue">O erro mais comum: não girar de lado antes de recuar. Girar primeiro, mover depois — sempre nessa ordem.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Bola de Aproximação · Exercício</div>
+      <h3>Curta + Avançar</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">10 reps</span></div>
+      <ul>
+        <li>Feeder joga bola curta (entre a linha de serviço e a rede)</li>
+        <li>Jogador corre, bate slice profundo ao longo da linha e continua avançando</li>
+        <li>Meta: depois de bater, estar 2m além da linha de serviço antes do feeder bater de volta</li>
+        <li>Feeder bate voleio para testar o posicionamento — jogador já deve estar na rede</li>
+        <li>10 reps FH, 10 reps BH</li>
+      </ul>
+      <div class="ex-cue">Bola de aproximação é um passo em direção à rede, não um ponto. Parar após bater anula a vantagem.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Lob · Exercício</div>
+      <h3>Profundidade de Lob</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">20 reps</span><span class="ex-mt">marcador</span></div>
+      <ul>
+        <li>Colocar marcador a 1m da linha de fundo do adversário</li>
+        <li>Série 1 (10): lob defensivo slice — aterrissar entre o marcador e a linha de fundo</li>
+        <li>Série 2 (10): lob ofensivo topspin — mesmo alvo, mas fechar a raquete</li>
+        <li>Contar % que aterrissa na zona alvo</li>
+        <li>Meta: 60%+ na zona com lob defensivo; 40%+ com topspin</li>
+      </ul>
+      <div class="ex-cue">Lob curto demais é smash fácil. Lob fora demais é ponto adversário. A profundidade é o que faz o lob funcionar.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Half Volley · Exercício</div>
+      <h3>Feed nos Pés</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">15 reps</span></div>
+      <ul>
+        <li>Feeder a 3–4m joga bola diretamente aos pés do jogador (quica logo antes dos pés)</li>
+        <li>Jogador: dobrar profundamente os joelhos, raquete paralela ao chão</li>
+        <li>Swing suave e curto — apenas colocar a bola em jogo</li>
+        <li>Após o half volley: avançar 2 passos em direção à rede</li>
+        <li>15 reps FH, 15 reps BH</li>
+      </ul>
+      <div class="ex-cue">O half volley é puro joelho. Quem não dobra, perde o contato e erra. Testar: colocar o joelho quase no chão antes de bater.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Drop Volley · Exercício</div>
+      <h3>Mão Solta — Absorver</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">15 reps</span></div>
+      <ul>
+        <li>Feeder a 4m bate bola de velocidade média direto para o voleador na rede</li>
+        <li>Voleador: soltar o grip antes do impacto, deixar a mão ficar "mole"</li>
+        <li>Abrir bastante a face da raquete — bola deve cair a &lt;50cm da rede</li>
+        <li>Usar o mesmo backswing de voleio normal (disfarce)</li>
+        <li>Contar reps onde a bola caiu antes da linha de serviço</li>
+      </ul>
+      <div class="ex-cue">O segredo é a mão solta. Apertar a raquete é o instinto — fazer o contrário é o que gera o drop volley perfeito.</div>
+    </div>
+  </div>
+
+</div><!-- /t4 -->
+
+<!-- ════════════════════════════════
+     TAB 5 — MENTAL
+═══════════════════════════════════ -->
+<div class="sec" id="t5">
+
+  <div class="sec-title">Os 3 pilares do mental em duplas</div>
+  <div class="g3">
+    <div class="card">
+      <h3>1. Decidir antes</h3>
+      <p>Saber para onde vai a bola antes de batê-la. A dupla que decide no último momento sempre erra mais. Planejamento elimina hesitação.</p>
+    </div>
+    <div class="card">
+      <h3>2. Reset rápido</h3>
+      <p>Cada ponto começa do zero. O erro anterior não existe mais. A dupla que carrega o erro perde dois pontos — o que errou e o próximo.</p>
+    </div>
+    <div class="card">
+      <h3>3. Um time, uma voz</h3>
+      <p>O silêncio entre os pontos é contagioso — tanto o positivo quanto o negativo. Escolher o que emitir é estratégia.</p>
+    </div>
+  </div>
+
+  <div class="sec-title">Rotina entre pontos (15–20 segundos)</div>
+  <div class="comm-grid">
+    <div class="cc cc-ok">
+      <h3>O que fazer</h3>
+      <ul>
+        <li><strong>Virar as costas para a rede</strong> — corta o contato visual</li>
+        <li>Uma palavra com o parceiro — curta e positiva</li>
+        <li>Definir o próximo plano tático em 1 frase</li>
+        <li>Respiração lenta: 4 tempos de inspiração, 4 de expiração</li>
+        <li>Raquete na mão não-dominante — solta o braço tenso</li>
+        <li>Olhar para o próprio lado da quadra</li>
+      </ul>
+    </div>
+    <div class="cc cc-warn">
+      <h3>O que evitar</h3>
+      <ul>
+        <li>Encarar o adversário por mais de 2 segundos após o ponto</li>
+        <li>Repetir o erro mentalmente</li>
+        <li>Linguagem corporal negativa (cabeça baixa, ombros caídos)</li>
+        <li>Discutir táticas longamente — o ponto vem em 20s</li>
+        <li>Olhar para fora da quadra</li>
+        <li>Respiração rápida e superficial</li>
+      </ul>
+    </div>
+  </div>
+  <div class="rule"><strong>Foco interno &gt; foco externo.</strong> Onde minha bola vai cair, meu posicionamento, meu split step = produtivo. O que o adversário vai fazer, o que o parceiro está pensando = improdutivo e ansioso.</div>
+
+  <div class="sec-title">Dicas mentais por situação</div>
+
+  <div class="msit">
+    <div class="msit-hd"><span class="msit-tag mtag-p">Pressão</span><h3>Após cometer um erro grave</h3></div>
+    <div class="msit-body">
+      <div class="msit-col"><h4>Faça</h4><ul>
+        <li>Reconheça o erro em 2 segundos: "errei, ok"</li>
+        <li>Foco imediato no próximo ponto — só o próximo</li>
+        <li>Use o gesto de reset da sua rotina</li>
+        <li>Diga algo para o parceiro — mesmo "vamos" quebra o loop mental</li>
+      </ul></div>
+      <div class="msit-col"><h4>Evite</h4><ul>
+        <li>Reconstruir o erro mentalmente várias vezes</li>
+        <li>Mudar seu jogo por medo de errar de novo</li>
+        <li>Pedir desculpas repetidamente ao parceiro</li>
+        <li>Bater na raquete — sinaliza ao adversário</li>
+      </ul></div>
+      <div class="msit-anchor"><strong>Âncora:</strong> "Cada ponto é um jogo novo. Eles também vão errar."</div>
+    </div>
+  </div>
+
+  <div class="msit">
+    <div class="msit-hd"><span class="msit-tag mtag-p">Pressão</span><h3>Parceiro erra muito / joga mal</h3></div>
+    <div class="msit-body">
+      <div class="msit-col"><h4>Faça</h4><ul>
+        <li>Linguagem corporal <strong>neutra ou positiva</strong></li>
+        <li>Encorajamento curto: "próximo", "tranquilo"</li>
+        <li>Adaptar a tática para proteger o parceiro</li>
+        <li>Focar no próprio jogo — o que você controla</li>
+      </ul></div>
+      <div class="msit-col"><h4>Evite</h4><ul>
+        <li>Olhares de desaprovação — mesmo inconscientes</li>
+        <li>Suspiros audíveis após o erro do parceiro</li>
+        <li>Forçar seu próprio jogo para "compensar"</li>
+        <li>Dar instrução técnica durante o jogo</li>
+      </ul></div>
+      <div class="msit-anchor"><strong>Âncora:</strong> "Minha linguagem corporal é parte do jogo. O adversário lê tudo."</div>
+    </div>
+  </div>
+
+  <div class="msit">
+    <div class="msit-hd"><span class="msit-tag mtag-m">Gestão</span><h3>Adversário saca muito bem</h3></div>
+    <div class="msit-body">
+      <div class="msit-col"><h4>Faça</h4><ul>
+        <li>Reduzir objetivo: <strong>colocar a bola em jogo</strong> já é sucesso</li>
+        <li>Recuar 30–50cm na linha de fundo</li>
+        <li>Usar lob alto como devolução de emergência</li>
+        <li>Combinar com parceiro: "devolvendo bloqueado, sobe junto"</li>
+      </ul></div>
+      <div class="msit-col"><h4>Evite</h4><ul>
+        <li>Esperar que o saque vai ficar mais fraco</li>
+        <li>Tentar winner na devolução para "compensar"</li>
+        <li>Sentir que o ponto está perdido antes de começar</li>
+      </ul></div>
+      <div class="msit-anchor"><strong>Âncora:</strong> "Meu objetivo agora é colocar a bola em jogo e sobreviver ao primeiro golpe."</div>
+    </div>
+  </div>
+
+  <div class="msit">
+    <div class="msit-hd"><span class="msit-tag mtag-m">Gestão</span><h3>Dois adversários na rede</h3></div>
+    <div class="msit-body">
+      <div class="msit-col"><h4>Faça</h4><ul>
+        <li>Decidir o alvo <strong>antes de batê-la</strong>: lob, pelo meio ou paralela</li>
+        <li>Velocidade baixa e alta — tira o timing deles</li>
+        <li>Aceitar a desvantagem — não arriscar passing rasgado</li>
+      </ul></div>
+      <div class="msit-col"><h4>Evite</h4><ul>
+        <li>Tentar passing lateral — percentual muito baixo</li>
+        <li>Bater sem decidir para onde</li>
+        <li>Panic shot — bola alta e forte vai direto para o smash</li>
+      </ul></div>
+      <div class="msit-anchor"><strong>Âncora:</strong> "Pelo meio ou lob. Decidi, bati. Já está feito."</div>
+    </div>
+  </div>
+
+  <div class="msit">
+    <div class="msit-hd"><span class="msit-tag mtag-s">Vantagem</span><h3>Dominando / acima no placar</h3></div>
+    <div class="msit-body">
+      <div class="msit-col"><h4>Faça</h4><ul>
+        <li>Manter a mesma rotina entre pontos</li>
+        <li>Continuar jogando o mesmo padrão</li>
+        <li>Nível de intensidade constante</li>
+      </ul></div>
+      <div class="msit-col"><h4>Evite</h4><ul>
+        <li>Tentar winners desnecessários</li>
+        <li>Pensar no resultado final antes de terminar</li>
+        <li>Mudar o padrão tático por querer mostrar algo diferente</li>
+      </ul></div>
+      <div class="msit-anchor"><strong>Âncora:</strong> "O adversário vai reagir. Continuar fazendo o que me trouxe até aqui."</div>
+    </div>
+  </div>
+
+  <div class="msit">
+    <div class="msit-hd"><span class="msit-tag mtag-c">Crise</span><h3>Perdendo o momento / virada adversária</h3></div>
+    <div class="msit-body">
+      <div class="msit-col"><h4>Faça</h4><ul>
+        <li><strong>Pausar:</strong> amarrar o tênis, ajustar o grip</li>
+        <li>Conversa rápida com parceiro: o que mudou?</li>
+        <li>Mudar um elemento tático — posição, direção do saque</li>
+        <li>Aceitar que o momento é deles — esperar passar</li>
+      </ul></div>
+      <div class="msit-col"><h4>Evite</h4><ul>
+        <li>Tentar resolver tudo no próximo ponto</li>
+        <li>Mudar completamente o estilo de jogo</li>
+        <li>Jogo apressado — pegar a bola rápido para sacar</li>
+      </ul></div>
+      <div class="msit-anchor"><strong>Âncora:</strong> "Momentos mudam. Não ceder pontos fáceis e esperar nossa onda voltar."</div>
+    </div>
+  </div>
+
+  <div class="sec-title">Comunicação com o parceiro</div>
+  <div class="comm-grid">
+    <div class="cc cc-ok">
+      <h3>Frases que ajudam</h3>
+      <ul>
+        <li><strong>"Vamos"</strong> — positivo, direciona energia</li>
+        <li><strong>"Próximo"</strong> — fecha o ponto, abre o seguinte</li>
+        <li><strong>"Boa bola"</strong> — reforça o que funcionou</li>
+        <li><strong>"Minha!"</strong> — evita hesitação na bola no meio</li>
+        <li><strong>"Switch!"</strong> — trocar de lado após lob</li>
+        <li><strong>"T" / "Corpo" / "Aberto"</strong> — sinal de saque</li>
+        <li><strong>"Fica" / "Vai"</strong> — combinação de poach</li>
+      </ul>
+    </div>
+    <div class="cc cc-warn">
+      <h3>Frases que destroem</h3>
+      <ul>
+        <li><strong>"Como você errou isso?"</strong></li>
+        <li><strong>"Eu sabia que ia errar"</strong></li>
+        <li><strong>"Precisamos ganhar esse game"</strong></li>
+        <li><strong>"Está errado o teu backhand"</strong></li>
+        <li><strong>Silêncio total após erro do parceiro</strong> — pior que crítica</li>
+        <li><strong>Instrução técnica longa entre pontos</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="rule"><strong>Regra do 1 ponto:</strong> entre pontos, comunicação máxima de 1 frase — plano tático ou encorajamento. Análise técnica fica para a troca de lados (90 segundos).</div>
+
+  <div class="sec-title">Mental por placar</div>
+  <div class="score-grid">
+    <div class="sc"><div class="scn">0–40</div><h4>Desvantagem máxima</h4><ul>
+      <li>Cada ponto ganho aqui é <strong>pesado psicologicamente para o adversário</strong></li>
+      <li>Jogar com mais risco — o game já está quase perdido</li>
+      <li>Um ponto de cada vez pode virar 40–40</li>
+    </ul></div>
+    <div class="sc"><div class="scn">40–0</div><h4>Vantagem máxima</h4><ul>
+      <li>Manter o padrão — não inventar</li>
+      <li>Jogar mais conservador — reduzir risco</li>
+      <li>O adversário tem pouco a perder — pode arriscar mais</li>
+    </ul></div>
+    <div class="sc"><div class="scn">30–40</div><h4>Break point contra você</h4><ul>
+      <li>Rotina de saque mais lenta — respira mais</li>
+      <li>Saque para o alvo mais consistente</li>
+      <li>"É só um ponto. O adversário também está nervoso."</li>
+    </ul></div>
+    <div class="sc"><div class="scn">40–30</div><h4>Game point a favor</h4><ul>
+      <li>Não mudar o plano tático</li>
+      <li>Padrão mais consistente — não o mais difícil</li>
+      <li>Fechar agora deixa o adversário ainda mais pressionado</li>
+    </ul></div>
+    <div class="sc"><div class="scn">Deuce</div><h4>Igualdade</h4><ul>
+      <li>A dupla que se prepara melhor entre pontos vence</li>
+      <li>Saque: ir para o alvo mais seguro</li>
+      <li>"Cada ponto do deuce é um mini-set"</li>
+    </ul></div>
+    <div class="sc"><div class="scn">Tiebreak</div><h4>Morte súbita</h4><ul>
+      <li>Placar anterior não existe — começa do zero</li>
+      <li><strong>Primeiro ponto é o mais importante</strong> — define o tom</li>
+      <li>Trocar de lado em 6–6 — aproveitar 90s para conversar</li>
+    </ul></div>
+    <div class="sc"><div class="scn">5–6 / 6–5</div><h4>Final de set</h4><ul>
+      <li>Rotinas mais devagar — não mais rápido</li>
+      <li>Foco somente no próximo ponto — jamais no set</li>
+      <li>O adversário está igualmente pressionado</li>
+    </ul></div>
+    <div class="sc"><div class="scn">0–1 set</div><h4>Após perder o 1º set</h4><ul>
+      <li>O primeiro set acabou — nova partida começa agora</li>
+      <li>Identificar o que não funcionou (uma coisa só)</li>
+      <li>A pressão é maior para quem está na frente</li>
+    </ul></div>
+  </div>
+
+
+  <div class="sec-title">Exercícios de Treino Mental</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-lbl">Mental 1 · Rotina</div>
+      <h3>Rotina Completa — Sem Atalhos</h3>
+      <div class="ex-meta"><span class="ex-mt">treino regular</span><span class="ex-mt">aplicar em todo ponto</span></div>
+      <ul>
+        <li>Em <strong>todo</strong> ponto de treino: executar a rotina entre pontos completa</li>
+        <li>Passos: (1) virar as costas para a rede, (2) raquete na mão esquerda, (3) 1 palavra para o parceiro, (4) definir o próximo plano</li>
+        <li>Parceiro monitora: levantou o dedo se a rotina foi pulada</li>
+        <li>Pontos pulados não contam para o placar — criar pressão para manter a rotina</li>
+        <li>Objetivo: rotina automática em 3 semanas de treino</li>
+      </ul>
+      <div class="ex-cue">A rotina é uma armadura. Quem tem rotina é mais difícil de pressionar — o adversário não consegue tirar o foco.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Mental 2 · Visualização</div>
+      <h3>3 Segundos Antes do Saque</h3>
+      <div class="ex-meta"><span class="ex-mt">treino de saque</span><span class="ex-mt">todo saque</span></div>
+      <ul>
+        <li>Antes de cada saque no treino: <strong>parar 3 segundos</strong> e visualizar a bola saindo e caindo no alvo escolhido</li>
+        <li>Imagem: ver a bola cruzar a rede e aterrissar no cone ou no T</li>
+        <li>Depois da visualização: executar o saque</li>
+        <li>Comparar: % de acerto nos saques com visualização vs sem</li>
+        <li>Levar para a partida após 2 semanas de prática no treino</li>
+      </ul>
+      <div class="ex-cue">A visualização não é superstição — é o cérebro calibrando o motor antes de executar. 3 segundos cria consistência.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Mental 3 · Pressão</div>
+      <h3>Placar de Pressão</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">20 min</span></div>
+      <ul>
+        <li>Todos os games começam em <strong>30–40</strong> (break point contra quem saca)</li>
+        <li>Variação: começar em <strong>0–40</strong> para treinar situação crítica</li>
+        <li>Observar: respiração acelera? A rotina entre pontos muda?</li>
+        <li>Meta: manter a rotina idêntica, independente do placar</li>
+        <li>Após o treino, discutir: o que mudou mentalmente sob pressão?</li>
+      </ul>
+      <div class="ex-cue">A pressão de jogo real é 10× maior que a de treino normal. Simular pressão no treino prepara o sistema nervoso.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Mental 4 · Comunicação</div>
+      <h3>1 Palavra Obrigatória</h3>
+      <div class="ex-meta"><span class="ex-mt">4 jogadores</span><span class="ex-mt">treino regular</span></div>
+      <ul>
+        <li>Regra: após cada ponto, ambos os parceiros <strong>devem</strong> dizer ao menos 1 palavra</li>
+        <li>Se um parceiro não falar, o ponto é dado ao adversário</li>
+        <li>Vale qualquer palavra: "vamos", "próximo", "T", "ele tá cansado"</li>
+        <li>Silêncio total após erro é proibido — pior sinal que a dupla pode dar</li>
+        <li>Observar: com comunicação obrigatória, o clima da dupla muda?</li>
+      </ul>
+      <div class="ex-cue">O silêncio após o erro diz ao adversário que a dupla está rachando. 1 palavra já é suficiente para mudar isso.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Mental 5 · Reset</div>
+      <h3>3 Respirações + Próximo</h3>
+      <div class="ex-meta"><span class="ex-mt">treino e jogo</span><span class="ex-mt">após todo erro</span></div>
+      <ul>
+        <li>Após qualquer erro importante: <strong>não pegar a bola imediatamente</strong></li>
+        <li>Fazer 3 respirações profundas (4 tempos de inspiração, 4 de expiração)</li>
+        <li>Dizer mentalmente "próximo" antes de agir</li>
+        <li>Só então pegar a bola, ajustar o grip e seguir para a rotina normal</li>
+        <li>Medir: quanto tempo leva para você se sentir pronto? Meta: &lt;10 segundos</li>
+      </ul>
+      <div class="ex-cue">3 respirações ativam o sistema parassimpático — o antídoto fisiológico para o estresse. Simples e eficaz.</div>
+    </div>
+  </div>
+
+</div><!-- /t5 -->
+
+<!-- ════════════════════════════════
+     TAB 6 — FÍSICO
+═══════════════════════════════════ -->
+<div class="sec" id="t6">
+  <div class="sec-title">Adaptações para jogador de 56 anos</div>
+  <div class="phys-grid">
+    <div class="card">
+      <h3>Mobilidade — o mais urgente</h3>
+      <ul>
+        <li><strong>Rotação torácica:</strong> ombros e parte superior das costas — limita saque e smash se restrita</li>
+        <li><strong>Mobilidade de quadril:</strong> rotação externa — protege o joelho no split step</li>
+        <li><strong>Tornozelo:</strong> dorsiflexão — necessária para dobrar os joelhos no half volley</li>
+        <li>Exercício: bastão nos ombros + rotação sentado (3x 15 cada lado)</li>
+        <li>Tempo: 10–15 min antes de jogar, 5–10 min depois</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Força — prioridades para duplas</h3>
+      <ul>
+        <li><strong>Rotação externa do ombro:</strong> elástico, 3x 15 — previne lesão de manguito</li>
+        <li><strong>Woodchop (elástico diagonal):</strong> 3x 12 — força de saque e smash</li>
+        <li><strong>Squat e lunge:</strong> 2x 12 — força para half volley e split step</li>
+        <li><strong>Core (prancha + rotação):</strong> 3x 30s — base de todos os golpes</li>
+        <li>Frequência: 2–3x por semana, fora dos dias de quadra</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Adaptações táticas ao corpo de 56 anos</h3>
+      <ul>
+        <li><strong>Posicionamento antecipado</strong> compensa reflexo mais lento</li>
+        <li>Cobrir o centro da rede reduz distância a percorrer</li>
+        <li><strong>Lob defensivo</strong> como arma estratégica — adversário que corre</li>
+        <li>Combinação de saques = menos surpresas = menos reação rápida</li>
+        <li>Voleio de bloqueio: menos stress no ombro que swing completo</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Prevenção de lesões</h3>
+      <ul>
+        <li><strong>Ombro:</strong> aquecimento progressivo, nunca saque a frio, fortalecer rotação externa</li>
+        <li><strong>Joelho:</strong> evitar mudanças bruscas sem preparação — treinar split step</li>
+        <li><strong>Cotovelo:</strong> grip relaxado — aperto excessivo causa epicondilite</li>
+        <li><strong>Panturrilha / Aquiles:</strong> alongar antes e depois, nunca sprint sem aquecimento</li>
+        <li>Regra: <strong>dor ≠ cansaço</strong> — parar se sentir dor localizada em articulações</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Rotina de aquecimento (15 min)</h3>
+      <ul>
+        <li>5 min: caminhada rápida ou bicicleta leve</li>
+        <li>3 min: mobilidade de ombro, quadril e tornozelo</li>
+        <li>3 min: raquetadas suaves — voleios a 50% para ativar ombro</li>
+        <li>2 min: saques progressivos (30% → 60% → 80% de força)</li>
+        <li>2 min: split steps e movimentos laterais</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Recuperação entre sessões</h3>
+      <ul>
+        <li>48h de descanso entre sessões intensas de quadra</li>
+        <li>Gelo no ombro por 10–15 min após jogar se houver desconforto</li>
+        <li>Hidratação: mínimo 500ml por hora de jogo</li>
+        <li>Sono 7–8h: recuperação muscular e mental</li>
+        <li><strong>Musculação não deve anteceder quadra no mesmo dia</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title" style="margin-top:4px">Princípio central</div>
+  <div class="rule" style="font-size:13px;line-height:1.6"><strong>Em duplas amador, quem perde a maioria dos pontos não é o menos habilidoso — é o que perde o fio mental primeiro.</strong> Controle mental, posicionamento e comunicação com o parceiro são habilidades técnicas como qualquer golpe e precisam ser treinadas.</div>
+
+  <div class="card" style="margin-top:10px;background:var(--surf)">
+    <h3>Fontes consultadas</h3>
+    <p style="color:var(--dim)">USTA · ITF · Tennis Creative · Tennis Nation · Bayview Village Tennis Camp · Tennis Life Magazine · ResearchGate · Mouratoglou Tennis Academy · My Tennis HQ · Tennis Files Podcast</p>
+  </div>
+
+  <div class="sec-title" style="margin-top:18px">Exercícios Físicos Específicos para Quadra</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-lbl">Físico 1 · Reação</div>
+      <h3>Split Step com Chamada</h3>
+      <div class="ex-meta"><span class="ex-mt">2 jogadores</span><span class="ex-mt">3 × 20 reps</span><span class="ex-mt">sem bola</span></div>
+      <ul>
+        <li>Jogador em posição de base na linha de serviço</li>
+        <li>Parceiro bate palma ou grita "agora!" aleatoriamente</li>
+        <li>Jogador executa split step no momento exato do sinal</li>
+        <li>Variação: após o split step, mover 1 passo para FH ou BH conforme o parceiro apontar</li>
+        <li>3 séries de 20 com 60s de descanso entre séries</li>
+      </ul>
+      <div class="ex-cue">O split step deve acontecer <em>no impacto do adversário</em> — não antes, não depois. Treinado repetidamente, vira instinto.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Físico 2 · Movimento lateral</div>
+      <h3>Lateral 4 Cones</h3>
+      <div class="ex-meta"><span class="ex-mt">1 jogador</span><span class="ex-mt">3 × 30s</span><span class="ex-mt">4 cones</span></div>
+      <ul>
+        <li>Colocar 4 cones em linha com 1m de distância entre eles</li>
+        <li>Side-shuffle lateralmente: tocar cada cone com a mão mais próxima</li>
+        <li>Manter postura baixa e cotovelos dobrados — não ficar ereto</li>
+        <li>30 segundos por série, 45s de descanso</li>
+        <li>Progressão: adicionar mudança de direção no meio do exercício</li>
+      </ul>
+      <div class="ex-cue">O movimento lateral na rede é horizontal — nunca cruzar as pernas. Shuffle correto mantém a posição de cobertura.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Físico 3 · Deslocamento</div>
+      <h3>Rede-Fundo Sprint</h3>
+      <div class="ex-meta"><span class="ex-mt">1 jogador</span><span class="ex-mt">5 sprints</span><span class="ex-mt">30s intervalo</span></div>
+      <ul>
+        <li>Posição inicial: linha de fundo (posição de saque)</li>
+        <li>Sprint até a posição de rede (entre linha de serviço e rede)</li>
+        <li>Split step de chegada na posição de rede — simular voleio</li>
+        <li>Recuar (não correr) de volta para a linha de fundo</li>
+        <li>5 sprints com 30s de descanso. Foco: chegada com equilíbrio, não velocidade máxima</li>
+      </ul>
+      <div class="ex-cue">O sprint à rede termina com split step — não com colapso. Chegar rápido mas desequilibrado é pior que chegar lento e estável.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Físico 4 · Técnica sem bola</div>
+      <h3>Sombra de Golpe</h3>
+      <div class="ex-meta"><span class="ex-mt">1 jogador</span><span class="ex-mt">2 min por golpe</span><span class="ex-mt">sem bola</span></div>
+      <ul>
+        <li>Posição de voleio FH: executar o movimento completo 30× em câmera lenta</li>
+        <li>Posição de voleio BH: 30× — focar no punho travado e cotovelo alto</li>
+        <li>Posição de smash: rotação de lado + passos cruzados + swing 20×</li>
+        <li>Posição de split step: 20 split steps com aterrizagem equilibrada</li>
+        <li>Útil para dias sem quadra ou como aquecimento antes de jogar</li>
+      </ul>
+      <div class="ex-cue">A memória muscular é construída por repetição — com bola ou sem. 1000 sombras de voleio melhoram o voleio real.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Físico 5 · Prevenção</div>
+      <h3>Rotação Externa do Ombro</h3>
+      <div class="ex-meta"><span class="ex-mt">1 jogador</span><span class="ex-mt">3 × 15 reps</span><span class="ex-mt">elástico</span></div>
+      <ul>
+        <li>Elástico fixo na altura da cintura; cotovelo junto ao corpo a 90°</li>
+        <li>Rotacionar o antebraço para fora (afastar da barriga) lentamente</li>
+        <li>Retornar com controle — não deixar o elástico puxar</li>
+        <li>3 séries de 15 cada ombro — 3× por semana</li>
+        <li>Este músculo (infraespinhal) é o principal protetor contra lesão de saque</li>
+      </ul>
+      <div class="ex-cue">O manguito rotador fraco é a causa #1 de lesão de ombro em tenistas acima de 50 anos. 10 minutos por semana previnem meses de recuperação.</div>
+    </div>
+    <div class="ex-card">
+      <div class="ex-lbl">Físico 6 · Core</div>
+      <h3>Woodchop com Elástico</h3>
+      <div class="ex-meta"><span class="ex-mt">1 jogador</span><span class="ex-mt">3 × 12 reps</span><span class="ex-mt">elástico alto</span></div>
+      <ul>
+        <li>Elástico fixo acima da cabeça; segurar com as duas mãos</li>
+        <li>Puxar em diagonal de cima-para-baixo, como cortar lenha</li>
+        <li>Rotação de quadril e tronco — o braço apenas guia</li>
+        <li>12 reps de cada lado; 3 séries com 45s de descanso</li>
+        <li>Simula o padrão de movimento do saque e smash</li>
+      </ul>
+      <div class="ex-cue">O saque vem do core, não do braço. Fortalecer a cadeia diagonal (ombro contralateral ao quadril) gera potência sem lesão.</div>
+    </div>
+  </div>
+
+</div><!-- /t6 -->
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+function showSit(id,btn){
+  document.querySelectorAll('.sit').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.sit-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+</script>
