@@ -218,34 +218,105 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
   <!-- OBSERVAR -->
   <div class="sec on" id="s-obs">
     <div class="pg-lbl">O que observar em quadra</div>
+
     <div class="item-card open">
       <div class="item-hd" onclick="tog(this.parentElement)">
         <div><div class="item-title" style="color:var(--c-obs)">Chegam à rede?</div><div class="item-sub">Posicionamento após saque e devolução</div></div>
         <span class="item-arr">▾</span>
       </div>
-      <div class="item-body">As duas avançam 3 passos após bater? Ou ficam presas no meio da quadra? É o indicador mais importante do padrão de jogo.</div>
+      <div class="item-body">
+        <strong>O indicador mais importante.</strong> Perguntas-chave:<br>
+        · Após o saque, a sacadora avança ou fica no fundo?<br>
+        · Após a devolução, a devolvente sobe ou recua?<br>
+        · A jogadora da rede avança quando a bola passa pelo centro ou fica colada na linha de serviço?<br>
+        <em>Se nenhuma das duas avança, o plano é construir o ponto curto para forçar a subida.</em>
+      </div>
     </div>
+
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Padrão de bola</div><div class="item-sub">Altura / profundidade / ritmo das trocas</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Saque e 2º saque</div><div class="item-sub">Direção, tipo, vulnerabilidade</div></div>
         <span class="item-arr">▾</span>
       </div>
-      <div class="item-body">A bola volta alta de novo? Fica sempre no mesmo ritmo? Cai no centro ou abre ângulo? Esses padrões revelam o que mudar.</div>
+      <div class="item-body">
+        · Para onde vai o 1º saque? (corpo, BH, FH, aberto)<br>
+        · O 2º saque é slice fraco ou kick atacável?<br>
+        · Duplas faltas aparecem sob pressão (30-40, tiebreak)?<br>
+        · A devolvente ataca o 2º ou apenas devolve seguro?<br>
+        <em>2º saque atacável é a maior oportunidade no amador — anotar se aparecer.</em>
+      </div>
     </div>
+
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Comunicação</div><div class="item-sub">Bola pelo meio, switch, sinais</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Lado fraco — BH ou FH?</div><div class="item-sub">Direção que evitam, onde erram</div></div>
         <span class="item-arr">▾</span>
       </div>
-      <div class="item-body">Há hesitação na bola pelo meio? Chamam "minha"? Confirmam o sinal? A falta de comunicação é sempre mais cara do que o erro técnico.</div>
+      <div class="item-body">
+        · Qual direção cada adversária evita bater? (cruzado? paralelo?)<br>
+        · BH produz bola curta ou alta com frequência?<br>
+        · FH fica dentro do campo ou sai lateral?<br>
+        · Sob pressão, para onde a bola vai — erro ou bola segura baixa?<br>
+        <em>No amador, BH fraco é mais comum — confirmar nos primeiros 3 games.</em>
+      </div>
     </div>
+
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
-        <div><div class="item-title" style="color:var(--c-obs)">Energia & tensão</div><div class="item-sub">Linguagem corporal, foco, relação entre parceiras</div></div>
+        <div><div class="item-title" style="color:var(--c-obs)">Padrão de troca</div><div class="item-sub">Direção, altura, ritmo preferido</div></div>
         <span class="item-arr">▾</span>
       </div>
-      <div class="item-body">Cabeça baixa após erro? Evitam se olhar? O estado mental é observável e muda a estratégia de instrução — lógica funciona quando estão calmas.</div>
+      <div class="item-body">
+        · Cruzado por padrão ou jogam muito paralelo?<br>
+        · A bola volta alta e lenta (segura) ou plana e rápida?<br>
+        · Atacam bola curta ou deixam passar sem avançar?<br>
+        · Drop shot aparece? Quem usa e em que situação?<br>
+        <em>Padrão alto e lento = usar drop shot. Padrão baixo e rápido = lob defensivo para resetar.</em>
+      </div>
     </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div><div class="item-title" style="color:var(--c-obs)">Cobertura e lob</div><div class="item-sub">Switch, interceptação, bola pelo meio</div></div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        · Quando o lob passa sobre a rede, fazem switch automático?<br>
+        · A jogadora da rede intercepta bolas do centro (poach) ou fica parada?<br>
+        · Quem bate a bola pelo meio — há hesitação ou combinação clara?<br>
+        · Como respondem ao lob alto — overhead confiante ou vacilam?<br>
+        <em>Poach ativo = evitar cruzado, jogar no corpo. Switch ausente = lob profundo é arma.</em>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div><div class="item-title" style="color:var(--c-obs)">Comunicação</div><div class="item-sub">Chamadas, switch, sinais entre parceiras</div></div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        · Chamam "minha" ou há silêncio e hesitação?<br>
+        · Combinam sinal antes do saque (dedo para a parceira)?<br>
+        · Após switch, reposicionam juntas ou ficam desorganizadas?<br>
+        · Conversam entre pontos ou ficam em silêncio?<br>
+        <em>Falta de comunicação gera mais erros do que falha técnica — é o ponto mais fácil de explorar.</em>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div><div class="item-title" style="color:var(--c-obs)">Estado mental & energia</div><div class="item-sub">Linguagem corporal, foco, relação entre parceiras</div></div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body">
+        · Cabeça baixa e ombros caídos após erro?<br>
+        · Evitam contato visual com a parceira?<br>
+        · Reagem com excesso de emoção (positiva ou negativa)?<br>
+        · Ficam mais tensas em pontos importantes ou mantêm o ritmo?<br>
+        <em>Estado mental define a estratégia de coaching: quando tensas, instrução simples e curta. Quando calmas, tática funciona.</em>
+      </div>
+    </div>
+
   </div>
 
   <!-- CENÁRIOS -->
