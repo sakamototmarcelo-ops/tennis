@@ -177,6 +177,27 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 .gen-btn{width:100%;padding:12px;border-radius:10px;background:var(--acc);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;border:none;cursor:pointer;margin-top:4px;transition:.15s}
 .gen-btn:active{opacity:.85}
 
+/* EM JOGO — chips de observação */
+.obs-section{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:11px 13px;margin-bottom:10px}
+.obs-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.obs-hdr-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--acc)}
+.obs-count{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;color:var(--c-obs);min-height:14px}
+.obs-clear{font-size:10px;color:var(--dim);background:none;border:1px solid var(--bdr);border-radius:6px;padding:2px 7px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600}
+.obs-cat{margin-bottom:8px}
+.obs-cat:last-of-type{margin-bottom:0}
+.obs-cat-lbl{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--dim);margin-bottom:4px;display:block}
+.obs-chips-row{display:flex;flex-wrap:wrap;gap:4px}
+.obs-chip{padding:4px 9px;border:1px solid var(--bdr);border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;cursor:pointer;color:var(--dim);background:transparent;transition:.12s;white-space:nowrap;line-height:1.4}
+.obs-chip.on{background:var(--c-obs);border-color:var(--c-obs);color:#fff}
+/* situação relevante */
+.item-card.relevant{border-color:var(--c-obs);border-left:3px solid var(--c-obs)}
+.rel-badge{display:inline-block;font-size:8.5px;background:var(--c-obs);color:#fff;padding:1px 5px;border-radius:6px;margin-left:5px;vertical-align:middle;font-weight:700;letter-spacing:.2px}
+/* plano de ajustes */
+.adj-card{background:var(--card);border:1px solid var(--bdr);border-left:3px solid var(--c-obs);border-radius:10px;padding:10px 13px;margin-bottom:7px}
+.adj-prio{font-family:'Space Grotesk',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.adj-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.adj-inst{font-size:12.5px;line-height:1.55;color:var(--dim)}
+
 /* IA EXPAND */
 .ai-expand-btn{width:100%;padding:11px;border-radius:10px;border:1.5px dashed var(--c-ins-bdr);background:var(--c-ins-l);color:var(--c-ins);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px;transition:.15s}
 .ai-expand-btn:disabled{opacity:.55;cursor:wait}
@@ -215,11 +236,102 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 
 <div class="content" id="content">
 
-  <!-- OBSERVAR -->
-  <div class="sec on" id="s-obs">
-    <div class="pg-lbl">O que observar em quadra</div>
+  <!-- EM JOGO -->
+  <div class="sec on" id="s-jogo">
 
-    <div class="item-card open">
+    <!-- CHIPS DE OBSERVAÇÃO -->
+    <div class="obs-section">
+      <div class="obs-hdr">
+        <span class="obs-hdr-title">O que está acontecendo</span>
+        <span class="obs-count" id="obs-count"></span>
+        <button class="obs-clear" onclick="clearObs()">limpar</button>
+      </div>
+      <div class="obs-cat">
+        <span class="obs-cat-lbl">Posição</span>
+        <div class="obs-chips-row">
+          <button class="obs-chip" data-key="no-net-serve" onclick="toggleObs(this)">Não sobe após saque</button>
+          <button class="obs-chip" data-key="no-net-ret" onclick="toggleObs(this)">Não sobe na devolução</button>
+          <button class="obs-chip" data-key="net-passive" onclick="toggleObs(this)">Rede jogadora passiva</button>
+        </div>
+      </div>
+      <div class="obs-cat">
+        <span class="obs-cat-lbl">Saque</span>
+        <div class="obs-chips-row">
+          <button class="obs-chip" data-key="2saque-weak" onclick="toggleObs(this)">2º saque fraco</button>
+          <button class="obs-chip" data-key="df-pressure" onclick="toggleObs(this)">Dupla falta sob pressão</button>
+          <button class="obs-chip" data-key="same-dir" onclick="toggleObs(this)">Saque sempre no mesmo lugar</button>
+        </div>
+      </div>
+      <div class="obs-cat">
+        <span class="obs-cat-lbl">Lado fraco</span>
+        <div class="obs-chips-row">
+          <button class="obs-chip" data-key="bh-j1" onclick="toggleObs(this)">BH J1</button>
+          <button class="obs-chip" data-key="bh-j2" onclick="toggleObs(this)">BH J2</button>
+          <button class="obs-chip" data-key="fh-j1" onclick="toggleObs(this)">FH J1</button>
+          <button class="obs-chip" data-key="fh-j2" onclick="toggleObs(this)">FH J2</button>
+        </div>
+      </div>
+      <div class="obs-cat">
+        <span class="obs-cat-lbl">Trocas</span>
+        <div class="obs-chips-row">
+          <button class="obs-chip" data-key="ball-high" onclick="toggleObs(this)">Bola sempre alta</button>
+          <button class="obs-chip" data-key="short-ignored" onclick="toggleObs(this)">Bola curta ignorada</button>
+          <button class="obs-chip" data-key="forced-finish" onclick="toggleObs(this)">Finalização forçada</button>
+        </div>
+      </div>
+      <div class="obs-cat">
+        <span class="obs-cat-lbl">Cobertura</span>
+        <div class="obs-chips-row">
+          <button class="obs-chip" data-key="no-switch" onclick="toggleObs(this)">Sem switch no lob</button>
+          <button class="obs-chip" data-key="no-poach" onclick="toggleObs(this)">Rede não intercepta</button>
+          <button class="obs-chip" data-key="middle-hesitate" onclick="toggleObs(this)">Hesitam no meio</button>
+        </div>
+      </div>
+      <div class="obs-cat">
+        <span class="obs-cat-lbl">Mental</span>
+        <div class="obs-chips-row">
+          <button class="obs-chip" data-key="pressure-errors" onclick="toggleObs(this)">Erros em pontos críticos</button>
+          <button class="obs-chip" data-key="tension" onclick="toggleObs(this)">Tensão entre parceiras</button>
+          <button class="obs-chip" data-key="no-comm" onclick="toggleObs(this)">Sem comunicação</button>
+        </div>
+      </div>
+      <button class="gen-btn" id="obs-plan-btn" onclick="gerarPlanoAjustes()" style="display:none;margin-top:10px">Gerar Plano de Ajustes →</button>
+    </div>
+
+    <!-- PLANO DE AJUSTES (output) -->
+    <div id="obs-plano-wrap" style="display:none">
+      <div class="pg-lbl">Plano de Ajustes</div>
+      <div id="obs-plano-content"></div>
+    </div>
+
+    <!-- SITUAÇÕES -->
+    <div class="pg-lbl" style="margin-top:4px">Situações</div>
+    <div id="situacoes-list"></div>
+
+    <!-- COMO INSTRUIR (colapsado) -->
+    <div class="item-card" style="margin-top:4px;border-color:var(--c-ins-bdr)">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div><div class="item-title" style="color:var(--c-ins)">Como instruir na pausa</div><div class="item-sub">4 regras de coaching</div></div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body" style="background:var(--c-ins-l);margin:-14px;padding:14px;border-radius:0 0 10px 10px">
+        <strong style="color:var(--c-ins)">1 instrução por pausa</strong> — o cérebro não processa mais de uma mudança de cada vez.<br><br>
+        <strong style="color:var(--c-ins)">Formato: gatilho + ação</strong> — "Quando vier bola curta → avança em movimento." Não "jogue mais profundo".<br><br>
+        <strong style="color:var(--c-ins)">Nunca: técnica de golpe</strong> — joelho, cotovelo, pegada... isso é treino. Na pausa: só tática posicional.<br><br>
+        <strong style="color:var(--c-ins)">Nunca: quem errou mais</strong> — guarde para conversa individual pós-jogo.
+      </div>
+    </div>
+
+  </div><!-- /s-jogo -->
+
+  <!-- DUMMY SECTIONS removed: obs/cen/ins merged into jogo -->
+  <div class="sec" id="s-obs" style="display:none!important"></div>
+  <div class="sec" id="s-cen" style="display:none!important"></div>
+  <div class="sec" id="s-ins" style="display:none!important"></div>
+
+  <!-- kept for reference but never shown: -->
+  <div style="display:none">
+  <div class="item-card open">
       <div class="item-hd" onclick="tog(this.parentElement)">
         <div><div class="item-title" style="color:var(--c-obs)">Chegam à rede?</div><div class="item-sub">Posicionamento após saque e devolução</div></div>
         <span class="item-arr">▾</span>
@@ -319,8 +431,9 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 
   </div>
 
-  <!-- CENÁRIOS -->
-  <div class="sec" id="s-cen">
+  <!-- CENÁRIOS / INSTRUÇÃO — merged into s-jogo, kept hidden for reference -->
+  <div style="display:none">
+  <div class="sec" id="s-cen-old">
     <div class="pg-lbl">Situações mais comuns</div>
     <div class="item-card">
       <div class="item-hd" onclick="tog(this.parentElement)">
@@ -387,8 +500,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
     </div>
   </div>
 
-  <!-- INSTRUÇÃO -->
-  <div class="sec" id="s-ins">
+  <div class="sec" id="s-ins-old">
     <div class="pg-lbl">Como dar feedback</div>
     <div class="rule-card" style="border-color:var(--c-ins-bdr);background:var(--c-ins-l)">
       <div class="rule-hd" style="color:var(--c-ins)">1 instrução por pausa</div>
@@ -407,6 +519,7 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
       <div class="rule-body">Dizer "você errou 5 vezes pelo meio" na frente da parceira cria distância e baixa a confiança. Guarde para conversa individual pós-jogo.</div>
     </div>
   </div>
+  </div><!-- /hidden cen+ins -->
 
   <!-- PAUSA -->
   <div class="sec" id="s-pau">
@@ -581,17 +694,9 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 
 <!-- BOTTOM NAV -->
 <nav class="botnav">
-  <button class="navbtn on" onclick="go('obs',this)">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/></svg>
-    Observar
-  </button>
-  <button class="navbtn" onclick="go('cen',this)">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-    Cenários
-  </button>
-  <button class="navbtn" onclick="go('ins',this)">
-    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    Instruir
+  <button class="navbtn on" onclick="go('jogo',this)">
+    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+    Em Jogo
   </button>
   <button class="navbtn" onclick="go('pau',this)">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -608,9 +713,166 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 function go(id, btn) {
   document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.navbtn').forEach(b => b.classList.remove('on'));
-  document.getElementById('s-' + id).classList.add('on');
+  const el = document.getElementById('s-' + id);
+  if (el) el.classList.add('on');
   btn.classList.add('on');
   document.getElementById('content').scrollTop = 0;
+}
+
+/* ── EM JOGO — OBSERVAÇÕES ── */
+const obsActive = new Set();
+
+const SCENARIOS = [
+  {key:'troca-longa', obs:['ball-high','short-ignored','no-net-serve','no-net-ret'],
+   color:'var(--c-cen)', title:'Troca longa sem plano',
+   sub:'8–15 bolas, ninguém avança, quem erra perde',
+   inst:'"Na 4ª bola, se vier curta — drop shot e avança. Se vier funda — profundo no BH e espera a curta aparecer."'},
+  {key:'bola-alta', obs:['ball-high'],
+   color:'var(--c-cen)', title:'Bola alta devolvida alta',
+   sub:'Ciclo de alturas sem construção',
+   inst:'"Quando vier bola alta: recua um passo, deixa cair até o ombro, bate flat cruzado — não devolve alta de volta."'},
+  {key:'sem-rede', obs:['no-net-serve','no-net-ret'],
+   color:'var(--c-cen)', title:'Dupla no fundo sem subir',
+   sub:'Ambas no fundo, sem avançar',
+   inst:'"Após saque: 3 passos à frente antes de ver a devolução. Após devolução: entra na rede na 3ª bola no máximo."'},
+  {key:'2saque-ataque', obs:['2saque-weak'],
+   color:'var(--c-cen)', title:'2º saque attackável',
+   sub:'Saque fraco que chega na zona de ataque',
+   inst:'"Devolver o 2º no BH delas. Cruzado e profundo. Parceira: faz blitz se a bola vier curta para a rede."'},
+  {key:'sem-poach', obs:['no-poach','net-passive'],
+   color:'var(--c-cen)', title:'Rede passiva — sem interceptação',
+   sub:'Jogadora da rede fica parada',
+   inst:'"Toda bola cruzada é poach. Quando a parceira devolver — move diagonal. Não espera: antecipa o cruzado."'},
+  {key:'sem-switch', obs:['no-switch'],
+   color:'var(--c-cen)', title:'Sem switch no lob',
+   sub:'Lob passa, ninguém troca',
+   inst:'"Parceira: quando o lob passar sobre você — grita \'troca\' e vai para o outro lado. Você recua e deixa ela fechar."'},
+  {key:'meio-hesita', obs:['middle-hesitate'],
+   color:'var(--c-cen)', title:'Hesitam no meio',
+   sub:'Bolas pelo centro sem dono',
+   inst:'"Todo meio é da sacadora. Combinem antes de cada ponto: \'centro é meu\' — para não duplicar nem hesitar."'},
+  {key:'pressao-erros', obs:['pressure-errors','df-pressure'],
+   color:'var(--c-obs)', title:'Erros em pontos críticos',
+   sub:'Dupla falta, erro em 30-40 ou game point',
+   inst:'"Em pontos importantes: primeira bola profunda no BH. Não force. A pressão é mental, não técnica — respira e abre o campo."'},
+  {key:'bh-alvo', obs:['bh-j1','bh-j2'],
+   color:'var(--c-obs)', title:'BH fraco identificado',
+   sub:'Lado que produz erros ou bolas altas',
+   inst:'"Construção: saque no T (BH delas) + 3ª bola cruzada funda no BH. Rali: toda bola no BH até ela errar ou levantar bola curta."'},
+  {key:'tensao', obs:['tension','no-comm'],
+   color:'var(--c-obs)', title:'Tensão entre parceiras',
+   sub:'Comunicação caiu, linguagem corporal negativa',
+   inst:'"Não instruir tática agora — primeiro trabalhar a parceria. \'Ela está tentando. Uma palavra positiva vale mais que qualquer ajuste.\'"'},
+];
+
+const OBS_INST = {
+  'no-net-serve':  {prio:1, title:'Subir após o saque',
+    inst:'"Saque → 3 passos à frente antes de ver a devolução. Sacadora não fica no fundo."'},
+  'no-net-ret':    {prio:1, title:'Subir na devolução',
+    inst:'"Na 3ª bola: se vier no meio ou curta — avança em movimento. Não espera no fundo."'},
+  'net-passive':   {prio:2, title:'Rede: interceptar o cruzado',
+    inst:'"Toda bola que vai cruzado pela sua frente: move diagonal e corta. Você está lá para interceptar, não decorar."'},
+  '2saque-weak':   {prio:1, title:'Atacar o 2º saque',
+    inst:'"2º saque: posição de devolução 1 metro à frente. Ataca cruzado profundo no BH delas."'},
+  'df-pressure':   {prio:2, title:'Reduzir DF sob pressão',
+    inst:'"Saque de kick no 2º: mais margem sobre a rede. Em 30-40 e tiebreak: ace não existe — coloca na quadra."'},
+  'same-dir':      {prio:3, title:'Variar direção do saque',
+    inst:'"Próximo game: alterna T e corpo. Parceira: blitz quando sacares no corpo delas."'},
+  'bh-j1':         {prio:1, title:'Construir no BH da J1',
+    inst:'"Saque no T + 3ª cruzada profunda no BH J1. Rali: bola no BH até a curta aparecer."'},
+  'bh-j2':         {prio:1, title:'Construir no BH da J2',
+    inst:'"Saque no T + 3ª cruzada profunda no BH J2. Rali: bola no BH até a curta aparecer."'},
+  'fh-j1':         {prio:2, title:'Pressionar FH da J1',
+    inst:'"FH da J1 fica dentro: bola aberta no FH. Ela abre espaço no meio para o próximo golpe."'},
+  'fh-j2':         {prio:2, title:'Pressionar FH da J2',
+    inst:'"FH da J2 fica dentro: bola aberta no FH. Ela abre espaço no meio para o próximo golpe."'},
+  'ball-high':     {prio:2, title:'Quebrar o ciclo de bola alta',
+    inst:'"Quando vier alta: recua, deixa cair, bate flat cruzado com profundidade. Não devolve alta de volta."'},
+  'short-ignored': {prio:2, title:'Atacar a bola curta',
+    inst:'"Bola curta = avanço automático. Não bate e volta ao fundo. Bate em movimento e fecha a rede."'},
+  'forced-finish': {prio:3, title:'Construir antes de finalizar',
+    inst:'"Não força o winner na 2ª bola. Constrói com 2 bolas fundas + quando a curta aparecer — finaliza."'},
+  'no-switch':     {prio:1, title:'Switch no lob — combinação',
+    inst:'"Lob sobre você: grita \'troca\' imediatamente, vai para o lado oposto. Parceira recua e cobre."'},
+  'no-poach':      {prio:1, title:'Poach — interceptar o cruzado',
+    inst:'"Próximo game: toda bola cruzada é poach. Parte na hora que a adversária bate, não depois."'},
+  'middle-hesitate':{prio:2, title:'Centro é da sacadora',
+    inst:'"Combinem: todo meio é da sacadora. Antes do ponto: \'centro é meu\' — sem hesitação em jogo."'},
+  'pressure-errors':{prio:1, title:'Pontos críticos: jogar seguro',
+    inst:'"Em 30-40 e game point: profundo no BH, não force. A pressão é delas, não de você."'},
+  'tension':       {prio:1, title:'Recuperar a parceria',
+    inst:'"Pausa: falar separado. \'Ela está tentando. Uma palavra positiva agora vale mais que qualquer tática.\'"'},
+  'no-comm':       {prio:2, title:'Retomar comunicação',
+    inst:'"Antes de cada ponto: um sinal ou palavra. \'Minha\' no meio, \'troca\' no lob. Só isso."'},
+};
+
+function toggleObs(btn) {
+  const key = btn.dataset.key;
+  if (obsActive.has(key)) { obsActive.delete(key); btn.classList.remove('on'); }
+  else { obsActive.add(key); btn.classList.add('on'); }
+  updateObsUI();
+}
+
+function clearObs() {
+  obsActive.clear();
+  document.querySelectorAll('.obs-chip').forEach(b => b.classList.remove('on'));
+  updateObsUI();
+}
+
+function updateObsUI() {
+  const n = obsActive.size;
+  document.getElementById('obs-count').textContent = n ? n + ' marcad' + (n===1?'a':'as') : '';
+  document.getElementById('obs-plan-btn').style.display = n ? 'block' : 'none';
+  document.getElementById('obs-plano-wrap').style.display = 'none';
+  renderSituacoes();
+}
+
+function renderSituacoes() {
+  const list = document.getElementById('situacoes-list');
+  if (!list) return;
+  const active = [...obsActive];
+  const sorted = [...SCENARIOS].sort((a, b) => {
+    const ra = a.obs.filter(k => active.includes(k)).length;
+    const rb = b.obs.filter(k => active.includes(k)).length;
+    return rb - ra;
+  });
+  list.innerHTML = sorted.map(sc => {
+    const matches = sc.obs.filter(k => active.includes(k)).length;
+    const rel = matches > 0;
+    return `<div class="item-card${rel?' relevant':''}">
+      <div class="item-hd" onclick="tog(this.parentElement)">
+        <div>
+          <div class="item-title" style="color:${sc.color}">${sc.title}${rel?'<span class="rel-badge">agora</span>':''}</div>
+          <div class="item-sub">${sc.sub}</div>
+        </div>
+        <span class="item-arr">▾</span>
+      </div>
+      <div class="item-body"><strong>Instrução:</strong> ${sc.inst}</div>
+    </div>`;
+  }).join('');
+}
+
+function gerarPlanoAjustes() {
+  const wrap = document.getElementById('obs-plano-wrap');
+  const content = document.getElementById('obs-plano-content');
+  const active = [...obsActive];
+  const ajustes = active
+    .filter(k => OBS_INST[k])
+    .map(k => ({...OBS_INST[k], key: k}))
+    .sort((a, b) => a.prio - b.prio);
+
+  if (!ajustes.length) {
+    content.innerHTML = '<p style="color:var(--dim);font-size:13px">Marque observações acima para gerar ajustes.</p>';
+  } else {
+    content.innerHTML = ajustes.map((aj, i) => `
+      <div class="adj-card">
+        <div class="adj-prio" style="color:var(--c-obs)">Ajuste ${i+1}</div>
+        <div class="adj-title">${aj.title}</div>
+        <div class="adj-inst">${aj.inst}</div>
+      </div>`).join('');
+  }
+  wrap.style.display = 'block';
+  wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 function tog(card) { card.classList.toggle('open'); }
 
@@ -1126,6 +1388,7 @@ ${pfStr('Adv J1', adv1, fichaMode)}
 ${pfStr('Adv J2', adv2, fichaMode)}
 ${advNome ? 'Time adversário: ' + advNome : ''}
 ${obs ? 'Observações: ' + obs : ''}${scoutExtra}
+${obsActive.size ? '━━ SITUAÇÕES OBSERVADAS EM QUADRA ━━\n' + [...obsActive].map(k => OBS_INST[k] ? '• ' + OBS_INST[k].title : '• ' + k).join('\n') : ''}
 
 ━━ HABILIDADES VÁLIDAS ━━
 Use EXATAMENTE estes valores nos campos armas/fracos: ${validSkills}
@@ -1176,4 +1439,7 @@ Seja específico ao perfil dado. Mencione nomes quando disponíveis. Armas/fraco
     btn.textContent = '✨ Análise com IA — enriquecer perfil';
   }
 }
+
+/* ── INIT ── */
+renderSituacoes();
 </script>
