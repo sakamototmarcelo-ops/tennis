@@ -39,24 +39,17 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 /* ── PAGE LABEL ── */
 .pg-lbl{font-size:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin-bottom:10px}
 
-/* ── CHECK CARDS ── */
-.check-toggle{display:flex;gap:8px;margin-bottom:14px}
-.cht{flex:1;padding:10px;border-radius:8px;border:1px solid var(--bdr);background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}
-.cht.on{background:var(--acc2);color:var(--acc);border-color:var(--acc)}
-.chklist{display:none}
-.chklist.on{display:block}
-.chk-item{display:flex;align-items:flex-start;gap:12px;padding:13px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.15s;user-select:none}
-.chk-item.done{background:var(--acc2);border-color:var(--acc)}
-.chk-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;margin-top:1px}
-.chk-item.done .chk-box{background:var(--acc);border-color:var(--acc)}
-.chk-tick{display:none;width:12px;height:10px}
-.chk-item.done .chk-tick{display:block}
-.chk-text{font-size:16px;line-height:1.45;color:var(--txt);font-weight:500}
-.chk-item.done .chk-text{color:var(--acc)}
-.chk-sub{font-size:13px;color:var(--dim);margin-top:2px}
-.chk-item.done .chk-sub{color:var(--acc2)}
-.reset-btn{width:100%;padding:11px;border-radius:10px;background:transparent;border:1px solid var(--bdr);color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px;transition:.15s}
-.reset-btn:active{background:var(--bdr)}
+/* ── DICAS ── */
+.dica-toggle{display:flex;gap:6px;margin-bottom:12px}
+.dica-tab{flex:1;padding:9px 4px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--dim);font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}
+.dica-tab.on{background:var(--acc2);color:var(--acc);border-color:var(--acc)}
+.dica-list{display:none;flex-direction:column;gap:7px}
+.dica-list.on{display:flex}
+.dica-card{background:var(--card);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:10px;padding:11px 13px}
+.dica-num{font-family:'Space Grotesk',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--dim);margin-bottom:3px}
+.dica-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--txt);margin-bottom:3px}
+.dica-body{font-size:12.5px;line-height:1.5;color:var(--dim)}
+.dica-body strong{color:var(--txt);font-weight:600}
 
 /* ── SITUATION CARDS ── */
 .sit-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
@@ -162,76 +155,97 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 
 <div class="content" id="main-content">
 
-<!-- ── CHECK ── -->
-<div class="sec on" id="s-check">
-  <div class="pg-lbl">Antes do Ponto</div>
-  <div class="check-toggle">
-    <button class="cht on" onclick="switchCh('ch-sac',this)">Sacando</button>
-    <button class="cht" onclick="switchCh('ch-dev',this)">Devolvendo</button>
+<!-- ── DICAS ── -->
+<div class="sec on" id="s-dicas">
+  <div class="pg-lbl">Dicas Rápidas</div>
+  <div class="dica-toggle">
+    <button class="dica-tab on" onclick="switchDica('d-sac',this)">Sacando</button>
+    <button class="dica-tab" onclick="switchDica('d-dev',this)">Devolvendo</button>
+    <button class="dica-tab" onclick="switchDica('d-rede',this)">Na Rede</button>
   </div>
 
-  <div class="chklist on" id="ch-sac">
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Alvo do saque definido</div>
-        <div class="chk-sub">T · corpo · aberto — decidir antes de jogar a bola</div>
-      </div>
+  <div class="dica-list on" id="d-sac">
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 1</div>
+      <div class="dica-title">Alvo definido antes de lançar</div>
+      <div class="dica-body">T · corpo · aberto — decidir antes de jogar a bola. <strong>Nunca sacar sem alvo.</strong></div>
     </div>
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Parceiro sinalizado</div>
-        <div class="chk-sub">Punho = ficar · mão aberta = roubar · confirmação recebida</div>
-      </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 2</div>
+      <div class="dica-title">Avançar no impacto do saque</div>
+      <div class="dica-body">Primeiro passo em direção à rede <strong>no momento em que a raquete bate</strong> — não esperar a devolução.</div>
     </div>
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Vou avançar à rede</div>
-        <div class="chk-sub">Avançar no impacto do saque — não esperar a devolução</div>
-      </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 3</div>
+      <div class="dica-title">Sinal ao parceiro</div>
+      <div class="dica-body"><strong>Punho</strong> = fica no corredor. <strong>Mão aberta</strong> = roubar. Confirmar que ele viu antes de sacar.</div>
     </div>
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Primeiro voleio é posicional</div>
-        <div class="chk-sub">Bola baixa nos pés — não tentar winner no 1º voleio</div>
-      </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 4</div>
+      <div class="dica-title">1º voleio é posicional</div>
+      <div class="dica-body">Bola baixa nos pés do adversário. <strong>Não tentar winner</strong> — ganhar posição na rede primeiro.</div>
     </div>
-    <button class="reset-btn" onclick="resetCh('ch-sac')">↺ Reiniciar</button>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 5</div>
+      <div class="dica-title">2º saque: kick com margem</div>
+      <div class="dica-body">Primeiro objetivo: <strong>colocar na quadra</strong>. Kick sobe e dificulta ataque. Flat no 2º = risco alto.</div>
+    </div>
   </div>
 
-  <div class="chklist" id="ch-dev">
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Alvo: cruzado e baixo</div>
-        <div class="chk-sub">Pelo centro da rede — não tentar winner</div>
-      </div>
+  <div class="dica-list" id="d-dev">
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 1</div>
+      <div class="dica-title">Backswing compacto — max 30cm</div>
+      <div class="dica-body">Saque rápido não dá tempo para mais. <strong>Swing grande = erro certo.</strong> Posicionar a raquete, não balançar.</div>
     </div>
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Backswing compacto</div>
-        <div class="chk-sub">Máximo 30cm — saque rápido não dá tempo para mais</div>
-      </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 2</div>
+      <div class="dica-title">Alvo: cruzado pelo centro da rede</div>
+      <div class="dica-body">Ponto mais baixo da rede. <strong>Não tentar winner</strong> — colocar o adversário em posição difícil é suficiente.</div>
     </div>
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Avançar imediatamente após devolver</div>
-        <div class="chk-sub">3 passos em direção à rede — mesmo se a devolução for mediana</div>
-      </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 3</div>
+      <div class="dica-title">Avançar 3 passos após devolver</div>
+      <div class="dica-body"><strong>Imediatamente</strong> após o contato — mesmo se a devolução foi mediana. Quem fica no fundo entrega a rede.</div>
     </div>
-    <div class="chk-item" onclick="toggleChk(this)">
-      <div class="chk-box"><svg class="chk-tick" viewBox="0 0 12 10"><polyline points="1,5 4.5,9 11,1" stroke="white" stroke-width="2" fill="none"/></svg></div>
-      <div>
-        <div class="chk-text">Observar o parceiro do sacador</div>
-        <div class="chk-sub">Se ele se mover → devolver ao longo da linha</div>
-      </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 4</div>
+      <div class="dica-title">Observar A2 — linha ou cruzado?</div>
+      <div class="dica-body">Se A2 cruzar: <strong>devolver na linha</strong>. B2 avisa "linha!" quando A2 mover. Não viu? Cruzado normal.</div>
     </div>
-    <button class="reset-btn" onclick="resetCh('ch-dev')">↺ Reiniciar</button>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 5</div>
+      <div class="dica-title">Saque forte: bloqueio + lob</div>
+      <div class="dica-body">Backswing zero — <strong>bloquear com punho firme</strong>. Se pressionado: lob alto com topspin resets e tira A2.</div>
+    </div>
+  </div>
+
+  <div class="dica-list" id="d-rede">
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 1</div>
+      <div class="dica-title">Movimento pendular — nunca parado</div>
+      <div class="dica-body">Balançar gentilmente enquanto o adversário bate. <strong>Parado = reativo. Em movimento = prontidão.</strong></div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 2</div>
+      <div class="dica-title">Bola pelo meio: "Minha!"</div>
+      <div class="dica-body"><strong>Forehand chama imediatamente.</strong> Silêncio = hesitação = erro. Chamar sempre, mesmo quando parece óbvio.</div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 3</div>
+      <div class="dica-title">Voleio: suave e colocado nos pés</div>
+      <div class="dica-body">Objetivo: bola baixa que força meio-voleio. <strong>Não força winner</strong> — voleio alto e forte é fácil de passar.</div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 4</div>
+      <div class="dica-title">Lob que passa: switch imediato</div>
+      <div class="dica-body">Gritar <strong>"switch!"</strong> e trocar de lado com passos de lado — não de costas. Parceiro recua e cobre o centro.</div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-num">Prioridade 5</div>
+      <div class="dica-title">Smash: girar de lado no ato</div>
+      <div class="dica-body"><strong>Girar imediatamente</strong> ao ver o lob vir. Passos cruzados para trás. Contato à frente do ombro — não acima.</div>
+    </div>
   </div>
 </div>
 
@@ -251,8 +265,8 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
   <!-- S1 -->
   <div class="sit-panel on" id="sit1">
     <div class="role-card r-a1">
-      <div class="role-hd" onclick="toggleRole(this)">A1 — Sacador<span class="arr">▾</span></div>
-      <div class="role-body"><ul>
+      <div class="role-hd open" onclick="toggleRole(this)">A1 — Sacador<span class="arr">▾</span></div>
+      <div class="role-body open"><ul>
         <li>Saque pelo <strong>T ou corpo</strong> — reduz ângulo de devolução</li>
         <li>Avançar à rede <strong>no impacto</strong> do saque</li>
         <li>Split step quando B1 bate · primeiro voleio baixo</li>
@@ -905,9 +919,9 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);display:flex;flex
 
 <!-- BOTTOM NAV -->
 <nav class="botnav">
-  <button class="navbtn on" onclick="showSec('s-check',this)">
-    <svg viewBox="0 0 24 24"><polyline points="9,11 12,14 22,4"/><path d="M21,12v7a2,2 0 0 1-2,2H5a2,2 0 0 1-2-2V5a2,2 0 0 1 2-2h11"/></svg>
-    Check
+  <button class="navbtn on" onclick="showSec('s-dicas',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Dicas
   </button>
   <button class="navbtn" onclick="showSec('s-sit',this)">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -944,9 +958,12 @@ function showSit(id,btn){
   document.querySelectorAll('.sit-chip').forEach(b=>b.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   btn.classList.add('on');
-  // Close all roles
+  // Reset all roles, then open first card in active panel
   document.querySelectorAll('.role-hd').forEach(h=>h.classList.remove('open'));
   document.querySelectorAll('.role-body').forEach(b=>b.classList.remove('open'));
+  const panel = document.getElementById(id);
+  const firstHd = panel.querySelector('.role-hd');
+  if(firstHd){ firstHd.classList.add('open'); firstHd.nextElementSibling.classList.add('open'); }
 }
 function toggleRole(hd){
   const body=hd.nextElementSibling;
@@ -962,14 +979,10 @@ function toggleAcc(hd){
   hd.classList.toggle('open',!isOpen);
   body.classList.toggle('open',!isOpen);
 }
-function toggleChk(item){item.classList.toggle('done')}
-function switchCh(id,btn){
-  document.querySelectorAll('.chklist').forEach(c=>c.classList.remove('on'));
-  document.querySelectorAll('.cht').forEach(b=>b.classList.remove('on'));
+function switchDica(id,btn){
+  document.querySelectorAll('.dica-list').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.dica-tab').forEach(b=>b.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   btn.classList.add('on');
-}
-function resetCh(id){
-  document.getElementById(id).querySelectorAll('.chk-item').forEach(i=>i.classList.remove('done'));
 }
 </script>
