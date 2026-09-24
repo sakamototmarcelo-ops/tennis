@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Partida Duplas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── tokens (dark-first) ── */
+:root{
+  color-scheme:dark;
+  --bg:#0d1820;--surf:#142030;--card:#1b2d40;--bdr:#253d55;
+  --acc:#d4703a;--acc-l:#d4703a22;--acc-bdr:#d4703a55;
+  --grn:#2e9d5f;--grn-l:#2e9d5f22;--grn-bdr:#2e9d5f55;
+  --blu:#3a82c9;--blu-l:#3a82c922;--blu-bdr:#3a82c955;
+  --red:#c74040;--red-l:#c7404022;--red-bdr:#c7404055;
+  --txt:#dde8f2;--dim:#7a9ab2;--lbl:#8aa4bc;
+  --nav-h:64px;--head-h:52px;
+}
+@media(prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    color-scheme:light;
+    --bg:#f0f5fa;--surf:#e4ecf4;--card:#fff;--bdr:#c8d8e8;
+    --txt:#1a2a38;--dim:#5a7080;--lbl:#6a8298;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f0f5fa;--surf:#e4ecf4;--card:#fff;--bdr:#c8d8e8;
+  --txt:#1a2a38;--dim:#5a7080;--lbl:#6a8298;
+}
+
+/* ── reset ── */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--txt);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;padding-top:env(safe-area-inset-top,0px)}
+
+/* ── panes ── */
+.pane{display:none;flex-direction:column;flex:1;min-height:0}
+.pane.on{display:flex}
+
+/* ── head ── */
+.pane-head{
+  flex:none;height:var(--head-h);display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;letter-spacing:.04em;
+}
+
+/* ── scroll ── */
+.pane-scroll{
+  flex:1;overflow-y:auto;
+  padding:14px 16px calc(var(--nav-h) + 14px + env(safe-area-inset-bottom,0px));
+  overscroll-behavior:contain;
+}
+
+/* ── bottom nav ── */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  display:flex;background:var(--surf);border-top:1px solid var(--bdr);z-index:99;
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;border:none;background:none;cursor:pointer;color:var(--dim);
+  font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:0;
+}
+.nav-btn.on{color:var(--acc)}
+.nav-icon{font-size:20px;line-height:1}
+
+/* ── blocks ── */
+.sec-block{margin-bottom:20px}
+.sec-lbl{
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--lbl);margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.sec-hint{font-size:10px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--dim)}
+.sec-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;
+  color:var(--lbl);letter-spacing:.1em;text-transform:uppercase;margin:16px 0 8px;
+}
+.sec-title:first-child{margin-top:0}
+
+/* ── chips ── */
+.chips-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:7px 13px;border-radius:20px;border:1.5px solid var(--bdr);
+  background:var(--card);cursor:pointer;font-size:13px;font-weight:600;color:var(--dim);
+}
+.chip.on{border-color:var(--acc);background:var(--acc-l);color:var(--acc)}
+.chip.grn{border-color:var(--bdr)}
+.chip.grn.on{border-color:var(--grn);background:var(--grn-l);color:var(--grn)}
+.chip.red.on{border-color:var(--red);background:var(--red-l);color:var(--red)}
+.chip.focus-hint{border-color:var(--acc-bdr);color:var(--acc)}
+
+/* ── stat grid ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:12px}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;
+  color:var(--acc);line-height:1}
+.stat-desc{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.4}
+
+/* ── ref / dont cards ── */
+.ref-card{
+  background:var(--card);border-radius:10px;border-left:3px solid var(--grn);
+  padding:10px 13px;margin-bottom:7px;font-size:13px;line-height:1.5;
+}
+.dont-card{
+  background:var(--red-l);border-radius:10px;border-left:3px solid var(--red);
+  padding:10px 13px;margin-bottom:7px;font-size:13px;font-weight:600;line-height:1.4;color:var(--txt);
+}
+
+/* ── timer ── */
+#timer-inline{
+  font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;
+  letter-spacing:.04em;cursor:pointer;padding:5px 12px;border-radius:8px;
+  border:1.5px solid var(--bdr);background:var(--card);color:var(--txt);line-height:1;
+}
+#timer-inline.running{border-color:var(--red);color:var(--red)}
+#timer-bar{flex:none;height:4px;background:var(--bdr);display:none}
+#timer-bar.on{display:block}
+#timer-bar-fill{height:100%;background:var(--grn);transition:width .5s linear;width:100%}
+#timer-bar-fill.warn{background:var(--acc)}
+#timer-bar-fill.urgent{background:var(--red)}
+
+/* ── sit grid ── */
+#sit-grid{
+  flex:none;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px 10px;
+}
+.sit-btn{
+  padding:11px 10px;border-radius:10px;border:1.5px solid var(--bdr);
+  background:var(--card);cursor:pointer;font-size:12.5px;font-weight:600;
+  color:var(--dim);text-align:left;line-height:1.3;
+}
+.sit-btn.on{border-color:var(--acc);background:var(--acc-l);color:var(--acc)}
+
+/* ── instruction panel ── */
+#sit-panel{
+  flex:1;overflow-y:auto;border-top:1px solid var(--bdr);
+  padding:14px 16px calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 10px);
+  overscroll-behavior:contain;
+}
+.panel-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;
+  line-height:1.2;margin-bottom:12px;
+}
+.panel-bullets{list-style:none;padding:0;margin:0 0 12px}
+.panel-bullets li{
+  padding:10px 0;border-bottom:1px solid var(--bdr);
+  font-size:14px;font-weight:600;line-height:1.3;
+}
+.panel-bullets li:first-child{padding-top:0}
+.panel-bullets li:last-child{border:none}
+.panel-chamada{
+  background:var(--acc-l);border:1px solid var(--acc-bdr);border-radius:10px;
+  padding:11px 14px;font-size:14px;font-weight:700;color:var(--acc);margin-bottom:10px;
+}
+.panel-evitar{font-size:12.5px;color:var(--dim);padding-left:10px;border-left:2px solid var(--red)}
+
+/* ── default panel (nothing selected) ── */
+.default-section-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--lbl);
+  margin:0 0 10px;padding-top:16px;border-top:1px solid var(--bdr);
+}
+.default-section-title:first-child{padding-top:0;border:none}
+.buraco-item{padding:10px 0;border-bottom:1px solid var(--bdr)}
+.buraco-item:last-child{border:none}
+.buraco-sit{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--lbl);margin-bottom:3px}
+.buraco-gatilho{font-size:12.5px;color:var(--dim);margin-bottom:5px;line-height:1.4}
+.buraco-frase{font-size:16px;font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--blu)}
+.qref-item{padding:9px 0;border-bottom:1px solid var(--bdr);font-size:13px;line-height:1.45}
+.qref-item:last-child{border:none}
+.qref-item strong{color:var(--acc);display:block;font-size:10px;
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+
+/* ── depois ── */
+.reflect-group{margin-bottom:20px}
+.reflect-lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--lbl);margin-bottom:10px}
+.foco-banner{
+  background:var(--acc-l);border:1px solid var(--acc-bdr);border-radius:10px;
+  padding:10px 13px;margin-bottom:18px;font-size:13px;
+}
+.foco-banner strong{color:var(--acc);display:block;font-size:11px;
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.result-btns{display:flex;gap:8px}
+.res-btn{
+  flex:1;padding:10px 0;border-radius:10px;border:1.5px solid var(--bdr);
+  background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--dim);
+}
+.res-btn.w{border-color:var(--grn);background:var(--grn-l);color:var(--grn)}
+.res-btn.l{border-color:var(--red);background:var(--red-l);color:var(--red)}
+.ctx-input{
+  width:100%;background:var(--card);border:1.5px solid var(--bdr);border-radius:10px;
+  padding:10px 13px;color:var(--txt);font:14px/1 inherit;outline:none;
+}
+.ctx-input:focus{border-color:var(--blu)}
+.nota-area{
+  width:100%;min-height:72px;background:var(--card);border:1.5px solid var(--bdr);
+  border-radius:10px;padding:11px 13px;color:var(--txt);font:15px/1.5 inherit;
+  resize:none;outline:none;
+}
+.nota-area:focus{border-color:var(--blu)}
+.save-btn{
+  width:100%;padding:13px;border-radius:10px;border:none;background:var(--grn);
+  color:#fff;font:700 15px/1 inherit;cursor:pointer;margin:14px 0;
+}
+.save-btn:active{opacity:.85}
+
+/* ── history ── */
+.hist-item{
+  background:var(--card);border:1px solid var(--bdr);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.hist-head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.hist-date{font-size:11px;color:var(--lbl);font-weight:600}
+.hist-res{font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px}
+.hist-res.w{background:var(--grn-l);color:var(--grn)}
+.hist-res.l{background:var(--red-l);color:var(--red)}
+.hist-ctx{font-size:12px;color:var(--dim);margin-bottom:5px}
+.hist-foco-row{font-size:12px;margin-bottom:6px}
+.hist-foco-lbl{color:var(--acc)}
+.hist-foco-check{font-size:11px;font-weight:600;margin-left:6px}
+.hist-foco-check.bem{color:var(--grn)}
+.hist-foco-check.mel{color:var(--red)}
+.hist-chips{display:flex;gap:5px;flex-wrap:wrap}
+.hist-chip{font-size:11px;padding:3px 8px;border-radius:10px;border:1px solid var(--bdr);color:var(--dim)}
+.hist-chip.grn{border-color:var(--grn);color:var(--grn)}
+.hist-chip.red{border-color:var(--red);color:var(--red)}
+.hist-nota{font-size:12px;color:var(--dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--bdr)}
+.empty-hist{text-align:center;color:var(--dim);font-size:13px;padding:24px 0}
+</style>
+</head><body>
+<div id="app">
+
+<!-- ══ ANTES ══ -->
+<div class="pane on" id="pane-antes">
+  <div class="pane-head">Preparação</div>
+  <div class="pane-scroll">
+
+    <div class="sec-block">
+      <div class="sec-lbl">Foco de hoje <span class="sec-hint">até 2 — aparece destacado no Depois</span></div>
+      <div class="chips-wrap" id="focos-chips"></div>
+    </div>
+
+    <div class="sec-block">
+      <div class="sec-lbl">Lembrar em quadra</div>
+      <div id="refs-list"></div>
+    </div>
+
+    <div class="sec-block">
+      <div class="sec-lbl">Não fazer hoje</div>
+      <div id="donts-list"></div>
+    </div>
+
+    <div class="sec-block">
+      <div class="sec-lbl">O jogo em números</div>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ EM JOGO ══ -->
+<div class="pane" id="pane-jogo">
+  <div class="pane-head">
+    <span>O que está acontecendo?</span>
+    <button id="timer-inline" onclick="timerClick()">90s &#9654;</button>
+  </div>
+  <div id="timer-bar"><div id="timer-bar-fill"></div></div>
+  <div id="sit-grid"></div>
+  <div id="sit-panel"></div>
+</div>
+
+<!-- ══ DEPOIS ══ -->
+<div class="pane" id="pane-depois">
+  <div class="pane-head">Reflexão</div>
+  <div class="pane-scroll">
+
+    <div id="foco-banner-wrap"></div>
+
+    <div class="reflect-group">
+      <div class="reflect-lbl">Resultado</div>
+      <div class="result-btns">
+        <button class="res-btn" id="res-w" onclick="setResult('W',this)">Ganhamos</button>
+        <button class="res-btn" id="res-l" onclick="setResult('L',this)">Perdemos</button>
+      </div>
+    </div>
+
+    <div class="reflect-group">
+      <div class="reflect-lbl">Adversário / condição</div>
+      <input type="text" class="ctx-input" id="ctx-txt" placeholder="ex: saibro, vento, adversário X...">
+    </div>
+
+    <div class="reflect-group">
+      <div class="reflect-lbl">O que foi bem</div>
+      <div class="chips-wrap" id="bem-chips"></div>
+    </div>
+
+    <div class="reflect-group">
+      <div class="reflect-lbl">O que trabalhar</div>
+      <div class="chips-wrap" id="mel-chips"></div>
+    </div>
+
+    <div class="reflect-group">
+      <div class="reflect-lbl">Nota</div>
+      <textarea class="nota-area" id="nota-txt" placeholder="Algo que ficou na memória..."></textarea>
+    </div>
+
+    <button class="save-btn" onclick="saveReflexao()">Salvar reflexão</button>
+
+    <div class="sec-lbl" style="margin-top:6px">Histórico</div>
+    <div id="hist-list"></div>
+
+  </div>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav id="bottom-nav">
+  <button class="nav-btn on" onclick="go('antes',this)">
+    <span class="nav-icon">&#9711;</span>
+    <span>Antes</span>
+  </button>
+  <button class="nav-btn" onclick="go('jogo',this)">
+    <span class="nav-icon">&#9654;</span>
+    <span>Em Jogo</span>
+  </button>
+  <button class="nav-btn" onclick="go('depois',this)">
+    <span class="nav-icon">&#10003;</span>
+    <span>Depois</span>
+  </button>
+</nav>
+
+</div>
+
+<script>
+/* ═══════════ DATA ═══════════ */
+
+const FOCOS = ['Rede','Comunicação','Devolução','Consistência',
+  'Segundo saque','Cobertura','Posicionamento','Mental'];
+
+/* Pool de 10 — mostra 4 aleatórios */
+const REFS_POOL = [
+  'Bola baixa ou desequilibrado → coloque com margem, prepare a defesa.',
+  'Bola alta, curta e equilibrada → ataque alvo amplo e acompanhe a resposta.',
+  'Parceiro cruzou por completo → assuma a metade que ele deixou.',
+  'Parceiro foi aberto → proteja o centro antes de fechar o meio.',
+  'Lob passou do alcance → avise cedo; decidam quem tem melhor acesso.',
+  'Bola no meio → quem tem melhor contato chama; o outro cobre.',
+  'Ponto importante → uma jogada conhecida; uma função por jogador.',
+  'Esteja na posição antes do contato adversário — não depois.',
+  'No voleio alto → alvo amplo, gesto compacto, sem força extra.',
+  'Devolução em jogo vale mais do que devolução winner.',
+];
+
+const DONTS = [
+  'Zona de ninguém — entra ou recua.',
+  'O que funciona não muda por pressão de placar.',
+  'Ponto perdido fica lá — foco na próxima bola.',
+  'Construa antes de tentar finalizar.',
+  'Não corram juntos sem combinação.',
+  'Saque forte não garante ponto — prepare a próxima bola.',
+];
+
+/* Pool de 6 — mostra 2 aleatórios */
+const STATS_POOL = [
+  { num:'72%', desc:'dos pontos ganhos por quem controla a rede' },
+  { num:'81%', desc:'dos pontos terminam em até 4 jogadas' },
+  { num:'60%', desc:'das devoluções amadoras vão cruzado — variar cria incerteza' },
+  { num:'+60%', desc:'dos pontos perdidos por erro não forçado — consistência supera winners' },
+  { num:'70%+', desc:'dos primeiros saques entram nas melhores duplas amadoras' },
+  { num:'#1', desc:'erro amador: parar na zona de ninguém entre a linha de saque e o fundo' },
+];
+
+const SITS_JOGO = [
+  { id:'saque2',   label:'2º saque atacado',
+    titulo:'2º saque está sendo atacado',
+    bullets:['Parceiro recua da rede','Sacador aguarda a resposta','Não suba automático'],
+    chamada:'"Segundo — protege a devolução"',
+    evitar:'Tentar saque novo sob pressão.' },
+  { id:'devolucao', label:'Devolução difícil',
+    titulo:'Não consigo devolver o 1º saque',
+    bullets:['Preparação curta, split step','Cruzada com margem','Parceiro defensivo na linha'],
+    chamada:'"Devolução em jogo"',
+    evitar:'Paralela rente à linha por medo do voleador.' },
+  { id:'eles-rede', label:'Eles dominam a rede',
+    titulo:'Os dois adversários controlam a rede',
+    bullets:['Bola baixa pelo meio','Lob quando tiver controle','Sem corredor com força'],
+    chamada:'"Baixo no meio ou lob"',
+    evitar:'Corredor estreito com máxima força em toda tentativa.' },
+  { id:'momento',  label:'Perdemos o ritmo',
+    titulo:'Perdemos o momento do jogo',
+    bullets:['Desacelera o ritual entre pontos','Qual padrão funcionou antes?','Uma jogada — não mude tudo'],
+    chamada:'"Volta ao plano"',
+    evitar:'Mudar tudo sob pressão de placar.' },
+  { id:'erros',    label:'Muitos erros nossos',
+    titulo:'Estamos errando demais',
+    bullets:['Mais margem sobre a rede','Alvo amplo, não linha','Construa, não finalize'],
+    chamada:'"Mais margem"',
+    evitar:'Winner forçado quando dá para construir.' },
+  { id:'decisivo', label:'Ponto decisivo',
+    titulo:'Break / 30-30 / tie-break',
+    bullets:['Padrão confiável deste jogo','Uma função por jogador','Sem inventar'],
+    chamada:'"Nossa jogada: [X]"',
+    evitar:'Formação nova em momento de pressão.' },
+  { id:'lob',      label:'Muitos lobs deles',
+    titulo:'Eles lobam constantemente',
+    bullets:['Avise cedo: "troca!"','Não smash desequilibrado','Recua um passo da rede'],
+    chamada:'"Avisa cedo, não arrisca"',
+    evitar:'Smash desequilibrado depois de lob.' },
+  { id:'zona',     label:'Não avançamos',
+    titulo:'Ficamos na zona de ninguém',
+    bullets:['Sobe junto ou fica atrás','Nunca pare no meio','Devolução profunda = sobe'],
+    chamada:'"Sobe junto ou fica atrás"',
+    evitar:'Ficar parado entre a linha de saque e o fundo.' },
+];
+
+const BURACO = [
+  { sit:'Apressado, tenso',        gatilho:'5 bounces na bola. Respire pelo nariz.',      frase:'"Meu ritmo. Minha bola."' },
+  { sit:'Erros seguidos',          gatilho:'Olhe para as cordas da raquete.',              frase:'"Uma bola de cada vez."' },
+  { sit:'Parceiro frustrado',      gatilho:'Aproxime. Contato visual. Uma palavra.',       frase:'"Próximo. Você consegue."' },
+  { sit:'Pensando no placar',      gatilho:'Foque na costura da bola no saque.',           frase:'"Bola. Agora."' },
+  { sit:'Nervoso para servir',     gatilho:'Rotina completa — não pule nenhum passo.',    frase:'"Rotina. Serve."' },
+  { sit:'Sinto que nada funciona', gatilho:'Pare 1s antes do ritual. Pergunte em voz baixa:', frase:'"O que posso controlar?"' },
+  { sit:'Raiva de si mesmo',       gatilho:'Solte os ombros. Respire. Ande devagar.',     frase:'"Esqueça. Próximo ponto."' },
+];
+
+const QREFS = [
+  { k:'Bola baixa ou desequilibrado', v:'Margem sobre a rede — prepare a próxima defesa.' },
+  { k:'Bola alta, curta, equilibrado', v:'Ataque alvo amplo — acompanhe a resposta.' },
+  { k:'Parceiro cruzou', v:'Assuma a metade que ele deixou.' },
+  { k:'Parceiro foi aberto', v:'Proteja o centro, ajuste profundidade.' },
+  { k:'Lob passou do alcance', v:'Avise cedo — decidam quem tem melhor acesso.' },
+  { k:'Bola entre os dois', v:'Quem tem melhor contato chama; o outro cobre.' },
+  { k:'Ponto decisivo', v:'Padrão confiável + uma função por jogador.' },
+];
+
+const CHIPS_REF = ['Rede','Saque','Comunicação','Devolução','Cobertura',
+  'Consistência','Mental','Defesa','Segundo saque','Posicionamento'];
+
+/* ═══════════ STATE ═══════════ */
+let activeSitId = null;
+let focosOn = new Set(), bemOn = new Set(), melOn = new Set();
+let resultadoAtual = null;
+let timerSec = 90, timerInterval = null, timerRunning = false;
+
+/* ═══════════ UTILS ═══════════ */
+function sample(arr, n) {
+  return arr.slice().sort(() => .5 - Math.random()).slice(0, n);
+}
+
+/* ═══════════ NAV ═══════════ */
+function go(id, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('pane-' + id).classList.add('on');
+  if (btn) btn.classList.add('on');
+  if (id === 'depois') renderDepoisFoco();
+  if (id === 'depois') renderHist();
+}
+
+/* ═══════════ TIMER ═══════════ */
+function timerClick() { timerRunning ? stopTimer() : startTimer(); }
+function startTimer() {
+  timerSec = 90; timerRunning = true;
+  document.getElementById('timer-bar').classList.add('on');
+  document.getElementById('timer-inline').classList.add('running');
+  updateTimerUI();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => { if (--timerSec <= 0) stopTimer(); else updateTimerUI(); }, 1000);
+}
+function stopTimer() {
+  clearInterval(timerInterval); timerRunning = false;
+  document.getElementById('timer-bar').classList.remove('on');
+  const btn = document.getElementById('timer-inline');
+  btn.classList.remove('running');
+  btn.textContent = '90s ▶';
+}
+function updateTimerUI() {
+  const m = Math.floor(timerSec / 60), s = timerSec % 60;
+  document.getElementById('timer-inline').textContent = m + ':' + String(s).padStart(2,'0');
+  const pct = (timerSec / 90) * 100;
+  const fill = document.getElementById('timer-bar-fill');
+  fill.style.width = pct + '%';
+  fill.className = timerSec > 30 ? '' : timerSec > 15 ? 'warn' : 'urgent';
+}
+
+/* ═══════════ SITUAÇÕES ═══════════ */
+function selectSit(id) {
+  activeSitId = activeSitId === id ? null : id;
+  document.querySelectorAll('.sit-btn').forEach(b =>
+    b.classList.toggle('on', b.dataset.id === activeSitId));
+  renderPanel();
+}
+
+/* ═══════════ CHIPS ═══════════ */
+function toggleFoco(el, k) {
+  if (focosOn.has(k)) { focosOn.delete(k); el.classList.remove('on'); }
+  else if (focosOn.size < 2) { focosOn.add(k); el.classList.add('on'); }
+}
+function toggleBem(el, k) {
+  bemOn.has(k) ? (bemOn.delete(k), el.classList.remove('on'))
+               : (bemOn.add(k), el.classList.add('on'));
+}
+function toggleMel(el, k) {
+  melOn.has(k) ? (melOn.delete(k), el.classList.remove('on'))
+               : (melOn.add(k), el.classList.add('on'));
+}
+function setResult(val, btn) {
+  resultadoAtual = resultadoAtual === val ? null : val;
+  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('w','l'));
+  if (resultadoAtual) btn.classList.add(resultadoAtual.toLowerCase());
+}
+
+/* ═══════════ SAVE ═══════════ */
+function saveReflexao() {
+  if (!bemOn.size && !melOn.size && !resultadoAtual) {
+    const btn = document.querySelector('.save-btn');
+    btn.textContent = 'Marque algo primeiro';
+    setTimeout(() => btn.textContent = 'Salvar reflexão', 2000);
+    return;
+  }
+  const entry = {
+    date: new Date().toLocaleDateString('pt-BR'),
+    focos: [...focosOn],
+    resultado: resultadoAtual,
+    ctx: document.getElementById('ctx-txt').value.trim(),
+    bem: [...bemOn], mel: [...melOn],
+    nota: document.getElementById('nota-txt').value.trim(),
+    ts: Date.now(),
+  };
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('dp_hist') || '[]'); } catch(e){}
+  hist.unshift(entry);
+  if (hist.length > 10) hist = hist.slice(0,10);
+  try { localStorage.setItem('dp_hist', JSON.stringify(hist)); } catch(e){}
+  // reset
+  bemOn.clear(); melOn.clear(); resultadoAtual = null;
+  document.getElementById('nota-txt').value = '';
+  document.getElementById('ctx-txt').value = '';
+  document.querySelectorAll('#bem-chips .chip, #mel-chips .chip').forEach(c => c.classList.remove('on'));
+  document.querySelectorAll('.res-btn').forEach(b => b.classList.remove('w','l'));
+  renderHist();
+  const btn = document.querySelector('.save-btn');
+  btn.textContent = 'Salvo!';
+  setTimeout(() => btn.textContent = 'Salvar reflexão', 2000);
+}
+
+/* ═══════════ RENDER ═══════════ */
+
+function renderAntes() {
+  // Focos
+  document.getElementById('focos-chips').innerHTML = FOCOS.map(f =>
+    `<button class="chip" onclick="toggleFoco(this,'${f}')">${f}</button>`).join('');
+
+  // 4 REFS aleatórios
+  document.getElementById('refs-list').innerHTML = sample(REFS_POOL, 4).map(r =>
+    `<div class="ref-card">${r}</div>`).join('');
+
+  // 3 DONTS aleatórios
+  document.getElementById('donts-list').innerHTML = sample(DONTS, 3).map(d =>
+    `<div class="dont-card">${d}</div>`).join('');
+
+  // 2 STATS aleatórios
+  document.getElementById('stats-grid').innerHTML = sample(STATS_POOL, 2).map(s =>
+    `<div class="stat-card">
+      <div class="stat-num">${s.num}</div>
+      <div class="stat-desc">${s.desc}</div>
+    </div>`).join('');
+}
+
+function renderSitGrid() {
+  document.getElementById('sit-grid').innerHTML = SITS_JOGO.map(s =>
+    `<button class="sit-btn" data-id="${s.id}" onclick="selectSit('${s.id}')">${s.label}</button>`
+  ).join('');
+}
+
+function renderPanel() {
+  const panel = document.getElementById('sit-panel');
+  if (!activeSitId) {
+    panel.innerHTML =
+      `<div class="default-section-title">Buraco mental — gatilho + frase</div>
+      ${BURACO.map(b => `
+        <div class="buraco-item">
+          <div class="buraco-sit">${b.sit}</div>
+          <div class="buraco-gatilho">${b.gatilho}</div>
+          <div class="buraco-frase">${b.frase}</div>
+        </div>`).join('')}
+      <div class="default-section-title">Referência tática rápida</div>
+      ${QREFS.map(q => `
+        <div class="qref-item"><strong>${q.k}</strong>${q.v}</div>`).join('')}`;
+    return;
+  }
+  const s = SITS_JOGO.find(x => x.id === activeSitId);
+  panel.innerHTML = `
+    <div class="panel-title">${s.titulo}</div>
+    <ul class="panel-bullets">
+      ${s.bullets.map(b => `<li>${b}</li>`).join('')}
+    </ul>
+    <div class="panel-chamada">${s.chamada}</div>
+    <div class="panel-evitar">Evitar: ${s.evitar}</div>`;
+}
+
+function renderDepoisFoco() {
+  const wrap = document.getElementById('foco-banner-wrap');
+  if (!focosOn.size) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `<div class="foco-banner">
+    <strong>Foco de hoje</strong>
+    ${[...focosOn].join(' · ')} — marque como foi nos chips abaixo
+  </div>`;
+  // highlight foco chips in both lists
+  document.querySelectorAll('#bem-chips .chip, #mel-chips .chip').forEach(c => {
+    const txt = c.textContent.trim();
+    c.classList.toggle('focus-hint', focosOn.has(txt) && !c.classList.contains('on'));
+  });
+}
+
+function renderDepois() {
+  const chips = (id, toggleFn, cls) =>
+    CHIPS_REF.map(c =>
+      `<button class="chip ${cls}" onclick="${toggleFn}(this,'${c}')">${c}</button>`
+    ).join('');
+  document.getElementById('bem-chips').innerHTML = chips('bem-chips','toggleBem','grn');
+  document.getElementById('mel-chips').innerHTML = chips('mel-chips','toggleMel','red');
+}
+
+function renderHist() {
+  const hl = document.getElementById('hist-list');
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('dp_hist') || '[]'); } catch(e){}
+  if (!hist.length) {
+    hl.innerHTML = '<div class="empty-hist">Nenhuma reflexão salva ainda.</div>';
+    return;
+  }
+  hl.innerHTML = hist.map(h => {
+    // foco loop check: did the foco appear in "bem" or "mel"?
+    const focoStatus = (h.focos || []).map(f => {
+      if ((h.bem||[]).includes(f)) return `<span class="hist-foco-check bem">&#10003; ${f} foi bem</span>`;
+      if ((h.mel||[]).includes(f)) return `<span class="hist-foco-check mel">&#8594; ${f} a trabalhar</span>`;
+      return `<span class="hist-foco-check" style="color:var(--dim)">${f} — sem avaliação</span>`;
+    }).join('');
+
+    return `<div class="hist-item">
+      <div class="hist-head">
+        <span class="hist-date">${h.date}</span>
+        ${h.resultado ? `<span class="hist-res ${h.resultado.toLowerCase()}">${h.resultado==='W'?'Ganhamos':'Perdemos'}</span>` : ''}
+      </div>
+      ${h.ctx ? `<div class="hist-ctx">${h.ctx}</div>` : ''}
+      ${focoStatus ? `<div class="hist-foco-row"><span class="hist-foco-lbl">Foco: </span>${focoStatus}</div>` : ''}
+      <div class="hist-chips">
+        ${(h.bem||[]).map(b => `<span class="hist-chip grn">${b}</span>`).join('')}
+        ${(h.mel||[]).map(m => `<span class="hist-chip red">${m}</span>`).join('')}
+      </div>
+      ${h.nota ? `<div class="hist-nota">${h.nota}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════ INIT ═══════════ */
+(function(){
+  renderAntes();
+  renderSitGrid();
+  renderPanel();
+  renderDepois();
+  renderHist();
+})();
+</script>
+</body></html>
