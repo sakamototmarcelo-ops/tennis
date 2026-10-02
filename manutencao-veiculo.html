@@ -3,6 +3,7 @@
 <title>Manutenção Veicular</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <style>
 :root {
   --bg:#0f1923;--surf:#162232;--card:#1c2e42;--bdr:#243d58;
@@ -450,7 +451,8 @@ let filterTo = '';
 let filterActive = false;
 let openId = null;
 let editingId = null;
-let pendingPhoto = null; // base64 data URL
+let pendingPhoto = null;    // base64 JPEG data URL
+let pendingPhotoPdf = null; // base64 PDF data URL (original, para download)
 
 // ── init ──────────────────────────────────────────────────────────
 async function init() {
@@ -647,23 +649,22 @@ function openDetail(id) {
 
   // photo first — most important for verification
   if (r.photo) {
-    const isPdf = r.photo.startsWith('data:application/pdf');
-    if (isPdf) {
+    html += `
+      <div class="nota-wrap" onclick="openLightbox('${r.id}')">
+        <img class="nota-img" src="${r.photo}" alt="Nota fiscal">
+        <div class="nota-hint">🔍 Toque para ampliar</div>
+      </div>`;
+    if (r.photoPdf) {
       html += `
-        <a class="nota-wrap pdf-nota" href="${r.photo}" download="nota-fiscal.pdf" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;text-decoration:none">
-          <div style="width:48px;height:48px;background:#e53e3e;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px;flex-shrink:0">PDF</div>
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--txt)">Nota fiscal / OS</div>
-            <div style="font-size:11px;color:var(--dim);margin-top:2px">Toque para baixar o PDF</div>
+        <a href="${r.photoPdf}" download="nota-fiscal.pdf"
+           style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--bdr);border-radius:9px;text-decoration:none;margin-bottom:10px">
+          <div style="width:36px;height:36px;background:#e53e3e;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:11px;flex-shrink:0">PDF</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:600;color:var(--txt)">Baixar PDF original</div>
+            <div style="font-size:10px;color:var(--dim)">Nota fiscal / Ordem de serviço</div>
           </div>
-          <div style="margin-left:auto;font-size:20px">⬇️</div>
+          <span style="font-size:18px">⬇️</span>
         </a>`;
-    } else {
-      html += `
-        <div class="nota-wrap" onclick="openLightbox('${r.id}')">
-          <img class="nota-img" src="${r.photo}" alt="Nota fiscal">
-          <div class="nota-hint">🔍 Toque para ampliar</div>
-        </div>`;
     }
   }
 
@@ -825,12 +826,13 @@ function showForm(rec = null) {
   document.getElementById('f-local').value = rec ? rec.local : '';
   document.getElementById('f-obs').value   = rec ? rec.obs   : '';
 
-  pendingPhoto = rec?.photo || null;
+  pendingPhoto    = rec?.photo    || null;
+  pendingPhotoPdf = rec?.photoPdf || null;
   const thumb = document.getElementById('photo-thumb');
   const zone  = document.getElementById('photo-zone');
   if (pendingPhoto) {
     thumb.src = pendingPhoto; thumb.classList.add('show');
-    document.getElementById('photo-zone-lbl').textContent = 'Nota fiscal anexada';
+    document.getElementById('photo-zone-lbl').textContent = pendingPhotoPdf ? 'PDF anexado (pré-visualização)' : 'Nota fiscal anexada';
     zone.classList.add('has');
   } else {
     thumb.classList.remove('show');
@@ -854,17 +856,32 @@ document.getElementById('btn-cancel').onclick = hideForm;
 document.getElementById('f-photo').onchange = async e => {
   const file = e.target.files[0];
   if (!file) return;
+  const zone = document.getElementById('photo-zone');
+  zone.classList.add('has');
+  document.getElementById('photo-zone-lbl').textContent = '⏳ Processando…';
   try {
-    pendingPhoto = await compressPhoto(file);
+    if (file.type === 'application/pdf') {
+      const reader = new FileReader();
+      const pdfData = await new Promise((res, rej) => {
+        reader.onload = e => res(e.target.result);
+        reader.onerror = rej;
+        reader.readAsDataURL(file);
+      });
+      pendingPhotoPdf = pdfData;
+      pendingPhoto = await renderPdfFirstPage(pdfData);
+    } else {
+      pendingPhotoPdf = null;
+      pendingPhoto = await compressPhoto(file);
+    }
     const img = document.getElementById('photo-thumb');
-    const isPdf = file.type === 'application/pdf';
-    img.src = isPdf ? 'data:image/svg+xml,' + encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="8" fill="#e53e3e"/><text x="40" y="48" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="white">PDF</text></svg>'
-    ) : pendingPhoto;
+    img.src = pendingPhoto;
     img.classList.add('show');
-    document.getElementById('photo-zone-lbl').textContent = file.name;
-    document.getElementById('photo-zone').classList.add('has');
-  } catch(e) { toast('Erro ao processar arquivo'); }
+    document.getElementById('photo-zone-lbl').textContent = file.name + (pendingPhotoPdf ? ' (PDF)' : '');
+  } catch(err) {
+    console.error(err);
+    toast('Erro ao processar arquivo');
+    zone.classList.remove('has');
+  }
 };
 
 document.getElementById('btn-save').onclick = async () => {
@@ -885,6 +902,7 @@ document.getElementById('btn-save').onclick = async () => {
     local: document.getElementById('f-local').value.trim(),
     obs:   document.getElementById('f-obs').value.trim(),
     photo: pendingPhoto,
+    photoPdf: pendingPhotoPdf,
     ts: editingId ? (allRecords.find(x=>x.id===editingId)?.ts || Date.now()) : Date.now(),
   };
 
@@ -904,16 +922,23 @@ document.getElementById('btn-save').onclick = async () => {
   toast(msg);
 };
 
+// ── PDF render (page 1 → JPEG) ────────────────────────────────────
+async function renderPdfFirstPage(pdfDataUrl) {
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  if (!pdfjsLib) throw new Error('PDF.js not loaded');
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+  const pdf = await pdfjsLib.getDocument({ url: pdfDataUrl }).promise;
+  const page = await pdf.getPage(1);
+  const vp = page.getViewport({ scale: 1.5 });
+  const canvas = document.createElement('canvas');
+  canvas.width = vp.width; canvas.height = vp.height;
+  await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+  return canvas.toDataURL('image/jpeg', 0.82);
+}
+
 // ── photo compression ─────────────────────────────────────────────
 function compressPhoto(file) {
-  if (file.type === 'application/pdf') {
-    return new Promise((res, rej) => {
-      const reader = new FileReader();
-      reader.onload = e => res(e.target.result); // data:application/pdf;base64,...
-      reader.onerror = () => rej(new Error('read'));
-      reader.readAsDataURL(file);
-    });
-  }
   return new Promise((res, rej) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -1136,19 +1161,13 @@ async function exportPDF() {
         y += obsLines.slice(0, 2).length * 4 + 2;
       }
 
-      if (r.photo && !r.photo.startsWith('data:application/pdf')) {
+      if (r.photo) {
         try {
           const imgW = Math.min(60, CW);
           const imgH = 40;
           doc.addImage(r.photo, 'JPEG', M, y, imgW, imgH);
           y += imgH + 4;
         } catch(e) {}
-      } else if (r.photo) {
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(8);
-        doc.setTextColor(180, 60, 60);
-        doc.text('📎 Nota fiscal em PDF anexada ao registro', M, y);
-        y += 6;
       }
 
       // separator
