@@ -457,7 +457,7 @@ async function init() {
   try {
     idb = await openIDB();
     allRecords = await idbGetAll();
-    allRecords.sort((a, b) => a.km - b.km);
+    allRecords.sort((a, b) => b.km - a.km);
   } catch(e) {
     console.warn('IndexedDB:', e);
     toast('⚠️ Armazenamento indisponível neste navegador');
@@ -878,7 +878,7 @@ document.getElementById('btn-save').onclick = async () => {
   } else {
     allRecords.push(rec);
   }
-  allRecords.sort((a,b) => a.km - b.km);
+  allRecords.sort((a,b) => b.km - a.km);
 
   const msg = editingId ? 'Registro atualizado ✓' : 'Registro salvo ✓';
   btn.disabled = false; btn.textContent = editingId ? 'Salvar alterações' : 'Salvar registro';
