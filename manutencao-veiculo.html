@@ -394,6 +394,7 @@ let filterFrom = '';
 let filterTo = '';
 let filterActive = false;
 let openId = null;
+let editingId = null;
 let pendingPhoto = null; // base64 data URL
 
 // ── init ──────────────────────────────────────────────────────────
@@ -595,6 +596,7 @@ function openDetail(id) {
   ].filter(Boolean);
   let html = rows.map(([l,v]) => `<div class="d-row"><span class="d-lbl">${l}</span><span class="d-val">${esc(v)}</span></div>`).join('');
   if (r.photo) html += `<div style="margin-top:2px"><div class="d-lbl" style="margin-bottom:5px">📎 NOTA FISCAL</div><img class="d-photo" src="${r.photo}" alt="Nota fiscal"></div>`;
+  html += `<button class="primary-btn" style="margin-top:12px" onclick="editRecord('${r.id}')">✏️ Editar registro</button>`;
   html += `<button class="del-btn" onclick="deleteRecord('${r.id}')">🗑 Excluir registro</button>`;
   document.getElementById('det-body').innerHTML = html;
   document.getElementById('detail-bg').classList.add('open');
@@ -614,24 +616,49 @@ async function deleteRecord(id) {
   toast('Excluído');
 }
 
-// ── add form ──────────────────────────────────────────────────────
-document.getElementById('fab').onclick = showForm;
+// ── add / edit form ───────────────────────────────────────────────
+document.getElementById('fab').onclick = () => showForm();
 
-function showForm() {
+function editRecord(id) {
+  const r = allRecords.find(x => x.id === id);
+  if (!r) return;
+  closeDetail();
+  showForm(r);
+}
+
+function showForm(rec = null) {
+  editingId = rec ? rec.id : null;
   document.getElementById('list-screen').classList.add('gone');
   document.getElementById('form-screen').classList.add('active');
-  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
-  ['f-desc','f-km','f-valor','f-local','f-obs'].forEach(id => document.getElementById(id).value = '');
-  pendingPhoto = null;
-  document.getElementById('photo-thumb').classList.remove('show');
-  document.getElementById('photo-zone-lbl').textContent = 'Toque para fotografar ou selecionar';
-  document.getElementById('photo-zone').classList.remove('has');
+  document.querySelector('.sec-lbl[style]').textContent = rec ? 'Editar registro' : 'Novo registro';
+  document.getElementById('btn-save').textContent = rec ? 'Salvar alterações' : 'Salvar registro';
+
+  document.getElementById('f-date').value  = rec ? rec.date  : new Date().toISOString().slice(0,10);
+  document.getElementById('f-desc').value  = rec ? rec.desc  : '';
+  document.getElementById('f-km').value    = rec ? rec.km    : '';
+  document.getElementById('f-valor').value = rec ? rec.valor : '';
+  document.getElementById('f-local').value = rec ? rec.local : '';
+  document.getElementById('f-obs').value   = rec ? rec.obs   : '';
+
+  pendingPhoto = rec?.photo || null;
+  const thumb = document.getElementById('photo-thumb');
+  const zone  = document.getElementById('photo-zone');
+  if (pendingPhoto) {
+    thumb.src = pendingPhoto; thumb.classList.add('show');
+    document.getElementById('photo-zone-lbl').textContent = 'Nota fiscal anexada';
+    zone.classList.add('has');
+  } else {
+    thumb.classList.remove('show');
+    document.getElementById('photo-zone-lbl').textContent = 'Toque para fotografar ou selecionar';
+    zone.classList.remove('has');
+  }
   document.getElementById('f-photo').value = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(() => document.getElementById('f-desc').focus(), 300);
 }
 
 function hideForm() {
+  editingId = null;
   document.getElementById('list-screen').classList.remove('gone');
   document.getElementById('form-screen').classList.remove('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -663,24 +690,30 @@ document.getElementById('btn-save').onclick = async () => {
   btn.disabled = true; btn.textContent = 'Salvando…';
 
   const rec = {
-    id: genId(),
+    id: editingId || genId(),
     desc, date,
     km: parseFloat(km),
     valor: parseFloat(valor),
     local: document.getElementById('f-local').value.trim(),
     obs:   document.getElementById('f-obs').value.trim(),
     photo: pendingPhoto,
-    ts: Date.now(),
+    ts: editingId ? (allRecords.find(x=>x.id===editingId)?.ts || Date.now()) : Date.now(),
   };
 
   if (idb) { try { await idbPut(rec); } catch(e) { console.warn(e); } }
-  allRecords.push(rec);
+  if (editingId) {
+    allRecords = allRecords.map(x => x.id === editingId ? rec : x);
+  } else {
+    allRecords.push(rec);
+  }
   allRecords.sort((a,b) => a.km - b.km);
 
-  btn.disabled = false; btn.textContent = 'Salvar registro';
+  const msg = editingId ? 'Registro atualizado ✓' : 'Registro salvo ✓';
+  btn.disabled = false; btn.textContent = editingId ? 'Salvar alterações' : 'Salvar registro';
+  editingId = null;
   hideForm();
   renderList();
-  toast('Registro salvo ✓');
+  toast(msg);
 };
 
 // ── photo compression ─────────────────────────────────────────────
