@@ -347,7 +347,7 @@ main{padding:0 14px 90px;max-width:560px;margin:0 auto}
   <div class="f-grp">
     <label class="f-lbl">Foto da nota fiscal</label>
     <div class="photo-zone" id="photo-zone">
-      <input type="file" id="f-photo" accept="image/*" capture="environment">
+      <input type="file" id="f-photo" accept="image/*,application/pdf">
       <div class="photo-zone-ico">📷</div>
       <div class="photo-zone-lbl" id="photo-zone-lbl">Toque para fotografar ou selecionar</div>
       <img class="photo-thumb" id="photo-thumb" alt="Nota">
@@ -647,11 +647,24 @@ function openDetail(id) {
 
   // photo first — most important for verification
   if (r.photo) {
-    html += `
-      <div class="nota-wrap" onclick="openLightbox('${r.id}')">
-        <img class="nota-img" src="${r.photo}" alt="Nota fiscal">
-        <div class="nota-hint">🔍 Toque para ampliar</div>
-      </div>`;
+    const isPdf = r.photo.startsWith('data:application/pdf');
+    if (isPdf) {
+      html += `
+        <a class="nota-wrap pdf-nota" href="${r.photo}" download="nota-fiscal.pdf" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;text-decoration:none">
+          <div style="width:48px;height:48px;background:#e53e3e;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px;flex-shrink:0">PDF</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--txt)">Nota fiscal / OS</div>
+            <div style="font-size:11px;color:var(--dim);margin-top:2px">Toque para baixar o PDF</div>
+          </div>
+          <div style="margin-left:auto;font-size:20px">⬇️</div>
+        </a>`;
+    } else {
+      html += `
+        <div class="nota-wrap" onclick="openLightbox('${r.id}')">
+          <img class="nota-img" src="${r.photo}" alt="Nota fiscal">
+          <div class="nota-hint">🔍 Toque para ampliar</div>
+        </div>`;
+    }
   }
 
   // data grid
@@ -844,11 +857,14 @@ document.getElementById('f-photo').onchange = async e => {
   try {
     pendingPhoto = await compressPhoto(file);
     const img = document.getElementById('photo-thumb');
-    img.src = pendingPhoto;
+    const isPdf = file.type === 'application/pdf';
+    img.src = isPdf ? 'data:image/svg+xml,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="8" fill="#e53e3e"/><text x="40" y="48" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="white">PDF</text></svg>'
+    ) : pendingPhoto;
     img.classList.add('show');
     document.getElementById('photo-zone-lbl').textContent = file.name;
     document.getElementById('photo-zone').classList.add('has');
-  } catch(e) { toast('Erro ao processar foto'); }
+  } catch(e) { toast('Erro ao processar arquivo'); }
 };
 
 document.getElementById('btn-save').onclick = async () => {
@@ -890,6 +906,14 @@ document.getElementById('btn-save').onclick = async () => {
 
 // ── photo compression ─────────────────────────────────────────────
 function compressPhoto(file) {
+  if (file.type === 'application/pdf') {
+    return new Promise((res, rej) => {
+      const reader = new FileReader();
+      reader.onload = e => res(e.target.result); // data:application/pdf;base64,...
+      reader.onerror = () => rej(new Error('read'));
+      reader.readAsDataURL(file);
+    });
+  }
   return new Promise((res, rej) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -1112,13 +1136,19 @@ async function exportPDF() {
         y += obsLines.slice(0, 2).length * 4 + 2;
       }
 
-      if (r.photo) {
+      if (r.photo && !r.photo.startsWith('data:application/pdf')) {
         try {
           const imgW = Math.min(60, CW);
           const imgH = 40;
           doc.addImage(r.photo, 'JPEG', M, y, imgW, imgH);
           y += imgH + 4;
         } catch(e) {}
+      } else if (r.photo) {
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(8);
+        doc.setTextColor(180, 60, 60);
+        doc.text('📎 Nota fiscal em PDF anexada ao registro', M, y);
+        y += 6;
       }
 
       // separator
