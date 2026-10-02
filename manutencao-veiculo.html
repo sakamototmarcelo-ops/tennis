@@ -2,6 +2,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Manutenção Veicular</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
   --bg:#0f1923;--surf:#162232;--card:#1c2e42;--bdr:#243d58;
@@ -150,11 +151,57 @@ main{padding:0 14px 90px;max-width:560px;margin:0 auto}
 .sheet-body{padding:14px}
 
 /* ── detail rows ── */
-.d-row{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:9px 12px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:7px}
-.d-lbl{font-size:11px;color:var(--dim);font-weight:500}
-.d-val{font-size:14px;font-weight:600;text-align:right}
-.d-photo{width:100%;max-height:260px;object-fit:contain;border-radius:9px;border:1px solid var(--bdr);background:var(--card);display:block;margin-top:10px}
-.del-btn{width:100%;margin-top:12px;padding:12px;border-radius:10px;background:var(--red-l);border:1px solid var(--red-b);color:var(--red);font-weight:700;font-size:14px;cursor:pointer;transition:background .15s,color .15s}
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.d-row{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:9px 12px}
+.d-row.wide{grid-column:1/-1}
+.d-lbl{font-size:10px;color:var(--dim);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.d-val{font-size:14px;font-weight:600;line-height:1.3}
+.d-val.big{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--amb)}
+.d-val.km{color:var(--blu)}
+
+/* ── nota photo in detail ── */
+.nota-wrap{
+  position:relative;cursor:zoom-in;border-radius:11px;overflow:hidden;
+  border:1px solid var(--bdr);background:var(--card);margin-bottom:10px;
+}
+.nota-img{width:100%;max-height:340px;object-fit:contain;display:block;background:var(--card)}
+.nota-hint{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,#00000077);
+  padding:20px 12px 10px;
+  font-size:11px;font-weight:700;color:#ffffffcc;letter-spacing:.05em;
+  pointer-events:none;display:flex;align-items:center;justify-content:center;gap:5px;
+}
+
+/* ── lightbox ── */
+#lightbox{
+  position:fixed;inset:0;background:#000e;z-index:60;display:none;
+  align-items:center;justify-content:center;touch-action:none;
+  cursor:zoom-out;
+}
+#lightbox.open{display:flex}
+#lb-img{
+  max-width:100%;max-height:100%;object-fit:contain;
+  transform-origin:center center;user-select:none;pointer-events:none;
+  transition:transform .15s ease;
+}
+#lb-img.no-anim{transition:none}
+#lb-close{
+  position:absolute;top:env(safe-area-inset-top,12px);right:12px;
+  width:36px;height:36px;border-radius:50%;background:#ffffff22;
+  border:1.5px solid #ffffff44;color:#fff;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;z-index:1;
+}
+#lb-hint{
+  position:absolute;bottom:calc(env(safe-area-inset-bottom,0) + 16px);
+  left:50%;transform:translateX(-50%);
+  background:#ffffff18;border:1px solid #ffffff22;
+  border-radius:20px;padding:5px 14px;
+  font-size:11px;color:#ffffffaa;white-space:nowrap;
+  pointer-events:none;transition:opacity .4s;
+}
+
+.del-btn{width:100%;margin-top:8px;padding:12px;border-radius:10px;background:var(--red-l);border:1px solid var(--red-b);color:var(--red);font-weight:700;font-size:14px;cursor:pointer;transition:background .15s,color .15s}
 .del-btn:hover{background:var(--red);color:#fff}
 
 /* ── form ── */
@@ -219,7 +266,8 @@ main{padding:0 14px 90px;max-width:560px;margin:0 auto}
   <div class="hdr-acts">
     <button class="act-btn" id="btn-search" title="Consultar histórico">🔍</button>
     <button class="act-btn" id="btn-car"    title="Dados do veículo">🚗</button>
-    <button class="act-btn" id="btn-export" title="Exportar histórico">📄</button>
+    <button class="act-btn" id="btn-export"     title="Exportar HTML">📄</button>
+    <button class="act-btn" id="btn-export-pdf" title="Exportar PDF">🖨️</button>
   </div>
 </header>
 
@@ -319,6 +367,13 @@ main{padding:0 14px 90px;max-width:560px;margin:0 auto}
     </div>
     <div class="sheet-body" id="det-body"></div>
   </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lb-close">✕</button>
+  <img id="lb-img" alt="Nota fiscal">
+  <div id="lb-hint">🤏 Pinça para zoom · Duplo toque para resetar</div>
 </div>
 
 <!-- CAR SETUP -->
@@ -587,17 +642,39 @@ function openDetail(id) {
   if (!r) return;
   openId = id;
   document.getElementById('det-title').textContent = r.desc;
-  const rows = [
-    ['Data', fmtDate(r.date)],
-    ['Quilometragem', fmtKm(r.km) + ' km'],
-    ['Valor', 'R$ ' + fmt(r.valor)],
-    r.local ? ['Estabelecimento', r.local] : null,
-    r.obs   ? ['Observações', r.obs] : null,
-  ].filter(Boolean);
-  let html = rows.map(([l,v]) => `<div class="d-row"><span class="d-lbl">${l}</span><span class="d-val">${esc(v)}</span></div>`).join('');
-  if (r.photo) html += `<div style="margin-top:2px"><div class="d-lbl" style="margin-bottom:5px">📎 NOTA FISCAL</div><img class="d-photo" src="${r.photo}" alt="Nota fiscal"></div>`;
-  html += `<button class="primary-btn" style="margin-top:12px" onclick="editRecord('${r.id}')">✏️ Editar registro</button>`;
+
+  let html = '';
+
+  // photo first — most important for verification
+  if (r.photo) {
+    html += `
+      <div class="nota-wrap" onclick="openLightbox('${r.id}')">
+        <img class="nota-img" src="${r.photo}" alt="Nota fiscal">
+        <div class="nota-hint">🔍 Toque para ampliar</div>
+      </div>`;
+  }
+
+  // data grid
+  html += `<div class="d-grid">
+    <div class="d-row">
+      <div class="d-lbl">📅 Data</div>
+      <div class="d-val">${fmtDate(r.date)}</div>
+    </div>
+    <div class="d-row">
+      <div class="d-lbl">🛣 Quilometragem</div>
+      <div class="d-val km">${fmtKm(r.km)} km</div>
+    </div>
+    <div class="d-row" style="grid-column:1/-1">
+      <div class="d-lbl">💰 Valor pago</div>
+      <div class="d-val big">R$ ${fmt(r.valor)}</div>
+    </div>
+    ${r.local ? `<div class="d-row wide"><div class="d-lbl">🏪 Estabelecimento</div><div class="d-val">${esc(r.local)}</div></div>` : ''}
+    ${r.obs   ? `<div class="d-row wide"><div class="d-lbl">📝 Observações</div><div class="d-val" style="font-weight:400;font-size:13px;color:var(--dim)">${esc(r.obs)}</div></div>` : ''}
+  </div>`;
+
+  html += `<button class="primary-btn" onclick="editRecord('${r.id}')">✏️ Editar registro</button>`;
   html += `<button class="del-btn" onclick="deleteRecord('${r.id}')">🗑 Excluir registro</button>`;
+
   document.getElementById('det-body').innerHTML = html;
   document.getElementById('detail-bg').classList.add('open');
 }
@@ -605,6 +682,101 @@ function openDetail(id) {
 function closeDetail() { document.getElementById('detail-bg').classList.remove('open'); openId = null; }
 document.getElementById('btn-det-close').onclick = closeDetail;
 document.getElementById('detail-bg').onclick = e => { if (e.target === document.getElementById('detail-bg')) closeDetail(); };
+
+// ── lightbox ──────────────────────────────────────────────────────
+let lbScale = 1, lbMinScale = 1, lbMaxScale = 5;
+let lbOriginX = 0, lbOriginY = 0;
+let lbPanX = 0, lbPanY = 0;
+let lbPinchDist0 = 0, lbPinchScale0 = 1;
+let lbLastTap = 0;
+
+function openLightbox(id) {
+  const r = allRecords.find(x => x.id === id);
+  if (!r?.photo) return;
+  const img = document.getElementById('lb-img');
+  img.src = r.photo;
+  lbScale = 1; lbPanX = 0; lbPanY = 0;
+  img.style.transform = '';
+  document.getElementById('lightbox').classList.add('open');
+  // fade hint after 2s
+  setTimeout(() => { document.getElementById('lb-hint').style.opacity = '0'; }, 2200);
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lb-hint').style.opacity = '';
+  lbScale = 1; lbPanX = 0; lbPanY = 0;
+}
+function lbApplyTransform(animate) {
+  const img = document.getElementById('lb-img');
+  img.classList.toggle('no-anim', !animate);
+  img.style.transform = `translate(${lbPanX}px,${lbPanY}px) scale(${lbScale})`;
+}
+function lbClamp() {
+  // clamp pan so image stays visible
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const maxPanX = Math.max(0, (vw * lbScale - vw) / 2);
+  const maxPanY = Math.max(0, (vh * lbScale - vh) / 2);
+  lbPanX = Math.max(-maxPanX, Math.min(maxPanX, lbPanX));
+  lbPanY = Math.max(-maxPanY, Math.min(maxPanY, lbPanY));
+}
+
+document.getElementById('lb-close').onclick = e => { e.stopPropagation(); closeLightbox(); };
+
+const lb = document.getElementById('lightbox');
+lb.addEventListener('click', e => { if (e.target === lb && lbScale <= 1.05) closeLightbox(); });
+
+// double-tap to reset
+lb.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - lbLastTap < 280) {
+    lbScale = 1; lbPanX = 0; lbPanY = 0;
+    lbApplyTransform(true);
+  }
+  lbLastTap = now;
+}, { passive: true });
+
+// pinch-to-zoom + drag
+lb.addEventListener('touchstart', e => {
+  if (e.touches.length === 2) {
+    lbPinchDist0 = Math.hypot(
+      e.touches[1].clientX - e.touches[0].clientX,
+      e.touches[1].clientY - e.touches[0].clientY);
+    lbPinchScale0 = lbScale;
+    lbOriginX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    lbOriginY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+  }
+}, { passive: true });
+
+let lbDragStart = null;
+lb.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) lbDragStart = { x: e.touches[0].clientX - lbPanX, y: e.touches[0].clientY - lbPanY };
+}, { passive: true });
+
+lb.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (e.touches.length === 2) {
+    const dist = Math.hypot(
+      e.touches[1].clientX - e.touches[0].clientX,
+      e.touches[1].clientY - e.touches[0].clientY);
+    lbScale = Math.max(lbMinScale, Math.min(lbMaxScale, lbPinchScale0 * dist / lbPinchDist0));
+    lbClamp();
+    lbApplyTransform(false);
+  } else if (e.touches.length === 1 && lbScale > 1.05 && lbDragStart) {
+    lbPanX = e.touches[0].clientX - lbDragStart.x;
+    lbPanY = e.touches[0].clientY - lbDragStart.y;
+    lbClamp();
+    lbApplyTransform(false);
+  }
+}, { passive: false });
+
+// mouse wheel zoom (desktop)
+lb.addEventListener('wheel', e => {
+  e.preventDefault();
+  lbScale = Math.max(lbMinScale, Math.min(lbMaxScale, lbScale * (e.deltaY < 0 ? 1.15 : 0.87)));
+  if (lbScale <= lbMinScale) { lbPanX = 0; lbPanY = 0; }
+  lbClamp();
+  lbApplyTransform(true);
+}, { passive: false });
 
 async function deleteRecord(id) {
   const r = allRecords.find(x => x.id === id);
@@ -829,6 +1001,169 @@ async function exportHTML() {
   else toast('Histórico exportado ✓');
 
   btn.textContent = '📄'; btn.style.pointerEvents = '';
+}
+
+// ── export PDF ────────────────────────────────────────────────────
+document.getElementById('btn-export-pdf').onclick = exportPDF;
+
+async function exportPDF() {
+  if (allRecords.length === 0) { toast('Nenhum registro para exportar'); return; }
+  if (typeof window.jspdf === 'undefined') { toast('jsPDF não carregou — verifique conexão'); return; }
+
+  const btn = document.getElementById('btn-export-pdf');
+  btn.textContent = '⏳'; btn.style.pointerEvents = 'none';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    const PW = 210, PH = 297, M = 14, CW = PW - M * 2;
+    let y = M;
+
+    const carLine = carInfo.modelo
+      ? `${carInfo.marca} ${carInfo.modelo}${carInfo.ano ? ' ' + carInfo.ano : ''}${carInfo.placa ? ' · ' + carInfo.placa : ''}`
+      : 'Veículo não especificado';
+    const gerado = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+    const total = allRecords.reduce((s, r) => s + parseFloat(r.valor || 0), 0);
+
+    // ─ header ─
+    doc.setFillColor(10, 32, 64);
+    doc.rect(0, 0, PW, 28, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Histórico de Manutenção', M, 11);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(180, 210, 240);
+    doc.text(carLine, M, 17);
+    doc.text('Gerado em ' + gerado, M, 22);
+
+    // ─ summary row ─
+    y = 34;
+    const sumItems = [
+      ['Total investido', 'R$ ' + fmt(total)],
+      ['Registros', String(allRecords.length)],
+      ['KM máxima', fmtKm(Math.max(...allRecords.map(r => parseFloat(r.km || 0)))) + ' km'],
+    ];
+    const colW = CW / sumItems.length;
+    sumItems.forEach(([lbl, val], i) => {
+      const x = M + i * colW;
+      doc.setFillColor(240, 247, 255);
+      doc.roundedRect(x, y, colW - 3, 14, 2, 2, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(10, 102, 60);
+      doc.text(val, x + 4, y + 8);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(90, 122, 149);
+      doc.text(lbl.toUpperCase(), x + 4, y + 13);
+    });
+    y += 20;
+
+    // ─ records ─
+    for (const r of allRecords) {
+      const photoH = r.photo ? 45 : 0;
+      const blockH = 8 + 18 + (r.obs ? 8 : 0) + photoH + 6;
+
+      if (y + blockH > PH - 16) {
+        doc.addPage();
+        y = M;
+      }
+
+      // title bar
+      doc.setFillColor(228, 238, 248);
+      doc.rect(M, y, CW, 8, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(10, 32, 64);
+      doc.text(r.desc || '(sem descrição)', M + 3, y + 5.5);
+      y += 10;
+
+      // data row
+      const cols = [
+        ['DATA', fmtDate(r.date)],
+        ['KM', fmtKm(r.km) + ' km'],
+        ['VALOR', 'R$ ' + fmt(r.valor)],
+        ['ESTABELECIMENTO', r.local || '—'],
+      ];
+      const dw = CW / cols.length;
+      cols.forEach(([lbl, val], i) => {
+        const x = M + i * dw;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6.5);
+        doc.setTextColor(107, 143, 175);
+        doc.text(lbl, x, y);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(30, 50, 70);
+        const maxW = dw - 2;
+        const lines = doc.splitTextToSize(val, maxW);
+        doc.text(lines[0], x, y + 5);
+      });
+      y += 12;
+
+      if (r.obs) {
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(8);
+        doc.setTextColor(90, 122, 149);
+        const obsLines = doc.splitTextToSize('Obs: ' + r.obs, CW);
+        doc.text(obsLines.slice(0, 2), M, y);
+        y += obsLines.slice(0, 2).length * 4 + 2;
+      }
+
+      if (r.photo) {
+        try {
+          const imgW = Math.min(60, CW);
+          const imgH = 40;
+          doc.addImage(r.photo, 'JPEG', M, y, imgW, imgH);
+          y += imgH + 4;
+        } catch(e) {}
+      }
+
+      // separator
+      doc.setDrawColor(220, 232, 244);
+      doc.line(M, y, M + CW, y);
+      y += 5;
+    }
+
+    // footer
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(150, 170, 190);
+    doc.text('Documento gerado pelo app Manutenção Veicular', M, PH - 6);
+
+    // save
+    const safeModel = (carInfo.modelo || 'veiculo').replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    const filename = `historico-${safeModel}-${new Date().toISOString().slice(0, 10)}.pdf`;
+    const pdfBlob = doc.output('blob');
+
+    let saved = false;
+    if (window.claude) {
+      try {
+        const dl = await claude.use('downloads');
+        if (dl) { await dl.save({ filename, data: pdfBlob }); saved = true; }
+      } catch(e) {}
+    }
+    if (!saved) {
+      try {
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        saved = true;
+      } catch(e) {}
+    }
+    if (!saved) toast('Exportação PDF não disponível');
+    else toast('PDF exportado ✓');
+
+  } catch(e) {
+    console.error(e);
+    toast('Erro ao gerar PDF');
+  }
+
+  btn.textContent = '🖨️'; btn.style.pointerEvents = '';
 }
 
 // ── helpers ───────────────────────────────────────────────────────
