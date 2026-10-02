@@ -1,0 +1,395 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Song Pro GS — Referência</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── layout: single-scroll mobile, scenario grid → detail panel ── */
+:root {
+  --bg: #0b1622; --surf: #112236; --card: #192f48; --bdr: #213d5a;
+  --blu: #3b9eff; --blu-l: #3b9eff1a; --blu-b: #3b9eff44;
+  --grn: #22c55e; --grn-l: #22c55e1a; --grn-b: #22c55e44;
+  --amb: #f59e0b; --amb-l: #f59e0b1a; --amb-b: #f59e0b44;
+  --red: #ef4444; --red-l: #ef44441a;
+  --txt: #ddeeff; --dim: #6b8faf; --lbl: #8aafc8;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f0f7ff; --surf: #e2eef9; --card: #fff; --bdr: #c2d8ef;
+    --blu: #1a7de0; --blu-l: #1a7de011; --blu-b: #1a7de033;
+    --grn: #16a34a; --grn-l: #16a34a11; --grn-b: #16a34a33;
+    --amb: #d97706; --amb-l: #d9770611; --amb-b: #d9770633;
+    --red: #dc2626; --red-l: #dc26261a;
+    --txt: #0f2035; --dim: #5a7a95; --lbl: #3a5f7d;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f0f7ff; --surf: #e2eef9; --card: #fff; --bdr: #c2d8ef;
+  --blu: #1a7de0; --blu-l: #1a7de011; --blu-b: #1a7de033;
+  --grn: #16a34a; --grn-l: #16a34a11; --grn-b: #16a34a33;
+  --amb: #d97706; --amb-l: #d9770611; --amb-b: #d9770633;
+  --red: #dc2626; --red-l: #dc26261a;
+  --txt: #0f2035; --dim: #5a7a95; --lbl: #3a5f7d;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+html, body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--txt) }
+
+/* ── header ── */
+header {
+  background: var(--surf);
+  border-bottom: 1px solid var(--bdr);
+  padding: 14px 16px 12px;
+  display: flex; align-items: flex-end; gap: 12px;
+}
+.byd-mark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 26px; line-height: 1;
+  color: var(--blu); letter-spacing: -.02em;
+}
+.header-text { flex: 1 }
+.header-model {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 14px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--lbl); line-height: 1;
+}
+.header-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 22px; line-height: 1.1;
+  color: var(--txt); margin-top: 2px;
+}
+
+/* ── main scroll ── */
+main { padding: 0 16px 40px; max-width: 540px; margin: 0 auto }
+
+/* ── section labels ── */
+.sec-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--lbl);
+  margin: 20px 0 10px;
+}
+
+/* ── scenario grid ── */
+.scenario-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.scen-btn {
+  background: var(--card); border: 1.5px solid var(--bdr);
+  border-radius: 12px; padding: 12px 13px;
+  cursor: pointer; text-align: left;
+  display: flex; flex-direction: column; gap: 4px;
+  transition: border-color .15s, background .15s;
+}
+.scen-btn.blu.on { border-color: var(--blu); background: var(--blu-l) }
+.scen-btn.grn.on { border-color: var(--grn); background: var(--grn-l) }
+.scen-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 22px; line-height: 1; color: var(--dim);
+}
+.scen-btn.blu.on .scen-num { color: var(--blu) }
+.scen-btn.grn.on .scen-num { color: var(--grn) }
+.scen-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 15px; line-height: 1.15; color: var(--txt);
+}
+.scen-sub { font-size: 11px; color: var(--dim); line-height: 1.3 }
+
+/* ── config panel ── */
+#config-panel {
+  margin-top: 10px;
+  background: var(--card); border: 1px solid var(--bdr);
+  border-radius: 14px; overflow: hidden;
+  display: none;
+}
+#config-panel.visible { display: block }
+.panel-head {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--bdr);
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+.panel-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 18px; line-height: 1.1;
+}
+.panel-sub { font-size: 11px; color: var(--dim); margin-top: 1px }
+.config-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--bdr);
+}
+.cfg-tile {
+  background: var(--card);
+  padding: 12px 13px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.cfg-lbl {
+  font-size: 9.5px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--dim);
+}
+.cfg-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 24px; line-height: 1;
+}
+.cfg-val.blu { color: var(--blu) }
+.cfg-val.grn { color: var(--grn) }
+.cfg-val.dim { color: var(--txt) }
+.cfg-val.amb { color: var(--amb) }
+.cfg-desc { font-size: 11px; color: var(--dim); line-height: 1.3 }
+.panel-objetivo {
+  padding: 12px 14px;
+  border-top: 1px solid var(--bdr);
+}
+.objetivo-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--lbl); margin-bottom: 4px;
+}
+.objetivo-txt { font-size: 13px; line-height: 1.5; color: var(--txt) }
+.panel-nota {
+  margin: 0 14px 12px;
+  background: var(--amb-l); border: 1px solid var(--amb-b);
+  border-radius: 8px; padding: 9px 11px;
+  font-size: 12px; font-weight: 600; color: var(--amb); line-height: 1.4;
+}
+
+/* ── dicas ── */
+.dicas-grid { display: flex; flex-direction: column; gap: 8px }
+.dica-card {
+  background: var(--card); border: 1px solid var(--bdr);
+  border-radius: 10px; padding: 11px 13px;
+  display: flex; gap: 11px; align-items: flex-start;
+}
+.dica-icon {
+  flex: none; width: 32px; height: 32px;
+  border-radius: 8px; background: var(--blu-l); border: 1px solid var(--blu-b);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1;
+}
+.dica-txt { font-size: 13px; line-height: 1.5; color: var(--txt); padding-top: 5px }
+
+/* ── battery tiers (viagem longa only) ── */
+#battery-section { display: none }
+#battery-section.visible { display: block }
+.battery-sec-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--lbl);
+  margin: 20px 0 10px;
+}
+.battery-tiers { display: flex; flex-direction: column; gap: 6px }
+.bat-tier {
+  background: var(--card); border: 1px solid var(--bdr);
+  border-radius: 10px; padding: 10px 13px;
+  display: flex; align-items: center; gap: 12px;
+}
+.bat-icon {
+  flex: none; width: 46px; height: 22px;
+  border: 2px solid; border-radius: 4px;
+  position: relative; display: flex; align-items: center; padding: 2px;
+}
+.bat-icon::after {
+  content: ''; position: absolute; right: -6px; top: 50%;
+  transform: translateY(-50%); width: 4px; height: 10px;
+  border-radius: 0 2px 2px 0; background: currentColor; opacity: .5;
+}
+.bat-fill { border-radius: 2px; height: 100% }
+.bat-100 { border-color: var(--grn); color: var(--grn) }
+.bat-100 .bat-fill { width: 90%; background: var(--grn) }
+.bat-80  { border-color: var(--grn); color: var(--grn) }
+.bat-80  .bat-fill { width: 60%; background: var(--grn) }
+.bat-40  { border-color: var(--amb); color: var(--amb) }
+.bat-40  .bat-fill { width: 30%; background: var(--amb) }
+.bat-20  { border-color: var(--red); color: var(--red) }
+.bat-20  .bat-fill { width: 10%; background: var(--red) }
+.bat-range {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 15px; color: var(--txt); min-width: 60px;
+}
+.bat-config { font-size: 12px; color: var(--dim); line-height: 1.4; flex: 1 }
+.bat-config strong { color: var(--txt); font-weight: 600 }
+
+/* ── warning ── */
+.warning-banner {
+  margin-top: 20px;
+  background: var(--amb-l); border: 1.5px solid var(--amb-b);
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; font-weight: 600; color: var(--amb);
+  line-height: 1.45; text-align: center;
+}
+</style>
+
+<header>
+  <div class="byd-mark">BYD</div>
+  <div class="header-text">
+    <div class="header-model">Song Pro GS 2027 Flex</div>
+    <div class="header-title">Referência Rápida</div>
+  </div>
+</header>
+
+<main>
+  <div class="sec-lbl">Cenário de uso</div>
+
+  <div class="scenario-grid" id="scen-grid"></div>
+
+  <div id="config-panel"></div>
+
+  <div id="battery-section">
+    <div class="battery-sec-lbl">Nível de bateria — partindo</div>
+    <div class="battery-tiers">
+      <div class="bat-tier">
+        <div class="bat-icon bat-100"><div class="bat-fill"></div></div>
+        <div class="bat-range">80–100%</div>
+        <div class="bat-config"><strong>HEV + NORMAL</strong> · SOC 40–50%</div>
+      </div>
+      <div class="bat-tier">
+        <div class="bat-icon bat-80"><div class="bat-fill"></div></div>
+        <div class="bat-range">40–80%</div>
+        <div class="bat-config"><strong>HEV + NORMAL</strong> · SOC ~40%</div>
+      </div>
+      <div class="bat-tier">
+        <div class="bat-icon bat-40"><div class="bat-fill"></div></div>
+        <div class="bat-range">20–40%</div>
+        <div class="bat-config"><strong>HEV + NORMAL</strong> · SOC ~30%</div>
+      </div>
+      <div class="bat-tier">
+        <div class="bat-icon bat-20"><div class="bat-fill"></div></div>
+        <div class="bat-range">&lt; 20%</div>
+        <div class="bat-config"><strong>HEV + NORMAL</strong> · deixe o sistema administrar</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-lbl">Dicas Essenciais</div>
+  <div class="dicas-grid">
+    <div class="dica-card">
+      <div class="dica-icon">🏠</div>
+      <div class="dica-txt">Carregue em casa sempre que possível (tomada 220 V).</div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-icon">⛽</div>
+      <div class="dica-txt">Não tente "fabricar" 100% usando gasolina. Não compensa.</div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-icon">⛰️</div>
+      <div class="dica-txt">Em serras e descidas longas, use regeneração HIGH e mantenha condução segura.</div>
+    </div>
+    <div class="dica-card">
+      <div class="dica-icon">🏙️</div>
+      <div class="dica-txt">Priorize EV em áreas urbanas e deixe o HEV em viagens longas.</div>
+    </div>
+  </div>
+
+  <div class="warning-banner">
+    ⚠️ Configure antes de iniciar o deslocamento.<br>Não altere as configurações na tela enquanto dirige.
+  </div>
+</main>
+
+<script>
+const CENARIOS = [
+  {
+    id: 'sp', num: '1', color: 'blu',
+    title: 'SP – Trânsito Pesado',
+    sub: 'Ex.: 13 km em 55 min',
+    cfg: [
+      { lbl: 'Modo Energia',   val: 'EV',       desc: '100% Elétrico', color: 'blu' },
+      { lbl: 'Modo Condução',  val: 'ECO',       desc: 'máx eficiência', color: 'grn' },
+      { lbl: 'Regeneração',    val: 'HIGH',      desc: 'Alta', color: 'amb' },
+      { lbl: 'Ar-Condicionado',val: 'Auto 23°C', desc: 'Purificador PM2.5', color: 'dim' },
+    ],
+    objetivo: 'Menor custo por km, menos estresse e mais conforto.',
+    nota: null,
+  },
+  {
+    id: 'curta', num: '2', color: 'grn',
+    title: 'Viagens Curtas até 180 km',
+    sub: 'Ex.: interior de SP',
+    cfg: [
+      { lbl: 'Modo Energia',  val: 'HEV',     desc: 'Híbrido',         color: 'grn' },
+      { lbl: 'Modo Condução', val: 'NORMAL',   desc: 'uso geral',       color: 'dim' },
+      { lbl: 'Regeneração',   val: 'STANDARD', desc: 'Padrão',          color: 'dim' },
+      { lbl: 'SOC na Tela',   val: '40–50%',   desc: 'estratégia inicial', color: 'amb' },
+    ],
+    objetivo: 'Equilibrar elétrico e combustível, chegando ao destino com bateria para o uso urbano.',
+    nota: null,
+  },
+  {
+    id: 'rod', num: '3', color: 'blu',
+    title: 'Rodovia Curta ~10 km',
+    sub: 'Sem trânsito',
+    cfg: [
+      { lbl: 'Modo Energia',  val: 'EV',       desc: '100% Elétrico',     color: 'blu' },
+      { lbl: 'Modo Condução', val: 'NORMAL',    desc: 'uso geral',         color: 'dim' },
+      { lbl: 'Regeneração',   val: 'STANDARD',  desc: 'Padrão',            color: 'dim' },
+      { lbl: 'Bateria',       val: '~10–20%',   desc: 'do trajeto', color: 'dim' },
+    ],
+    objetivo: 'Praticidade, silêncio e resposta rápida. Sem necessidade de ligar o motor a combustão.',
+    nota: null,
+  },
+  {
+    id: 'longa', num: '4', color: 'grn',
+    title: 'Viagem Longa',
+    sub: 'Mais de 200 km',
+    cfg: [
+      { lbl: 'Modo Energia',  val: 'HEV',     desc: 'Híbrido',           color: 'grn' },
+      { lbl: 'Modo Condução', val: 'NORMAL',   desc: 'uso geral',         color: 'dim' },
+      { lbl: 'Regeneração',   val: 'STANDARD', desc: 'Padrão',            color: 'dim' },
+      { lbl: 'SOC na Tela',   val: '40–50%',   desc: 'ou deixe o sistema', color: 'amb' },
+    ],
+    objetivo: 'Máxima eficiência e conforto em viagem longa.',
+    nota: 'Em descidas longas: troque regeneração para HIGH.',
+  },
+];
+
+let activeId = null;
+
+function renderGrid() {
+  const grid = document.getElementById('scen-grid');
+  grid.innerHTML = CENARIOS.map(c => `
+    <button class="scen-btn ${c.color}${activeId === c.id ? ' on' : ''}"
+            onclick="selectCenario('${c.id}')">
+      <div class="scen-num">${c.num}</div>
+      <div class="scen-title">${c.title}</div>
+      <div class="scen-sub">${c.sub}</div>
+    </button>`).join('');
+}
+
+function renderPanel() {
+  const panel = document.getElementById('config-panel');
+  if (!activeId) { panel.classList.remove('visible'); return; }
+  const c = CENARIOS.find(x => x.id === activeId);
+  panel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">${c.title}</div>
+        <div class="panel-sub">${c.sub}</div>
+      </div>
+    </div>
+    <div class="config-grid">
+      ${c.cfg.map(t => `
+        <div class="cfg-tile">
+          <div class="cfg-lbl">${t.lbl}</div>
+          <div class="cfg-val ${t.color}">${t.val}</div>
+          <div class="cfg-desc">${t.desc}</div>
+        </div>`).join('')}
+    </div>
+    <div class="panel-objetivo">
+      <div class="objetivo-lbl">Objetivo</div>
+      <div class="objetivo-txt">${c.objetivo}</div>
+    </div>
+    ${c.nota ? `<div class="panel-nota">⚡ ${c.nota}</div>` : ''}
+  `;
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function selectCenario(id) {
+  activeId = activeId === id ? null : id;
+  renderGrid();
+  renderPanel();
+  const batSec = document.getElementById('battery-section');
+  if (activeId === 'longa') batSec.classList.add('visible');
+  else batSec.classList.remove('visible');
+}
+
+renderGrid();
+</script>
