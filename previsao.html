@@ -148,6 +148,7 @@ header{
 .radar-bar button{width:36px;height:36px;border-radius:50%;border:1px solid var(--bdr);background:var(--bg);color:var(--txt);font-size:14px;cursor:pointer;flex-shrink:0}
 .radar-bar input{flex:1;min-width:0}
 #radar-time{font-size:12px;font-weight:600;color:var(--dim);min-width:92px;text-align:right}
+#radar-time.forecast{color:var(--amb)}
 .radar-note{padding:0 12px 10px;font-size:11px;color:var(--dim);line-height:1.5}
 .radar-note a{color:var(--blu);text-decoration:none}
 
@@ -240,7 +241,7 @@ footer a{color:var(--blu);text-decoration:none}
   </div>
 
   <div class="sec" style="padding-top:20px">
-    <div class="sec-ttl">Radar de chuva · últimas 2h</div>
+    <div class="sec-ttl">Radar de chuva · 2h observadas + previsão</div>
     <div class="radar-card">
       <div id="radar-map"></div>
       <div class="radar-bar">
@@ -540,8 +541,8 @@ function renderConsensusRain(data){
 }
 
 // ── Radar (RainViewer) ─────────────────────────────────────────────
-let rMap=null,rMarker=null,rLayers=[],rFrames=[],rIdx=0,rTimer=null,rActiveLayer=null,rRadarHost='',rTileWarned=false,rCenterLat=0,rCenterLon=0;
-const RADAR_NOTE='Radar: <a href="https://www.rainviewer.com/" target="_blank">RainViewer</a> · a cobertura varia por região. Para São Paulo, confira também o <a href="https://www.cgesp.org/" target="_blank">CGE</a> e o <a href="https://www.saisp.br/" target="_blank">SAISP</a>.';
+let rMap=null,rMarker=null,rLayers=[],rFrames=[],rObservedCount=0,rIdx=0,rTimer=null,rActiveLayer=null,rRadarHost='',rTileWarned=false,rCenterLat=0,rCenterLon=0;
+const RADAR_NOTE='Radar e nowcast: <a href="https://librewxr.net/" target="_blank">LibreWXR</a> · quadros futuros são previsão experimental de curto prazo. Para São Paulo, confira também o <a href="https://www.cgesp.org/" target="_blank">CGE</a> e o <a href="https://www.saisp.br/" target="_blank">SAISP</a>.';
 function radarBounds(lat,lon,zoom){
   const world=256*Math.pow(2,zoom),half=256;
   const x=(lon+180)/360*world;
@@ -564,7 +565,12 @@ function showRadarFrame(i){
   rActiveLayer=rLayers[i].addTo(rMap);
   document.getElementById('radar-slider').value=i;
   const d=new Date(rFrames[i].time*1000);
-  document.getElementById('radar-time').textContent=pad2(d.getHours())+':'+pad2(d.getMinutes())+(i===rFrames.length-1?' (agora)':'');
+  const timeEl=document.getElementById('radar-time');
+  const future=i>=rObservedCount;
+  const baseTime=rFrames[Math.max(0,rObservedCount-1)].time;
+  const lead=Math.max(0,Math.round((rFrames[i].time-baseTime)/60));
+  timeEl.classList.toggle('forecast',future);
+  timeEl.textContent=pad2(d.getHours())+':'+pad2(d.getMinutes())+(i===rObservedCount-1?' (agora)':future?' (+'+lead+' min)':'');
 }
 function radarPlay(on){
   clearInterval(rTimer); rTimer=null;
@@ -589,15 +595,20 @@ async function renderRadar(lat,lon){
     radarPlay(false);
     if(rActiveLayer&&rMap.hasLayer(rActiveLayer)) rMap.removeLayer(rActiveLayer);
     rActiveLayer=null; rLayers=[]; rTileWarned=false;
-    const resp=await fetch('https://api.rainviewer.com/public/weather-maps.json');
-    if(!resp.ok) throw new Error('erro '+resp.status+' em api.rainviewer.com');
+    const resp=await fetch('https://api.librewxr.net/public/weather-maps.json');
+    if(!resp.ok) throw new Error('erro '+resp.status+' em api.librewxr.net');
     const j=await resp.json();
     rRadarHost=j.host;
-    rFrames=(j.radar&&j.radar.past)||[];
+    const past=(j.radar&&j.radar.past)||[];
+    const lastPast=past.length?past[past.length-1].time:0;
+    const future=((j.radar&&j.radar.nowcast)||[]).filter(f=>f.time>lastPast);
+    rObservedCount=past.length;
+    rFrames=[...past,...future];
     if(!rFrames.length) throw new Error('sem frames');
+    note.innerHTML=RADAR_NOTE+'<br>'+future.length+' quadros futuros disponíveis, até '+(future.length?Math.round((future[future.length-1].time-lastPast)/60):0)+' minutos.';
     const sl=document.getElementById('radar-slider');
     sl.max=rFrames.length-1;
-    showRadarFrame(rFrames.length-1);
+    showRadarFrame(Math.max(0,rObservedCount-1));
   }catch(e){
     console.error(e);
     note.innerHTML='Não foi possível carregar o radar ('+(e.message||e)+'). '+RADAR_NOTE;
