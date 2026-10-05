@@ -578,8 +578,7 @@ async function renderRadar(lat,lon){
   try{
     if(!rMap){
       rMap=L.map('radar-map').setView([lat,lon],7);
-      const dk=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches;
-      L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dk?'dark_all':'light_all'}/{z}/{x}/{y}{r}.png`,{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(rMap);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'}).addTo(rMap);
       rMarker=L.circleMarker([lat,lon],{radius:6,color:'#fff',weight:2,fillColor:'#3b9eff',fillOpacity:1}).addTo(rMap);
       document.getElementById('radar-play').onclick=()=>radarPlay(!rTimer);
       document.getElementById('radar-slider').oninput=e=>{radarPlay(false);showRadarFrame(+e.target.value);};
