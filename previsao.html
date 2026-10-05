@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c1520">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <title>Previsão do Tempo</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -24,7 +31,8 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);padding-bottom:32px}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 
 /* header */
 header{
@@ -52,7 +60,7 @@ header{
 #srch-inp{
   flex:1;height:44px;border-radius:10px;border:1.5px solid var(--bdr);
   background:var(--card);color:var(--txt);padding:0 14px;
-  font-size:15px;font-family:inherit;outline:none;
+  font-size:16px;font-family:inherit;outline:none;
 }
 #srch-inp:focus{border-color:var(--blu)}
 .srch-cancel{background:none;border:none;color:var(--blu);font-size:13px;cursor:pointer;padding:8px 4px;font-family:inherit;white-space:nowrap}
@@ -133,11 +141,37 @@ header{
 .con-info{margin-top:8px;font-size:11px;color:var(--dim);text-align:center;line-height:1.5}
 .ct{font-size:10px;fill:var(--dim);font-family:'Inter',sans-serif}
 
+/* radar */
+.radar-card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+#radar-map{position:relative;z-index:0;height:300px;width:100%;background:var(--bg)}
+.radar-bar{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.radar-bar button{width:36px;height:36px;border-radius:50%;border:1px solid var(--bdr);background:var(--bg);color:var(--txt);font-size:14px;cursor:pointer;flex-shrink:0}
+.radar-bar input{flex:1;min-width:0}
+#radar-time{font-size:12px;font-weight:600;color:var(--dim);min-width:92px;text-align:right}
+.radar-note{padding:0 12px 10px;font-size:11px;color:var(--dim);line-height:1.5}
+.radar-note a{color:var(--blu);text-decoration:none}
+
+/* tabelas do consenso */
+.tbl-ttl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lbl);margin:14px 0 6px}
+.tbl-ttl:first-child{margin-top:0}
+.tbl-wrap{overflow-x:auto}
+.ctbl{width:100%;border-collapse:collapse;font-size:13px;text-align:center;font-variant-numeric:tabular-nums}
+.ctbl th{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--lbl);padding:6px 3px;border-bottom:1px solid var(--bdr)}
+.ctbl td{padding:7px 3px;border-bottom:1px solid var(--bdr)}
+.ctbl th:first-child,.ctbl td:first-child{text-align:left;color:var(--dim);font-weight:600;padding-left:4px;white-space:nowrap}
+.ctbl th.e{color:var(--blu)} .ctbl th.g{color:var(--grn)} .ctbl th.i{color:var(--amb)}
+.ctbl tr.dsep td{background:var(--bg);color:var(--lbl);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:5px 6px}
+.ctbl .ok{color:var(--grn);font-weight:600} .ctbl .mid{color:var(--amb);font-weight:600} .ctbl .bad{color:var(--red);font-weight:600}
+.ctbl td.wet{color:var(--cyn);font-weight:600}
+.con-empty{padding:18px 6px;text-align:center;font-size:13px;color:var(--dim)}
+
 /* footer */
 footer{padding:20px 16px 0;font-size:11px;color:var(--dim);text-align:center;line-height:1.7}
 footer a{color:var(--blu);text-decoration:none}
 </style>
 
+</head>
+<body>
 <header>
   <div class="loc-wrap">
     <div class="loc-name" id="loc-name">Obtendo localização…</div>
@@ -194,20 +228,27 @@ footer a{color:var(--blu);text-decoration:none}
   </div>
 
   <div class="sec" style="padding-top:20px">
-    <div class="sec-ttl">Consenso de modelos · Temperatura 48h</div>
+    <div class="sec-ttl">Consenso de modelos · 48h</div>
     <div class="con-card">
       <div class="con-tabs">
         <button class="con-tab active" id="tab-temp" onclick="switchConTab('temp')">🌡️ Temperatura</button>
         <button class="con-tab" id="tab-rain" onclick="switchConTab('rain')">🌧️ Chuva (mm)</button>
       </div>
-      <div class="con-legend" id="con-legend">
-        <div class="leg"><div class="leg-bar" style="background:#3b9eff"></div>ECMWF</div>
-        <div class="leg"><div class="leg-bar" style="background:#22c55e"></div>GFS</div>
-        <div class="leg"><div class="leg-bar" style="background:#f59e0b"></div>ICON</div>
-        <div class="leg" id="leg-unc"><div class="leg-bar" style="background:rgba(59,158,255,.25);height:10px;border-radius:3px"></div>Incerteza</div>
-      </div>
-      <div id="con-svg"></div>
+      <div id="con-tbl"></div>
       <div class="con-info" id="con-info"></div>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:20px">
+    <div class="sec-ttl">Radar de chuva · últimas 2h</div>
+    <div class="radar-card">
+      <div id="radar-map"></div>
+      <div class="radar-bar">
+        <button id="radar-play" aria-label="Reproduzir">▶</button>
+        <input type="range" id="radar-slider" min="0" max="0" value="0">
+        <span id="radar-time">--:--</span>
+      </div>
+      <div class="radar-note" id="radar-note"></div>
     </div>
   </div>
 
@@ -217,6 +258,7 @@ footer a{color:var(--blu);text-decoration:none}
   </footer>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 // ── WMO helpers ────────────────────────────────────────────────────
 const DAYS_PT  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -261,6 +303,17 @@ const WX  = 'https://api.open-meteo.com/v1/forecast';
 const GEO = 'https://geocoding-api.open-meteo.com/v1/search';
 const REV = 'https://nominatim.openstreetmap.org/reverse';
 
+async function fetchEcmwf(base){
+  // ecmwf_ifs04 (0.4°) é o modelo antigo; tenta o IFS 0.25° e, se falhar, o IFS 9 km
+  for(const m of ['ecmwf_ifs025','ecmwf_ifs']){
+    try{
+      const d=await fetch(`${base}&hourly=temperature_2m,precipitation&models=${m}`).then(r=>r.json());
+      if(d&&!d.error&&d.hourly?.temperature_2m?.some(v=>v!=null)) return d;
+    }catch(e){}
+  }
+  return null;
+}
+
 async function fetchWeather(lat,lon){
   const cur  = 'temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weathercode,windspeed_10m,is_day';
   const hrly = 'temperature_2m,apparent_temperature,precipitation_probability,precipitation,weathercode,windspeed_10m,is_day';
@@ -269,7 +322,7 @@ async function fetchWeather(lat,lon){
 
   const [main,ecmwf,gfs,icon] = await Promise.all([
     fetch(`${base}&current=${cur}&hourly=${hrly}&daily=${dly}`).then(r=>r.json()),
-    fetch(`${base}&hourly=temperature_2m,precipitation&models=ecmwf_ifs04`).then(r=>r.json()).catch(()=>null),
+    fetchEcmwf(base),
     fetch(`${base}&hourly=temperature_2m,precipitation&models=gfs_seamless`).then(r=>r.json()).catch(()=>null),
     fetch(`${base}&hourly=temperature_2m,precipitation&models=icon_seamless`).then(r=>r.json()).catch(()=>null),
   ]);
@@ -381,159 +434,175 @@ function renderDaily(data){
   }).join('');
 }
 
-// ── Consensus shared helpers ───────────────────────────────────────
-let _conData = null;
-let _conTab  = 'temp';
+// ── Consenso de modelos (tabelas) ──────────────────────────────────
+const CN=48, CSTEP=3;
+let _conData=null, _conTab='temp';
 
 function switchConTab(tab){
-  _conTab = tab;
-  document.getElementById('tab-temp').classList.toggle('active', tab==='temp');
-  document.getElementById('tab-rain').classList.toggle('active', tab==='rain');
-  document.getElementById('leg-unc').style.display = tab==='temp' ? '' : 'none';
-  if(_conData) tab==='temp' ? renderConsensusTemp(_conData) : renderConsensusRain(_conData);
+  _conTab=tab;
+  document.getElementById('tab-temp').classList.toggle('active',tab==='temp');
+  document.getElementById('tab-rain').classList.toggle('active',tab==='rain');
+  if(_conData) renderConsensus(_conData);
 }
-
 function renderConsensus(data){
-  _conData = data;
-  switchConTab(_conTab);
+  _conData=data;
+  _conTab==='temp'?renderConsensusTemp(data):renderConsensusRain(data);
 }
 
-// shared SVG scaffolding
-function conSvgBase(times, N){
-  const W=800,H=180,pL=34,pR=8,pT=12,pB=26;
-  const cW=W-pL-pR, cH=H-pT-pB;
-  const tx=i=>pL+(i/(N-1))*cW;
-  const ticks=[], divs=[];
-  for(let i=0;i<N;i+=6){
-    if(!times[i]) continue;
-    const t=new Date(times[i]);
-    const lbl=t.getHours()===0?DAYS_PT[t.getDay()]:t.getHours()+'h';
-    ticks.push(`<text x="${tx(i).toFixed(1)}" y="${H-5}" text-anchor="middle" class="ct">${lbl}</text>`);
-    if(t.getHours()===0) divs.push(`<line x1="${tx(i).toFixed(1)}" y1="${pT}" x2="${tx(i).toFixed(1)}" y2="${pT+cH}" stroke="var(--bdr)" stroke-width="1" stroke-dasharray="3,3"/>`);
-  }
-  return {W,H,pL,pR,pT,pB,cW,cH,tx,ticks,divs};
+const pad2=n=>String(n).padStart(2,'0');
+const MH='<th class="e">ECMWF</th><th class="g">GFS</th><th class="i">ICON</th>';
+function conSeries(data,key){
+  const g=m=>m?.hourly?.[key]?.slice(0,CN)||new Array(CN).fill(null);
+  return [g(data.ecmwf),g(data.gfs),g(data.icon)];
+}
+function tbl(first,extra,rows){
+  return `<div class="tbl-wrap"><table class="ctbl"><thead><tr><th>${first}</th>${MH}${extra}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+function daySep(t,cols){
+  const d=new Date(t);
+  return `<tr class="dsep"><td colspan="${cols}">${DAYS_PT[d.getDay()]}, ${d.getDate()}/${d.getMonth()+1}</td></tr>`;
 }
 
-// ── Consensus: temperatura ─────────────────────────────────────────
 function renderConsensusTemp(data){
-  const N=48;
-  const get=m=>m?.hourly?.temperature_2m?.slice(0,N)||new Array(N).fill(null);
-  const eT=get(data.ecmwf), gT=get(data.gfs), iT=get(data.icon);
-  const times=(data.main.hourly.time||[]).slice(0,N);
-  const all=[...eT,...gT,...iT].filter(v=>v!=null);
-  if(!all.length){
-    document.getElementById('con-svg').innerHTML='<p style="color:var(--dim);font-size:12px;padding:6px">Dados indisponíveis</p>';
-    document.getElementById('con-info').textContent='';
-    return;
+  const [E,G,I]=conSeries(data,'temperature_2m');
+  const T=data.main.hourly.time.slice(0,CN);
+  const out=document.getElementById('con-tbl'), info=document.getElementById('con-info');
+  if(![...E,...G,...I].some(v=>v!=null)){
+    out.innerHTML='<p class="con-empty">Dados indisponíveis</p>'; info.textContent=''; return;
   }
-
-  let totalSpread=0,cnt=0;
-  for(let i=0;i<N;i++){
-    const vs=[eT[i],gT[i],iT[i]].filter(v=>v!=null);
-    if(vs.length>=2){ totalSpread+=Math.max(...vs)-Math.min(...vs); cnt++; }
+  let tot=0,cnt=0;
+  for(let i=0;i<CN;i++){
+    const vs=[E[i],G[i],I[i]].filter(v=>v!=null);
+    if(vs.length>=2){ tot+=Math.max(...vs)-Math.min(...vs); cnt++; }
   }
-  const avg=cnt?totalSpread/cnt:0;
-  document.getElementById('con-info').textContent =
+  const avg=cnt?tot/cnt:0;
+  info.textContent=
     avg<1?'🟢 Alta confiança — modelos em consenso (variação < 1°)':
     avg<3?'🟡 Confiança moderada — divergência de '+avg.toFixed(1)+'° em média':
     '🔴 Baixa confiança — modelos divergem '+avg.toFixed(1)+'° em média';
 
-  const {W,H,pL,pT,pB,cW,cH,tx,ticks,divs}=conSvgBase(times,N);
-  const minT=Math.floor(Math.min(...all))-1, maxT=Math.ceil(Math.max(...all))+1;
-  const ty=v=>pT+cH-((v-minT)/(maxT-minT))*cH;
+  const mm=(a,d)=>{
+    const x=a.slice(d*24,d*24+24).filter(v=>v!=null);
+    return x.length?Math.round(Math.min(...x))+'° / '+Math.round(Math.max(...x))+'°':'–';
+  };
+  const sum=[0,1].map(d=>`<tr><td>${d?'Amanhã':'Hoje'}</td><td>${mm(E,d)}</td><td>${mm(G,d)}</td><td>${mm(I,d)}</td></tr>`);
 
-  const tp=[],bt=[];
-  for(let i=0;i<N;i++){
-    const vs=[eT[i],gT[i],iT[i]].filter(v=>v!=null);
-    if(vs.length){ tp.push(`${tx(i).toFixed(1)},${ty(Math.max(...vs)).toFixed(1)}`); bt.push(`${tx(i).toFixed(1)},${ty(Math.min(...vs)).toFixed(1)}`); }
+  const f=v=>v==null?'–':Math.round(v)+'°';
+  const rows=[];
+  for(let i=0;i<CN;i+=CSTEP){
+    const t=new Date(T[i]);
+    if(i===0||t.getHours()===0) rows.push(daySep(T[i],6));
+    const vs=[E[i],G[i],I[i]].filter(v=>v!=null);
+    const m=vs.length?vs.reduce((s,v)=>s+v,0)/vs.length:null;
+    const sp=vs.length>1?Math.max(...vs)-Math.min(...vs):null;
+    const cls=sp==null?'':sp<1?'ok':sp<3?'mid':'bad';
+    rows.push(`<tr><td>${pad2(t.getHours())}h</td><td>${f(E[i])}</td><td>${f(G[i])}</td><td>${f(I[i])}</td><td><b>${f(m)}</b></td><td class="${cls}">${sp==null?'–':sp.toFixed(1)+'°'}</td></tr>`);
   }
-  const poly=[...tp,...[...bt].reverse()].join(' ');
-
-  function line(ts,col){
-    const pts=ts.map((v,i)=>v!=null?`${tx(i).toFixed(1)},${ty(v).toFixed(1)}`:null).filter(Boolean).join(' ');
-    return pts?`<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`:'';
-  }
-
-  const ygrid=[];
-  const rng=maxT-minT,step=rng<=6?2:rng<=14?5:10;
-  for(let v=Math.ceil(minT/step)*step;v<=maxT;v+=step){
-    const y_=ty(v).toFixed(1);
-    ygrid.push(`<line x1="${pL}" y1="${y_}" x2="${pL+cW}" y2="${y_}" stroke="var(--bdr)" stroke-width="0.5"/>`);
-    ygrid.push(`<text x="${pL-4}" y="${(+y_+4).toFixed(1)}" text-anchor="end" class="ct">${v}°</text>`);
-  }
-
-  document.getElementById('con-svg').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
-    <style>.ct{font-size:10px;fill:var(--dim);font-family:'Inter',sans-serif}</style>
-    ${ygrid.join('')}${divs.join('')}
-    <polygon points="${poly}" fill="rgba(59,158,255,.09)"/>
-    ${line(eT,'#3b9eff')}${line(gT,'#22c55e')}${line(iT,'#f59e0b')}
-    ${ticks.join('')}
-  </svg>`;
+  out.innerHTML=
+    `<div class="tbl-ttl">Mín / Máx por dia</div>${tbl('Dia','',sum)}`+
+    `<div class="tbl-ttl">A cada 3 horas · Δ = diferença entre modelos</div>${tbl('Hora','<th>Média</th><th>Δ</th>',rows)}`;
 }
 
-// ── Consensus: precipitação ────────────────────────────────────────
 function renderConsensusRain(data){
-  const N=48;
-  const get=m=>m?.hourly?.precipitation?.slice(0,N)||new Array(N).fill(null);
-  const eR=get(data.ecmwf), gR=get(data.gfs), iR=get(data.icon);
-  const times=(data.main.hourly.time||[]).slice(0,N);
-  const all=[...eR,...gR,...iR].filter(v=>v!=null&&v>0);
-
-  const maxR=all.length?Math.max(...all):1;
-  const hasRain=maxR>0.05;
-
-  // consensus info: total rain and model agreement
-  let totalAgree=0, rainHours=0;
-  for(let i=0;i<N;i++){
-    const vs=[eR[i],gR[i],iR[i]].filter(v=>v!=null);
-    const anyRain=vs.some(v=>v>0.1);
-    const allRain=vs.every(v=>v>0.1);
-    if(anyRain) rainHours++;
-    if(allRain) totalAgree++;
+  const [E,G,I]=conSeries(data,'precipitation');
+  const T=data.main.hourly.time.slice(0,CN);
+  const out=document.getElementById('con-tbl'), info=document.getElementById('con-info');
+  if(![...E,...G,...I].some(v=>v!=null)){
+    out.innerHTML='<p class="con-empty">Dados indisponíveis</p>'; info.textContent=''; return;
   }
-  const eTotal=(eR.filter(v=>v!=null).reduce((s,v)=>s+v,0)).toFixed(1);
-  const gTotal=(gR.filter(v=>v!=null).reduce((s,v)=>s+v,0)).toFixed(1);
-  const iTotal=(iR.filter(v=>v!=null).reduce((s,v)=>s+v,0)).toFixed(1);
+  const sum=(a,s,e)=>{
+    const x=a.slice(s,e).filter(v=>v!=null);
+    return x.length?x.reduce((p,v)=>p+v,0):null;
+  };
+  const f=v=>v==null?'–':v<0.05?'0':v.toFixed(1);
+  const wet=v=>v!=null&&v>=0.1?' class="wet"':'';
+  info.textContent=`Acumulado 48h — ECMWF: ${f(sum(E,0,CN))}mm · GFS: ${f(sum(G,0,CN))}mm · ICON: ${f(sum(I,0,CN))}mm`;
 
-  if(!hasRain){
-    document.getElementById('con-svg').innerHTML=`<div style="padding:24px;text-align:center;font-size:14px;color:var(--dim)">☀️ Sem chuva prevista nos próximos 2 dias pelos 3 modelos</div>`;
-    document.getElementById('con-info').textContent='ECMWF: 0mm · GFS: 0mm · ICON: 0mm';
-    return;
+  const dayRows=[0,1].map(d=>{
+    const v=[E,G,I].map(a=>sum(a,d*24,d*24+24));
+    return `<tr><td>${d?'Amanhã':'Hoje'}</td>${v.map(x=>`<td${wet(x)}>${f(x)}</td>`).join('')}</tr>`;
+  });
+
+  const rows=[]; let lastDay=-1;
+  for(let i=0;i<CN;i+=CSTEP){
+    const v=[E,G,I].map(a=>sum(a,i,i+CSTEP));
+    if(!v.some(x=>x!=null&&x>=0.1)) continue;
+    const t=new Date(T[i]), d=Math.floor(i/24);
+    if(d!==lastDay){ rows.push(daySep(T[i],5)); lastDay=d; }
+    const n=v.filter(x=>x!=null&&x>=0.1).length;
+    rows.push(`<tr><td>${pad2(t.getHours())}–${pad2(t.getHours()+CSTEP-1)}h</td>${v.map(x=>`<td${wet(x)}>${f(x)}</td>`).join('')}<td class="${n===3?'ok':n===2?'mid':''}">${n}/3</td></tr>`);
   }
+  out.innerHTML=
+    `<div class="tbl-ttl">Total por dia (mm)</div>${tbl('Dia','',dayRows)}`+
+    (rows.length
+      ? `<div class="tbl-ttl">Blocos de 3h com chuva (mm) · Acordo = modelos com chuva</div>${tbl('Hora','<th>Acordo</th>',rows)}`
+      : `<p class="con-empty">☀️ Sem chuva prevista nas próximas 48h pelos 3 modelos</p>`);
+}
 
-  document.getElementById('con-info').textContent=
-    `Acumulado 48h — ECMWF: ${eTotal}mm · GFS: ${gTotal}mm · ICON: ${iTotal}mm`;
-
-  const {W,H,pL,pT,pB,cW,cH,tx,ticks,divs}=conSvgBase(times,N);
-  const maxY=Math.max(maxR*1.15, 0.5);
-  const ty=v=>pT+cH-(v/maxY)*cH;
-  const base=pT+cH;
-
-  // area fill per model (semi-transparent)
-  function area(rs,fill,stroke){
-    const pts=rs.map((v,i)=>[tx(i).toFixed(1),(+(v||0)>0?ty(v):base).toFixed(1)]);
-    if(!pts.length) return '';
-    const top=pts.map(p=>p.join(',')).join(' ');
-    const poly=`${tx(0).toFixed(1)},${base} ${top} ${tx(N-1).toFixed(1)},${base}`;
-    return `<polygon points="${poly}" fill="${fill}"/><polyline points="${top}" fill="none" stroke="${stroke}" stroke-width="1.8" stroke-linejoin="round"/>`;
+// ── Radar (RainViewer) ─────────────────────────────────────────────
+let rMap=null,rMarker=null,rLayers=[],rFrames=[],rIdx=0,rTimer=null,rActiveLayer=null,rRadarHost='',rTileWarned=false,rCenterLat=0,rCenterLon=0;
+const RADAR_NOTE='Radar: <a href="https://www.rainviewer.com/" target="_blank">RainViewer</a> · a cobertura varia por região. Para São Paulo, confira também o <a href="https://www.cgesp.org/" target="_blank">CGE</a> e o <a href="https://www.saisp.br/" target="_blank">SAISP</a>.';
+function radarBounds(lat,lon,zoom){
+  const world=256*Math.pow(2,zoom),half=256;
+  const x=(lon+180)/360*world;
+  const sin=Math.sin(lat*Math.PI/180);
+  const y=(.5-Math.log((1+sin)/(1-sin))/(4*Math.PI))*world;
+  const toLon=px=>px/world*360-180;
+  const toLat=py=>Math.atan(Math.sinh(Math.PI*(1-2*py/world)))*180/Math.PI;
+  return [[toLat(y+half),toLon(x-half)],[toLat(y-half),toLon(x+half)]];
+}
+function showRadarFrame(i){
+  rIdx=i;
+  if(rActiveLayer&&rMap.hasLayer(rActiveLayer)) rMap.removeLayer(rActiveLayer);
+  if(!rLayers[i]){
+    const f=rFrames[i];
+    const url=`${rRadarHost}${f.path}/512/7/${rCenterLat.toFixed(4)}/${rCenterLon.toFixed(4)}/2/1_1.png`;
+    const l=L.imageOverlay(url,radarBounds(rCenterLat,rCenterLon,7),{opacity:0.78,zIndex:5});
+    l.on('error',()=>{ if(!rTileWarned){ rTileWarned=true; document.getElementById('radar-note').innerHTML='A imagem do radar não carregou. Aguarde alguns segundos e tente novamente. '+RADAR_NOTE; } });
+    rLayers[i]=l;
   }
-
-  const ygrid=[];
-  const step=maxY<=1?0.5:maxY<=3?1:maxY<=10?2:5;
-  for(let v=step;v<=maxY;v+=step){
-    const y_=ty(v).toFixed(1);
-    ygrid.push(`<line x1="${pL}" y1="${y_}" x2="${pL+cW}" y2="${y_}" stroke="var(--bdr)" stroke-width="0.5"/>`);
-    ygrid.push(`<text x="${pL-3}" y="${(+y_+4).toFixed(1)}" text-anchor="end" class="ct">${v}mm</text>`);
+  rActiveLayer=rLayers[i].addTo(rMap);
+  document.getElementById('radar-slider').value=i;
+  const d=new Date(rFrames[i].time*1000);
+  document.getElementById('radar-time').textContent=pad2(d.getHours())+':'+pad2(d.getMinutes())+(i===rFrames.length-1?' (agora)':'');
+}
+function radarPlay(on){
+  clearInterval(rTimer); rTimer=null;
+  document.getElementById('radar-play').textContent=on?'⏸':'▶';
+  if(on) rTimer=setInterval(()=>showRadarFrame((rIdx+1)%rFrames.length),1400);
+}
+async function renderRadar(lat,lon){
+  const note=document.getElementById('radar-note');
+  note.innerHTML=RADAR_NOTE;
+  rCenterLat=lat; rCenterLon=lon;
+  try{
+    if(!rMap){
+      rMap=L.map('radar-map').setView([lat,lon],7);
+      const dk=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches;
+      L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dk?'dark_all':'light_all'}/{z}/{x}/{y}{r}.png`,{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(rMap);
+      rMarker=L.circleMarker([lat,lon],{radius:6,color:'#fff',weight:2,fillColor:'#3b9eff',fillOpacity:1}).addTo(rMap);
+      document.getElementById('radar-play').onclick=()=>radarPlay(!rTimer);
+      document.getElementById('radar-slider').oninput=e=>{radarPlay(false);showRadarFrame(+e.target.value);};
+    }else{
+      rMap.setView([lat,lon],7); rMarker.setLatLng([lat,lon]);
+    }
+    setTimeout(()=>rMap.invalidateSize(),60);
+    radarPlay(false);
+    if(rActiveLayer&&rMap.hasLayer(rActiveLayer)) rMap.removeLayer(rActiveLayer);
+    rActiveLayer=null; rLayers=[]; rTileWarned=false;
+    const resp=await fetch('https://api.rainviewer.com/public/weather-maps.json');
+    if(!resp.ok) throw new Error('erro '+resp.status+' em api.rainviewer.com');
+    const j=await resp.json();
+    rRadarHost=j.host;
+    rFrames=(j.radar&&j.radar.past)||[];
+    if(!rFrames.length) throw new Error('sem frames');
+    const sl=document.getElementById('radar-slider');
+    sl.max=rFrames.length-1;
+    showRadarFrame(rFrames.length-1);
+  }catch(e){
+    console.error(e);
+    note.innerHTML='Não foi possível carregar o radar ('+(e.message||e)+'). '+RADAR_NOTE;
   }
-
-  document.getElementById('con-svg').innerHTML=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
-    <style>.ct{font-size:10px;fill:var(--dim);font-family:'Inter',sans-serif}</style>
-    ${ygrid.join('')}${divs.join('')}
-    ${area(iR,'rgba(245,158,11,.18)','#f59e0b')}
-    ${area(gR,'rgba(34,197,94,.18)','#22c55e')}
-    ${area(eR,'rgba(59,158,255,.22)','#3b9eff')}
-    ${ticks.join('')}
-  </svg>`;
 }
 
 // ── Load ───────────────────────────────────────────────────────────
@@ -565,6 +634,7 @@ async function load(lat,lon,name){
       'Atualizado às '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
     document.getElementById('loading').hidden=true;
     document.getElementById('content').hidden=false;
+    renderRadar(lat,lon);
   }catch(e){
     console.error(e);
     document.getElementById('loading').hidden=true;
@@ -632,3 +702,5 @@ function pick(lat,lon,name){
 // ── Init ───────────────────────────────────────────────────────────
 useGPS();
 </script>
+</body>
+</html>
